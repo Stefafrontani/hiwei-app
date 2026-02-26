@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { RegisterBenefitsUseCase } from '@/application/dashcam/RegisterBenefitsUseCase'
+import { SupabaseBenefitsRepository } from '@/infrastructure/dashcam/SupabaseBenefitsRepository'
 import type { ApiResponse } from '@/types'
 
 export async function POST(request: NextRequest) {
   try {
     const form = await request.json()
-    const useCase = new RegisterBenefitsUseCase()
-    const result = useCase.execute(form)
+    const useCase = new RegisterBenefitsUseCase(new SupabaseBenefitsRepository())
+    const result = await useCase.execute(form)
     return NextResponse.json<ApiResponse<{ success: boolean }>>({
       data: result,
       message: '¡Ya sos parte! Revisá tu email para ver tus beneficios.',

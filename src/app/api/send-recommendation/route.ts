@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { SendRecommendationUseCase } from '@/application/dashcam/SendRecommendationUseCase'
+import { SupabaseSendRecommendationRepository } from '@/infrastructure/dashcam/SupabaseSendRecommendationRepository'
 import type { ApiResponse } from '@/types'
 
 export async function POST(request: NextRequest) {
   try {
     const form = await request.json()
-    const useCase = new SendRecommendationUseCase()
-    const result = useCase.execute(form)
+    const useCase = new SendRecommendationUseCase(new SupabaseSendRecommendationRepository())
+    const result = await useCase.execute(form)
     return NextResponse.json<ApiResponse<{ success: boolean }>>({
       data: result,
       message: '¡Recomendación enviada! Revisá tu email.',
