@@ -14,8 +14,8 @@ export class GetRecommendationUseCase {
     this.service = new DashcamRecommendationService(repository)
   }
 
-  execute(answers: QuizAnswers): RecommendationResult {
-    const all = this.service.recommendAll(answers)
+  async execute(answers: QuizAnswers): Promise<RecommendationResult> {
+    const all = await this.service.recommendAll(answers)
     return {
       main: all[0],
       alternatives: all.slice(1, 4),

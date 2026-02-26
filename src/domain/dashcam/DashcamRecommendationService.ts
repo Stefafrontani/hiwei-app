@@ -13,12 +13,12 @@ export interface ScoredProduct {
 export class DashcamRecommendationService {
   constructor(private readonly repository: IDashcamRepository) {}
 
-  recommend(answers: QuizAnswers): ScoredProduct {
-    return this.recommendAll(answers)[0]
+  async recommend(answers: QuizAnswers): Promise<ScoredProduct> {
+    return (await this.recommendAll(answers))[0]
   }
 
-  recommendAll(answers: QuizAnswers): ScoredProduct[] {
-    const products = this.repository.getAll()
+  async recommendAll(answers: QuizAnswers): Promise<ScoredProduct[]> {
+    const products = await this.repository.getAll()
     const scored = products.map((p) => this.score(p, answers))
     scored.sort((a, b) => b.matchScore - a.matchScore)
     return scored

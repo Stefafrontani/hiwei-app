@@ -1,16 +1,17 @@
 import type { ContactAdvisorForm } from '@/types/dashcam'
+import type { IContactRepository } from '@/domain/dashcam/IContactRepository'
 
 export class ContactAdvisorUseCase {
-  execute(form: ContactAdvisorForm): { success: boolean } {
-    // Validate required fields
+  constructor(private readonly repository?: IContactRepository) {}
+
+  async execute(form: ContactAdvisorForm): Promise<{ success: boolean }> {
     if (!form.name.trim() || !form.phone.trim() || !form.email.trim()) {
       throw new Error('Todos los campos obligatorios deben completarse')
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       throw new Error('El email no es válido')
     }
-    // In production: send to CRM/email service
-    console.log('[ContactAdvisor] New contact request:', form)
+    await this.repository?.save(form)
     return { success: true }
   }
 }

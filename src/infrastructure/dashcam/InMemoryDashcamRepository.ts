@@ -131,11 +131,11 @@ const PRODUCTS: DashcamProduct[] = [
 ]
 
 export class InMemoryDashcamRepository implements IDashcamRepository {
-  getAll(): DashcamProduct[] {
-    return PRODUCTS
+  async getAll(): Promise<DashcamProduct[]> {
+    return Promise.resolve(PRODUCTS)
   }
 
-  getById(id: string): DashcamProduct | undefined {
-    return PRODUCTS.find((p) => p.id === id)
+  async getById(id: string): Promise<DashcamProduct | undefined> {
+    return Promise.resolve(PRODUCTS.find((p) => p.id === id))
   }
 }
