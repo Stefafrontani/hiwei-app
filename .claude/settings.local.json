@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /c/Users/usuario/desktop/hiwei-app && npm run build 2>&1)"
+    ]
+  }
+}
