@@ -57,7 +57,7 @@ export default function ResultadoPage() {
   }
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-white">
+    <div className="flex h-screen flex-col overflow-hidden bg-background">
       <AppHeader />
 
       {/* Desktop layout: main column + CTA sidebar */}
@@ -65,11 +65,11 @@ export default function ResultadoPage() {
         {/* Main scrollable column */}
         <main className="flex flex-1 flex-col overflow-y-auto">
           {/* Success Banner */}
-          <div className="flex flex-col gap-1 bg-[#F0FDF4] px-5 py-3.5 md:px-12">
-            <p className="text-[14px] font-bold text-[#16A34A] md:text-[16px]">
+          <div className="flex flex-col gap-1 bg-success/10 px-5 py-3.5 md:px-12">
+            <p className="text-[14px] font-bold text-success md:text-[16px]">
               ¡Tu recomendación está lista!
             </p>
-            <p className="text-[12px] text-[#4ADE80] md:text-[13px]">
+            <p className="text-[12px] text-success/70 md:text-[13px]">
               Basada en tu configuración personalizada
             </p>
           </div>
@@ -77,20 +77,20 @@ export default function ResultadoPage() {
           {/* Loading */}
           {loading && (
             <div className="flex flex-1 flex-col items-center justify-center gap-4 py-16 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF]">
-                <Camera className="h-8 w-8 animate-pulse text-[#2563EB]" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand/10">
+                <Camera className="h-8 w-8 animate-pulse text-brand" />
               </div>
-              <p className="text-[16px] font-semibold text-[#18181B]">Calculando tu recomendación...</p>
-              <p className="text-[13px] text-[#71717A]">Analizando tus respuestas</p>
+              <p className="text-[16px] font-semibold text-foreground">Calculando tu recomendación...</p>
+              <p className="text-[13px] text-muted-foreground">Analizando tus respuestas</p>
             </div>
           )}
 
           {/* Error */}
           {error && (
-            <div className="m-4 flex flex-col items-center gap-3 rounded-xl bg-[#FEF2F2] p-6 text-center">
-              <p className="text-[16px] font-semibold text-[#DC2626]">Algo salió mal</p>
-              <p className="text-[13px] text-[#71717A]">{error}</p>
-              <button onClick={() => router.push('/quiz')} className="text-[13px] font-semibold text-[#2563EB] underline">
+            <div className="m-4 flex flex-col items-center gap-3 rounded-xl bg-destructive/10 p-6 text-center">
+              <p className="text-[16px] font-semibold text-destructive">Algo salió mal</p>
+              <p className="text-[13px] text-muted-foreground">{error}</p>
+              <button onClick={() => router.push('/quiz')} className="text-[13px] font-semibold text-brand underline">
                 Intentar de nuevo
               </button>
             </div>
@@ -102,7 +102,7 @@ export default function ResultadoPage() {
               {/* Mobile CTA Beneficios (hidden on desktop — shown in sidebar) */}
               <Link
                 href="/beneficios"
-                className="flex h-[54px] w-full items-center justify-center gap-2.5 rounded-xl bg-gradient-to-b from-[#2563EB] to-[#1D4ED8] text-[15px] font-bold text-white transition-opacity hover:opacity-90 md:hidden"
+                className="flex h-[54px] w-full items-center justify-center gap-2.5 rounded-xl bg-gradient-to-b from-brand to-brand/90 text-[15px] font-bold text-white transition-opacity hover:opacity-90 md:hidden"
               >
                 <Gift className="h-5 w-5" />
                 Obtener beneficios exclusivos
@@ -124,21 +124,21 @@ export default function ResultadoPage() {
               <div className="flex flex-col gap-3 md:hidden">
                 <button
                   onClick={() => setShowContact(true)}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#2563EB] bg-white text-[14px] font-semibold text-[#2563EB] transition-colors hover:bg-[#EFF6FF]"
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-brand bg-card text-[14px] font-semibold text-brand transition-colors hover:bg-brand/10"
                 >
                   <Headphones className="h-4 w-4" />
                   Contactar con un asesor
                 </button>
                 <button
                   onClick={() => setShowSend(true)}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E4E4E7] bg-white text-[14px] font-medium text-[#71717A] transition-colors hover:bg-[#F4F4F5]"
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card text-[14px] font-medium text-muted-foreground transition-colors hover:bg-muted"
                 >
                   <Send className="h-4 w-4" />
                   Enviar recomendación
                 </button>
                 <button
                   onClick={handleRestart}
-                  className="flex items-center justify-center gap-1.5 text-[13px] font-medium text-[#A1A1AA] transition-colors hover:text-[#71717A]"
+                  className="flex items-center justify-center gap-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
                   Empezar de nuevo

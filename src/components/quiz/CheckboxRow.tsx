@@ -21,7 +21,7 @@ export function CheckboxRow({
   return (
     <div
       className={`flex flex-col rounded-xl transition-all
-        ${isChecked ? 'border-2 border-[#2563EB] bg-[#EFF6FF]' : 'border border-[#E4E4E7] bg-white'}`}
+        ${isChecked ? 'border-2 border-brand bg-brand/10' : 'border border-border bg-card'}`}
     >
       <button
         onClick={() => onChange(!isChecked)}
@@ -30,19 +30,19 @@ export function CheckboxRow({
         {/* Icon */}
         <div
           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg
-            ${isChecked ? 'bg-[#DBEAFE]' : 'bg-[#F4F4F5]'}`}
+            ${isChecked ? 'bg-brand/20' : 'bg-muted'}`}
         >
-          <Icon className={`h-4 w-4 ${isChecked ? 'text-[#2563EB]' : 'text-[#71717A]'}`} />
+          <Icon className={`h-4 w-4 ${isChecked ? 'text-brand' : 'text-muted-foreground'}`} />
         </div>
 
         {/* Text */}
         <div className="flex flex-1 flex-col gap-0.5">
           <span
-            className={`text-[14px] font-semibold ${isChecked ? 'text-[#2563EB]' : 'text-[#18181B]'}`}
+            className={`text-[14px] font-semibold ${isChecked ? 'text-brand' : 'text-foreground'}`}
           >
             {title}
           </span>
-          <span className={`text-[11px] ${isChecked ? 'text-[#3B82F6]' : 'text-[#71717A]'}`}>
+          <span className={`text-[11px] ${isChecked ? 'text-brand/80' : 'text-muted-foreground'}`}>
             {description}
           </span>
         </div>
@@ -50,7 +50,7 @@ export function CheckboxRow({
         {/* Checkbox */}
         <div
           className={`flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-md transition-colors
-            ${isChecked ? 'bg-[#2563EB]' : 'border border-[#E4E4E7] bg-white'}`}
+            ${isChecked ? 'bg-brand' : 'border border-border bg-card'}`}
         >
           {isChecked && <Check className="h-3 w-3 text-white" />}
         </div>

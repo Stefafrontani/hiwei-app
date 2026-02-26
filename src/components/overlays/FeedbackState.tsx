@@ -27,11 +27,12 @@ export function FeedbackState({
       >
         <Icon className={`h-8 w-8 ${iconColor}`} />
       </div>
-      <p className="text-[18px] font-bold text-[#18181B]">{title}</p>
-      <p className="text-[13px] leading-relaxed text-[#71717A]">{message}</p>
+      <p className="text-[18px] font-bold text-foreground">{title}</p>
+      <p className="text-[13px] leading-relaxed text-muted-foreground">{message}</p>
       <Button
         onClick={onClose}
-        className="h-12 w-full rounded-xl bg-[#2563EB] text-[14px] font-semibold hover:bg-[#1D4ED8]"
+        variant="brand"
+        className="h-12 w-full rounded-xl text-[14px] font-semibold"
       >
         {buttonLabel}
       </Button>

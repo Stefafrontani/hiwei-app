@@ -22,22 +22,22 @@ export function OptionRow({
 }: OptionRowProps) {
   const colors = {
     blue: {
-      border: 'border-[#2563EB]',
-      bg: 'bg-[#EFF6FF]',
-      iconBg: 'bg-[#DBEAFE]',
-      iconColor: 'text-[#2563EB]',
-      title: 'text-[#2563EB]',
-      desc: 'text-[#3B82F6]',
-      dot: 'bg-[#2563EB]',
+      border: 'border-brand',
+      bg: 'bg-brand/10',
+      iconBg: 'bg-brand/20',
+      iconColor: 'text-brand',
+      title: 'text-brand',
+      desc: 'text-brand/80',
+      dot: 'bg-brand',
     },
     green: {
-      border: 'border-[#16A34A]',
-      bg: 'bg-[#F0FDF4]',
-      iconBg: 'bg-[#DCFCE7]',
-      iconColor: 'text-[#16A34A]',
-      title: 'text-[#18181B]',
-      desc: 'text-[#71717A]',
-      dot: 'bg-[#16A34A]',
+      border: 'border-success',
+      bg: 'bg-success/10',
+      iconBg: 'bg-success/20',
+      iconColor: 'text-success',
+      title: 'text-foreground',
+      desc: 'text-muted-foreground',
+      dot: 'bg-success',
     },
   }
   const c = isActive ? colors[accentColor] : null
@@ -48,32 +48,32 @@ export function OptionRow({
       className={`flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left transition-all
         ${isActive
           ? `border-2 ${c!.border} ${c!.bg}`
-          : 'border border-[#E4E4E7] bg-white hover:border-[#2563EB]/40'}`}
+          : 'border border-border bg-card hover:border-brand/40'}`}
     >
       {/* Icon */}
       <div
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg
-          ${isActive ? c!.iconBg : 'bg-[#F4F4F5]'}`}
+          ${isActive ? c!.iconBg : 'bg-muted'}`}
       >
-        <Icon className={`h-[18px] w-[18px] ${isActive ? c!.iconColor : 'text-[#71717A]'}`} />
+        <Icon className={`h-[18px] w-[18px] ${isActive ? c!.iconColor : 'text-muted-foreground'}`} />
       </div>
 
       {/* Text */}
       <div className="flex flex-1 flex-col gap-0.5">
         <div className="flex items-center justify-between gap-2">
           <span
-            className={`text-[14px] font-semibold ${isActive ? c!.title : 'text-[#18181B]'}`}
+            className={`text-[14px] font-semibold ${isActive ? c!.title : 'text-foreground'}`}
           >
             {title}
           </span>
           {badge && isActive && (
-            <Badge className="bg-[#2563EB] text-white text-[10px] px-2 py-0.5 h-auto">
+            <Badge className="bg-brand text-white text-[10px] px-2 py-0.5 h-auto">
               {badge}
             </Badge>
           )}
         </div>
         <span
-          className={`text-[12px] ${isActive ? c!.desc : 'text-[#71717A]'}`}
+          className={`text-[12px] ${isActive ? c!.desc : 'text-muted-foreground'}`}
         >
           {description}
         </span>
@@ -82,7 +82,7 @@ export function OptionRow({
       {/* Radio dot */}
       <div
         className={`h-[18px] w-[18px] shrink-0 rounded-full border-2 transition-colors
-          ${isActive ? `${c!.dot} border-transparent` : 'border-[#E4E4E7] bg-white'}`}
+          ${isActive ? `${c!.dot} border-transparent` : 'border-border bg-card'}`}
       />
     </button>
   )

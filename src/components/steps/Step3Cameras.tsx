@@ -12,14 +12,14 @@ export function Step3Cameras({ cameraPosition, onChange }: Step3CamerasProps) {
     <div className="flex flex-col gap-5">
       {/* Step title */}
       <div className="flex items-start gap-2.5">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#EFF6FF]">
-          <Camera className="h-[18px] w-[18px] text-[#2563EB]" />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-brand/10">
+          <Camera className="h-[18px] w-[18px] text-brand" />
         </div>
         <div className="flex flex-col gap-0.5">
-          <p className="text-[16px] font-semibold text-[#18181B] md:text-[22px] md:font-bold">
+          <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
             ¿Cuántas cámaras necesitás?
           </p>
-          <p className="text-[12px] text-[#71717A] md:text-[14px]">
+          <p className="text-[12px] text-muted-foreground md:text-[14px]">
             Cada opción incluye todo lo necesario
           </p>
         </div>
@@ -27,7 +27,7 @@ export function Step3Cameras({ cameraPosition, onChange }: Step3CamerasProps) {
 
       {/* Options */}
       <div className="flex flex-col gap-2.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[1px] text-[#A1A1AA] md:text-[12px]">
+        <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
           UBICACIÓN DE CÁMARAS *
         </p>
 

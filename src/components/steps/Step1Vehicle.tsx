@@ -40,14 +40,14 @@ export function Step1Vehicle({
     <div className="flex flex-col gap-5">
       {/* Step title */}
       <div className="flex items-start gap-2.5">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#EFF6FF]">
-          <Car className="h-[18px] w-[18px] text-[#2563EB]" />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-brand/10">
+          <Car className="h-[18px] w-[18px] text-brand" />
         </div>
         <div className="flex flex-col gap-0.5">
-          <p className="text-[16px] font-semibold text-[#18181B] md:text-[22px] md:font-bold">
+          <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
             ¿Qué tipo de vehículo tenés?
           </p>
-          <p className="text-[12px] text-[#71717A] md:text-[14px]">
+          <p className="text-[12px] text-muted-foreground md:text-[14px]">
             Elegí el que mejor describe tu auto o moto
           </p>
         </div>
@@ -55,7 +55,7 @@ export function Step1Vehicle({
 
       {/* Vehicle type */}
       <div className="flex flex-col gap-2.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[1px] text-[#A1A1AA] md:text-[12px]">
+        <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
           TIPO DE VEHÍCULO *
         </p>
         <div className="flex flex-wrap gap-2.5">
@@ -73,7 +73,7 @@ export function Step1Vehicle({
 
       {/* Vehicle year */}
       <div className="flex flex-col gap-2.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[1px] text-[#A1A1AA] md:text-[12px]">
+        <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
           AÑO DEL VEHÍCULO *
         </p>
         <Select
@@ -82,7 +82,7 @@ export function Step1Vehicle({
         >
           <SelectTrigger
             className={`h-12 w-full rounded-[10px] border px-3.5 text-[14px] md:w-80
-              ${showYearError ? 'border-[#FCA5A5]' : 'border-[#E4E4E7]'}`}
+              ${showYearError ? 'border-destructive/30' : 'border-border'}`}
           >
             <SelectValue placeholder="Ej: 2020" />
           </SelectTrigger>

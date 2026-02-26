@@ -19,7 +19,8 @@ export function ResultCTAs({ onRestart }: ResultCTAsProps) {
       <div className="flex flex-col gap-3">
         <Button
           onClick={() => setShowContact(true)}
-          className="flex h-12 w-full items-center gap-2 rounded-xl bg-[#2563EB] text-[14px] font-semibold hover:bg-[#1D4ED8]"
+          variant="brand"
+          className="flex h-12 w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
         >
           <Headphones className="h-4 w-4" />
           Contactar con un asesor
@@ -28,7 +29,7 @@ export function ResultCTAs({ onRestart }: ResultCTAsProps) {
         <Button
           onClick={() => setShowSend(true)}
           variant="outline"
-          className="flex h-12 w-full items-center gap-2 rounded-xl border-[#E4E4E7] text-[14px] font-semibold text-[#18181B] hover:bg-[#F4F4F5]"
+          className="flex h-12 w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
         >
           <Send className="h-4 w-4" />
           Enviarme la recomendación
@@ -38,7 +39,7 @@ export function ResultCTAs({ onRestart }: ResultCTAsProps) {
           href="https://wa.me/5491100000000"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] text-[14px] font-semibold text-white transition-opacity hover:opacity-90"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-whatsapp text-[14px] font-semibold text-white transition-opacity hover:opacity-90"
         >
           <MessageCircle className="h-4 w-4" />
           Consultar por WhatsApp
@@ -47,7 +48,7 @@ export function ResultCTAs({ onRestart }: ResultCTAsProps) {
         {onRestart && (
           <button
             onClick={onRestart}
-            className="flex items-center justify-center gap-1.5 text-[12px] text-[#A1A1AA] transition-colors hover:text-[#71717A]"
+            className="flex items-center justify-center gap-1.5 text-[12px] text-muted-foreground transition-colors hover:text-foreground"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             Empezar de nuevo
