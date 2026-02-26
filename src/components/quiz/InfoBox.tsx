@@ -3,11 +3,11 @@ import type { LucideIcon } from 'lucide-react'
 type InfoVariant = 'blue' | 'orange' | 'amber' | 'green' | 'red'
 
 const VARIANT_STYLES: Record<InfoVariant, { bg: string; border: string; iconColor: string; textColor: string }> = {
-  blue: { bg: 'bg-[#EFF6FF]', border: 'border-[#BFDBFE]', iconColor: 'text-[#2563EB]', textColor: 'text-[#1D4ED8]' },
-  orange: { bg: 'bg-[#FFF7ED]', border: 'border-[#FED7AA]', iconColor: 'text-[#F97316]', textColor: 'text-[#9A3412]' },
-  amber: { bg: 'bg-[#FFFBEB]', border: 'border-[#FDE68A]', iconColor: 'text-[#D97706]', textColor: 'text-[#92400E]' },
-  green: { bg: 'bg-[#F0FDF4]', border: 'border-[#BBF7D0]', iconColor: 'text-[#16A34A]', textColor: 'text-[#166534]' },
-  red: { bg: 'bg-[#FEF2F2]', border: 'border-[#FCA5A5]', iconColor: 'text-[#EF4444]', textColor: 'text-[#DC2626]' },
+  blue:   { bg: 'bg-brand/10',       border: 'border-brand/30',       iconColor: 'text-brand',       textColor: 'text-brand' },
+  orange: { bg: 'bg-warning/10',     border: 'border-warning/30',     iconColor: 'text-warning',     textColor: 'text-warning' },
+  amber:  { bg: 'bg-warning/10',     border: 'border-warning/30',     iconColor: 'text-warning',     textColor: 'text-warning' },
+  green:  { bg: 'bg-success/10',     border: 'border-success/30',     iconColor: 'text-success',     textColor: 'text-success' },
+  red:    { bg: 'bg-destructive/10', border: 'border-destructive/30', iconColor: 'text-destructive', textColor: 'text-destructive' },
 }
 
 interface InfoBoxProps {

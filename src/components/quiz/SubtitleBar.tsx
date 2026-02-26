@@ -8,12 +8,12 @@ export function SubtitleBar({ variant = 'blue', title, subtitle }: SubtitleBarPr
   const isBlue = variant === 'blue'
   return (
     <div
-      className={`flex flex-col gap-1 px-5 py-3 ${isBlue ? 'bg-[#EFF6FF]' : 'bg-[#F0FDF4]'}`}
+      className={`flex flex-col gap-1 px-5 py-3 ${isBlue ? 'bg-brand/10' : 'bg-success/10'}`}
     >
-      <p className={`text-[14px] font-semibold ${isBlue ? 'text-[#2563EB]' : 'text-[#16A34A]'}`}>
+      <p className={`text-[14px] font-semibold ${isBlue ? 'text-brand' : 'text-success'}`}>
         {title}
       </p>
-      <p className="text-[12px] text-[#71717A]">{subtitle}</p>
+      <p className="text-[12px] text-muted-foreground">{subtitle}</p>
     </div>
   )
 }

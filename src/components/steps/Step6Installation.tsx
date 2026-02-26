@@ -12,14 +12,14 @@ export function Step6Installation({ installation, onChange }: Step6InstallationP
     <div className="flex flex-col gap-5">
       {/* Step title */}
       <div className="flex items-start gap-2.5">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#F0FDF4]">
-          <Wrench className="h-[18px] w-[18px] text-[#16A34A]" />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-success/10">
+          <Wrench className="h-[18px] w-[18px] text-success" />
         </div>
         <div className="flex flex-col gap-0.5">
-          <p className="text-[16px] font-semibold text-[#18181B] md:text-[22px] md:font-bold">
+          <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
             ¿Te gustaría que instalemos tu dashcam?
           </p>
-          <p className="text-[12px] text-[#71717A] md:text-[14px]">
+          <p className="text-[12px] text-muted-foreground md:text-[14px]">
             Instalación profesional en nuestro taller
           </p>
         </div>

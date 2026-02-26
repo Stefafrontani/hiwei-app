@@ -1,9 +1,9 @@
 import type { ScoredProduct } from '@/domain/dashcam/DashcamRecommendationService'
 
 const ALT_BADGES = [
-  { label: 'Económica', bg: 'bg-[#F0FDF4]', text: 'text-[#16A34A]' },
-  { label: 'Popular',   bg: 'bg-[#EFF6FF]', text: 'text-[#2563EB]' },
-  { label: 'Premium',   bg: 'bg-[#FEF9C3]', text: 'text-[#B45309]' },
+  { label: 'Económica', bg: 'bg-success/10', text: 'text-success' },
+  { label: 'Popular',   bg: 'bg-brand/10',   text: 'text-brand' },
+  { label: 'Premium',   bg: 'bg-warning/15', text: 'text-warning' },
 ]
 
 interface AlternativesSectionProps {
@@ -15,7 +15,7 @@ export function AlternativesSection({ alternatives }: AlternativesSectionProps) 
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-[11px] font-semibold uppercase tracking-[1px] text-[#A1A1AA]">
+      <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground">
         ALTERNATIVAS
       </p>
       <div className="flex flex-col gap-2 md:flex-row">
@@ -24,18 +24,18 @@ export function AlternativesSection({ alternatives }: AlternativesSectionProps) 
           return (
             <div
               key={alt.product.id}
-              className="flex flex-1 items-center gap-2.5 rounded-xl border border-[#E4E4E7] bg-white p-3"
+              className="flex flex-1 items-center gap-2.5 rounded-xl border border-border bg-card p-3"
             >
               <span className={`shrink-0 rounded-md px-2 py-1 text-[10px] font-semibold ${badge.bg} ${badge.text}`}>
                 {badge.label}
               </span>
               <div className="flex flex-1 flex-col gap-0.5 min-w-0">
-                <span className="truncate text-[13px] font-semibold text-[#18181B]">
+                <span className="truncate text-[13px] font-semibold text-foreground">
                   {alt.product.name}
                 </span>
-                <span className="text-[12px] text-[#71717A]">{alt.product.priceDisplay}</span>
+                <span className="text-[12px] text-muted-foreground">{alt.product.priceDisplay}</span>
               </div>
-              <button className="shrink-0 rounded-lg bg-[#F4F4F5] px-3 py-2 text-[12px] font-semibold text-[#18181B] transition-colors hover:bg-[#E4E4E7]">
+              <button className="shrink-0 rounded-lg bg-muted px-3 py-2 text-[12px] font-semibold text-foreground transition-colors hover:bg-muted">
                 Ver
               </button>
             </div>

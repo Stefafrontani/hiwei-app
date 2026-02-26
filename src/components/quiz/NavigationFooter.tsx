@@ -21,13 +21,13 @@ export function NavigationFooter({
   const isLast = currentStep === totalSteps
 
   return (
-    <footer className="flex h-20 items-center gap-3 border-t border-[#E4E4E7] bg-white px-5">
+    <footer className="flex h-20 items-center gap-3 border-t border-border bg-card px-5">
       {/* Back button */}
       <button
         onClick={onBack}
         disabled={isFirst}
         className={`flex h-11 w-20 items-center justify-center gap-1.5 rounded-[10px] text-[14px] font-medium transition-opacity
-          ${isFirst ? 'cursor-not-allowed bg-[#F4F4F5] text-[#A1A1AA]' : 'bg-[#F4F4F5] text-[#71717A] hover:opacity-80'}`}
+          ${isFirst ? 'cursor-not-allowed bg-muted text-muted-foreground' : 'bg-muted text-muted-foreground hover:opacity-80'}`}
       >
         <ChevronLeft className="h-4 w-4" />
         Atrás
@@ -39,7 +39,7 @@ export function NavigationFooter({
         disabled={!canGoNext || isLoading}
         className={`flex h-11 flex-1 items-center justify-center gap-1.5 rounded-[10px] text-[14px] font-semibold text-white transition-opacity
           ${!canGoNext || isLoading ? 'cursor-not-allowed opacity-50' : 'hover:opacity-90'}
-          ${isLast ? 'bg-[#16A34A]' : 'bg-[#2563EB]'}`}
+          ${isLast ? 'bg-success' : 'bg-brand'}`}
       >
         {isLoading ? (
           <span>Cargando...</span>
