@@ -1,8 +1,22 @@
 # Design System Tokens
 
 ## Regla de oro
-**Nunca uses colores hex (`#2563EB`) en componentes dentro de `src/components/ui/`.
-Siempre usa tokens semánticos** (`bg-brand`, `text-success`, `border-warning`, etc.)
+**Nunca uses colores hex (`#394493`) en componentes dentro de `src/components/ui/`.
+Siempre usa tokens semánticos** (`bg-primary`, `text-brand`, `border-warning`, etc.)
+
+---
+
+## Brand Palette → Token Mapping
+
+| Brand Color       | Hex       | Token(s)                                                  | Role                                    |
+|-------------------|-----------|-----------------------------------------------------------|-----------------------------------------|
+| Deep indigo       | `#394493` | `--primary`, `--brand`, `--ring`                          | CTAs, links, focus rings, brand identity |
+| Dark warm charcoal| `#24211B` | `--foreground`, dark-mode `--background`                  | Body text (light), surfaces (dark)       |
+| Warm beige        | `#DBD6D1` | `--secondary`, `--border`, `--input`                      | Secondary elements, borders, input frames|
+| White             | `#FFFFFF` | `--background`, `--primary-foreground`, `--brand-foreground`| Surfaces (light), text on indigo        |
+| Golden yellow     | `#E5C761` | `--warning`, `--chart-2`                                  | Warnings, highlights, chart accent       |
+
+**Design philosophy:** Indigo drives CTAs and brand moments. Beige warms borders and secondary surfaces. Gold appears sparingly in warnings/charts. Charcoal replaces cold black for a warmer feel. White backgrounds stay clean.
 
 ---
 
@@ -10,20 +24,33 @@ Siempre usa tokens semánticos** (`bg-brand`, `text-success`, `border-warning`, 
 
 | Token | Light mode | Dark mode | Uso recomendado |
 |---|---|---|---|
-| `--brand` / `--brand-foreground` | `oklch(0.546 0.244 262.881)` (blue) | `oklch(0.698 0.195 262.881)` | Identidad Hiwei, CTA principal |
-| `--success` / `--success-foreground` | `oklch(0.527 0.154 149.214)` (green) | `oklch(0.696 0.17 149.214)` | Confirmaciones, estados OK |
-| `--warning` / `--warning-foreground` | `oklch(0.769 0.188 70.08)` (amber) | `oklch(0.828 0.189 84.429)` | Alertas no críticas, atención |
-| `--info` / `--info-foreground` | `oklch(0.614 0.115 213.283)` (cyan-blue) | `oklch(0.75 0.12 213.283)` | Información contextual |
-| `--destructive` | `oklch(0.577 0.245 27.325)` (red) | `oklch(0.704 0.191 22.216)` | Errores, acciones destructivas |
-| `--primary` / `--primary-foreground` | near-black / near-white | near-white / near-black | Elemento principal UI |
-| `--secondary` / `--secondary-foreground` | light gray / dark | dark gray / light | Elemento secundario UI |
-| `--muted` / `--muted-foreground` | light gray / medium gray | dark gray / medium gray | Texto y fondos desactivados |
+| `--primary` / `--primary-foreground` | deep indigo / white | lighter indigo / white | CTAs, botones principales, enlaces |
+| `--brand` / `--brand-foreground` | deep indigo / white | medium indigo / white | Identidad Hiwei, CTA alternativo |
+| `--secondary` / `--secondary-foreground` | warm beige / charcoal | dark warm / near-white | Elemento secundario UI, bordes |
+| `--accent` / `--accent-foreground` | warm tint / charcoal | dark warm / near-white | Hover states (ghost, outline) |
+| `--muted` / `--muted-foreground` | light warm gray / medium gray | dark warm / medium gray | Texto y fondos desactivados |
+| `--success` / `--success-foreground` | green / white | brighter green / charcoal | Confirmaciones, estados OK |
+| `--warning` / `--warning-foreground` | golden yellow / charcoal | muted gold / charcoal | Alertas no críticas, atención |
+| `--info` / `--info-foreground` | cyan-blue / white | brighter cyan / charcoal | Información contextual |
+| `--destructive` | red | brighter red | Errores, acciones destructivas |
+
+### Accessibility notes
+
+All primary pairings pass WCAG AA:
+- Indigo on white: **~10:1** contrast ratio
+- Beige with charcoal: **~11:1**
+- Gold with charcoal: **~9.4:1**
+- Muted-foreground on white: **~5.5:1**
+- `--ring` uses indigo — visible focus states in both modes
 
 ### Clases Tailwind expuestas
 
 ```
+bg-primary        text-primary        border-primary        ring-primary
+bg-primary-foreground  text-primary-foreground
 bg-brand          text-brand          border-brand          ring-brand
 bg-brand-foreground  text-brand-foreground
+bg-secondary      text-secondary      border-secondary
 bg-success        text-success        border-success        ring-success
 bg-success-foreground  text-success-foreground
 bg-warning        text-warning        border-warning        ring-warning
@@ -74,14 +101,14 @@ Con opacidad: `bg-brand/10`, `bg-success/20`, `border-warning/30`, etc.
 
 | Variante | Uso |
 |---|---|
-| `default` | Acción primaria genérica |
-| `brand` | CTA Hiwei (reemplaza hex `#2563EB`) |
+| `default` | Acción primaria (indigo) |
+| `brand` | CTA Hiwei (idéntico a primary, para énfasis semántico) |
 | `success` | Confirmar / guardar |
 | `warning` | Acción con precaución |
 | `info` | Acción informativa |
 | `destructive` | Eliminar / acción irreversible |
 | `outline` | Acción secundaria |
-| `secondary` | Acción terciaria |
+| `secondary` | Acción terciaria (beige) |
 | `ghost` | Botón sin fondo visible |
 | `link` | Estilo enlace |
 
