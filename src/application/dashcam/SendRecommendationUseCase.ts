@@ -1,6 +1,7 @@
 import type { SendRecommendationForm } from '@/types/dashcam'
 import type { ISendRecommendationRepository } from '@/domain/dashcam/ISendRecommendationRepository'
 
+/* Flow: Recommendation - (3): Use Case (Application) */
 export class SendRecommendationUseCase {
   constructor(private readonly repository?: ISendRecommendationRepository) {}
 

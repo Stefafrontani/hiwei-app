@@ -2,6 +2,7 @@ import { createServerClient } from '@/lib/supabase/server'
 import type { ISendRecommendationRepository } from '@/domain/dashcam/ISendRecommendationRepository'
 import type { SendRecommendationForm } from '@/types/dashcam'
 
+/* Flow: Recommendation - (5): Repo (Infrastructure) */
 export class SupabaseSendRecommendationRepository implements ISendRecommendationRepository {
   async save(form: SendRecommendationForm): Promise<void> {
     const client = createServerClient()

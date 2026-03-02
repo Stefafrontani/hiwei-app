@@ -16,6 +16,7 @@ import { createEmptyAnswers } from '@/domain/dashcam/QuizAnswers'
 import type { QuizAnswers } from '@/domain/dashcam/QuizAnswers'
 import type { RecommendationResult } from '@/application/dashcam/GetRecommendationUseCase'
 
+/* Flow: Recommendation - (1): UI */
 export default function ResultadoPage() {
   const router = useRouter()
   const [answers] = useState<QuizAnswers>(() => {
