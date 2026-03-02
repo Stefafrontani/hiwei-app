@@ -1,4 +1,4 @@
-import type { ScoredProduct } from '@/domain/dashcam/DashcamRecommendationService'
+import type { ScoredProduct } from '@/domain/services/DashcamRecommendationService'
 
 const ALT_BADGES = [
   { label: 'Económica', bg: 'bg-success/10', text: 'text-success' },

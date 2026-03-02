@@ -1,5 +1,5 @@
 import { LayoutList, Check } from 'lucide-react'
-import type { QuizAnswers } from '@/domain/dashcam/QuizAnswers'
+import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 
 const STEP_CONFIG = [
   { step: 1, label: 'Vehículo', getSummary: (a: QuizAnswers) => a.vehicleType ? `${capitalize(a.vehicleType)} · Año: ${a.vehicleYear ?? '—'}` : 'Pendiente' },

@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import type { VehicleType } from '@/types/dashcam'
+import type { VehicleType } from '@/domain/value-objects/VehicleType'
 
 const VEHICLE_OPTIONS: { type: VehicleType; label: string; icon: typeof Car }[] = [
   { type: 'auto', label: 'Auto', icon: Car },

@@ -1,7 +1,7 @@
 import { Timer, Info } from 'lucide-react'
 import { OptionCard } from '@/components/quiz/OptionCard'
 import { InfoBox } from '@/components/quiz/InfoBox'
-import type { RecordingTime } from '@/types/dashcam'
+import type { RecordingTime } from '@/domain/value-objects/RecordingTime'
 
 const TIME_OPTIONS: { value: RecordingTime; label: string; subLabel: string }[] = [
   { value: '1h', label: '1 h', subLabel: 'Básico' },

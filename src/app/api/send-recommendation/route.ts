@@ -1,19 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { SendRecommendationUseCase } from '@/application/dashcam/SendRecommendationUseCase'
-import { SupabaseSendRecommendationRepository } from '@/infrastructure/dashcam/SupabaseSendRecommendationRepository'
-import type { ApiResponse } from '@/types'
+import { SendRecommendationUseCase } from '@/application/use-cases/dashcam/SendRecommendation/SendRecommendation.usecase'
+import { SupabaseSendRecommendationRepository } from '@/infrastructure/repositories/supabase/SupabaseSendRecommendationRepository'
+import { presentSendRecommendation, presentError } from '@/infrastructure/presenters/api'
 
 export async function POST(request: NextRequest) {
   try {
     const form = await request.json()
     const useCase = new SendRecommendationUseCase(new SupabaseSendRecommendationRepository())
     const result = await useCase.execute(form)
-    return NextResponse.json<ApiResponse<{ success: boolean }>>({
-      data: result,
-      message: '¡Recomendación enviada! Revisá tu email.',
-    })
+    return NextResponse.json(presentSendRecommendation(result))
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al enviar recomendación'
-    return NextResponse.json<ApiResponse<never>>({ error: message }, { status: 400 })
+    return NextResponse.json(
+      presentError(error, 'Error al enviar recomendación'),
+      { status: 400 }
+    )
   }
 }

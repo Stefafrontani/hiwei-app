@@ -1,5 +1,5 @@
 import { ClipboardList } from 'lucide-react'
-import type { QuizAnswers } from '@/domain/dashcam/QuizAnswers'
+import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 
 const VEHICLE_LABELS: Record<string, string> = {
   auto: 'Auto', pickup: 'Pickup', suv: 'SUV', moto: 'Moto',

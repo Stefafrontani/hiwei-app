@@ -12,9 +12,9 @@ import { AlternativesSection } from '@/components/result/AlternativesSection'
 import { ResultDesktopSidebar } from '@/components/result/ResultDesktopSidebar'
 import { ContactAdvisorOverlay } from '@/components/overlays/ContactAdvisorOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
-import { createEmptyAnswers } from '@/domain/dashcam/QuizAnswers'
-import type { QuizAnswers } from '@/domain/dashcam/QuizAnswers'
-import type { RecommendationResult } from '@/application/dashcam/GetRecommendationUseCase'
+import { createEmptyAnswers } from '@/domain/entities/QuizAnswers'
+import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
+import type { RecommendationResult } from '@/application/use-cases/dashcam/GetRecommendation/GetRecommendation.dto'
 
 /* Flow: Recommendation - (1): UI */
 export default function ResultadoPage() {

@@ -1,5 +1,5 @@
 import { Star, ShoppingCart } from 'lucide-react'
-import type { DashcamProduct } from '@/domain/dashcam/DashcamProduct'
+import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 
 interface MainRecommendationCardProps {
   product: DashcamProduct

@@ -1,7 +1,7 @@
 import { Video, Info } from 'lucide-react'
 import { OptionRow } from '@/components/quiz/OptionRow'
 import { InfoBox } from '@/components/quiz/InfoBox'
-import type { VideoQuality } from '@/types/dashcam'
+import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
 
 interface Step2QualityProps {
   videoQuality?: VideoQuality

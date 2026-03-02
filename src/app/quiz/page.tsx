@@ -13,9 +13,14 @@ import { Step3Cameras } from '@/components/steps/Step3Cameras'
 import { Step4Time } from '@/components/steps/Step4Time'
 import { Step5Extras } from '@/components/steps/Step5Extras'
 import { Step6Installation } from '@/components/steps/Step6Installation'
-import { createEmptyAnswers, isStepComplete } from '@/domain/dashcam/QuizAnswers'
-import type { QuizAnswers } from '@/domain/dashcam/QuizAnswers'
-import type { VehicleType, VideoQuality, CameraPosition, RecordingTime, Extra, Installation } from '@/types/dashcam'
+import { createEmptyAnswers, isStepComplete } from '@/domain/entities/QuizAnswers'
+import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
+import type { VehicleType } from '@/domain/value-objects/VehicleType'
+import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
+import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
+import type { RecordingTime } from '@/domain/value-objects/RecordingTime'
+import type { Extra } from '@/domain/value-objects/Extra'
+import type { Installation } from '@/domain/value-objects/Installation'
 
 const TOTAL_STEPS = 6
 

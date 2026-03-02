@@ -1,6 +1,6 @@
 import { Check, Star, Tag } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import type { DashcamProduct } from '@/domain/dashcam/DashcamProduct'
+import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(price)

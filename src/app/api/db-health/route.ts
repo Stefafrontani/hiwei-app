@@ -1,12 +1,7 @@
 import { NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
-import type { ApiResponse } from '@/types'
-
-interface DbHealthResult {
-  status: 'ok' | 'error'
-  productCount?: number
-  detail?: string
-}
+import { SupabaseDbHealthRepository } from '@/infrastructure/repositories/supabase/SupabaseDbHealthRepository'
+import { GetDbHealthUseCase } from '@/application/use-cases/health/GetDbHealth/GetDbHealth.usecase'
+import { presentDbHealth, presentDbHealthError } from '@/infrastructure/presenters/api'
 
 /**
  * GET /api/db-health
@@ -14,22 +9,11 @@ interface DbHealthResult {
  */
 export async function GET() {
   try {
-    const client = createServerClient()
-    const { count, error } = await client
-      .from('dashcam_products')
-      .select('*', { count: 'exact', head: true })
-
-    if (error) throw new Error(error.message)
-
-    return NextResponse.json<ApiResponse<DbHealthResult>>({
-      data: { status: 'ok', productCount: count ?? 0 },
-      message: 'Database connection successful',
-    })
+    const useCase = new GetDbHealthUseCase(new SupabaseDbHealthRepository())
+    const result = await useCase.execute()
+    return NextResponse.json(presentDbHealth(result))
   } catch (error) {
     const detail = error instanceof Error ? error.message : 'Unknown error'
-    return NextResponse.json<ApiResponse<DbHealthResult>>(
-      { data: { status: 'error', detail }, error: 'Database connection failed' },
-      { status: 503 }
-    )
+    return NextResponse.json(presentDbHealthError(detail), { status: 503 })
   }
 }

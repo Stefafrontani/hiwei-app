@@ -1,6 +1,6 @@
 import { Wrench, Package } from 'lucide-react'
 import { OptionRow } from '@/components/quiz/OptionRow'
-import type { Installation } from '@/types/dashcam'
+import type { Installation } from '@/domain/value-objects/Installation'
 
 interface Step6InstallationProps {
   installation?: Installation

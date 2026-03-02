@@ -1,0 +1,7 @@
+export { presentRecommendation } from './recommendation.presenter'
+export { presentContact } from './contact.presenter'
+export { presentSendRecommendation } from './sendRecommendation.presenter'
+export { presentBenefits } from './benefits.presenter'
+export { presentHealth } from './health.presenter'
+export { presentDbHealth, presentDbHealthError } from './dbHealth.presenter'
+export { presentError } from './error.presenter'
