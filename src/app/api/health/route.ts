@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import type { ApiResponse } from "@/types";
-import type { HealthStatus } from "@/domain/health/HealthStatus";
-import { SystemClockAdapter } from "@/infrastructure/clock/SystemClockAdapter";
-import { HealthService } from "@/domain/health/HealthService";
-import { GetHealthUseCase } from "@/application/health/GetHealthUseCase";
+import { SystemClockAdapter } from "@/infrastructure/adapters/SystemClockAdapter";
+import { HealthService } from "@/domain/services/HealthService";
+import { GetHealthUseCase } from "@/application/use-cases/health/GetHealth/GetHealth.usecase";
+import { presentHealth } from "@/infrastructure/presenters/api";
 
 export async function GET() {
   const clock = new SystemClockAdapter();
@@ -11,9 +10,5 @@ export async function GET() {
   const useCase = new GetHealthUseCase(healthService);
   const result = useCase.execute();
 
-  const body: ApiResponse<HealthStatus> = {
-    data: result.healthStatus,
-    message: result.message,
-  };
-  return NextResponse.json(body);
+  return NextResponse.json(presentHealth(result));
 }

@@ -1,7 +1,7 @@
 import { Package, Sun, Bluetooth, Car, Info } from 'lucide-react'
 import { CheckboxRow } from '@/components/quiz/CheckboxRow'
 import { InfoBox } from '@/components/quiz/InfoBox'
-import type { Extra } from '@/types/dashcam'
+import type { Extra } from '@/domain/value-objects/Extra'
 
 const EXTRAS_CONFIG = [
   {

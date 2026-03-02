@@ -1,19 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { SupabaseDashcamRepository } from '@/infrastructure/dashcam/SupabaseDashcamRepository'
-import { GetRecommendationUseCase, type RecommendationResult } from '@/application/dashcam/GetRecommendationUseCase'
-import type { ApiResponse } from '@/types'
+import { SupabaseDashcamRepository } from '@/infrastructure/repositories/supabase/SupabaseDashcamRepository'
+import { GetRecommendationUseCase } from '@/application/use-cases/dashcam/GetRecommendation/GetRecommendation.usecase'
+import { presentRecommendation, presentError } from '@/infrastructure/presenters/api'
 
-/* Flow: Recommendation - (2): Driving Adapter (Route Handler) */
 export async function POST(request: NextRequest) {
   try {
     const answers = await request.json()
-    const useCase = new GetRecommendationUseCase(
-      new SupabaseDashcamRepository()
-    )
+    const useCase = new GetRecommendationUseCase(new SupabaseDashcamRepository())
     const result = await useCase.execute(answers)
-    return NextResponse.json<ApiResponse<RecommendationResult>>({ data: result })
+    return NextResponse.json(presentRecommendation(result))
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Error al obtener recomendación'
-    return NextResponse.json<ApiResponse<never>>({ error: message }, { status: 400 })
+    return NextResponse.json(
+      presentError(error, 'Error al obtener recomendación'),
+      { status: 400 }
+    )
   }
 }

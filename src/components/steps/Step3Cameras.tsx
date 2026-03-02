@@ -1,6 +1,6 @@
 import { Camera } from 'lucide-react'
 import { OptionRow } from '@/components/quiz/OptionRow'
-import type { CameraPosition } from '@/types/dashcam'
+import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 
 interface Step3CamerasProps {
   cameraPosition?: CameraPosition
