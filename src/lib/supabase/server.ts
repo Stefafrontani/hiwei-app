@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js'
  * Use ONLY in server-side code (API routes, Server Components).
  * The service role key bypasses Row Level Security — never expose to the browser.
  */
+/* Flow: Recommendation - (6): Supabase Client (lib) */
 export function createServerClient() {
   const url = process.env.SUPABASE_URL
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY

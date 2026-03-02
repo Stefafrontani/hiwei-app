@@ -3,11 +3,13 @@ import { SupabaseDashcamRepository } from '@/infrastructure/dashcam/SupabaseDash
 import { GetRecommendationUseCase, type RecommendationResult } from '@/application/dashcam/GetRecommendationUseCase'
 import type { ApiResponse } from '@/types'
 
+/* Flow: Recommendation - (2): Driving Adapter (Route Handler) */
 export async function POST(request: NextRequest) {
   try {
     const answers = await request.json()
-    const repository = new SupabaseDashcamRepository()
-    const useCase = new GetRecommendationUseCase(repository)
+    const useCase = new GetRecommendationUseCase(
+      new SupabaseDashcamRepository()
+    )
     const result = await useCase.execute(answers)
     return NextResponse.json<ApiResponse<RecommendationResult>>({ data: result })
   } catch (error) {
