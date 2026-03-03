@@ -25,12 +25,12 @@ import type { Installation } from '@/domain/value-objects/Installation'
 const TOTAL_STEPS = 6
 
 const SUBTITLE_CONFIG: Record<number, { variant: 'blue' | 'green'; title: string; subtitle: string }> = {
-  1: { variant: 'blue', title: 'Asesor Inteligente de Dashcams', subtitle: 'Respondé 6 preguntas y encontrá tu dashcam ideal' },
-  2: { variant: 'blue', title: 'Asesor Inteligente de Dashcams', subtitle: 'Respondé 6 preguntas y encontrá tu dashcam ideal' },
-  3: { variant: 'blue', title: 'Asesor Inteligente de Dashcams', subtitle: 'Respondé 6 preguntas y encontrá tu dashcam ideal' },
-  4: { variant: 'blue', title: 'Asesor Inteligente de Dashcams', subtitle: 'Respondé 6 preguntas y encontrá tu dashcam ideal' },
-  5: { variant: 'blue', title: 'Asesor Inteligente de Dashcams', subtitle: 'Respondé 6 preguntas y encontrá tu dashcam ideal' },
-  6: { variant: 'green', title: 'Asesor Inteligente de Dashcams', subtitle: '¡Último paso! Ya casi tenés tu recomendación' },
+  1: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
+  2: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
+  3: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
+  4: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
+  5: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
+  6: { variant: 'green', title: '¡Encontrá tu DASHCAM!', subtitle: '¡Último paso! Ya casi estamos' },
 }
 
 export default function QuizPage() {
@@ -92,7 +92,7 @@ export default function QuizPage() {
           {/* Progress */}
           <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
 
-          {/* Step content */}
+          {/* Step content + navigation */}
           <div className="flex-1 overflow-y-auto px-5 py-4 md:px-12 md:py-8">
             <div className="mx-auto max-w-2xl">
               {currentStep === 1 && (
@@ -134,18 +134,33 @@ export default function QuizPage() {
                   onChange={(v) => update('installation', v as Installation)}
                 />
               )}
+
+              {/* Navigation footer — desktop: inline after content */}
+              <div className="hidden md:block">
+                <NavigationFooter
+                  currentStep={currentStep}
+                  totalSteps={TOTAL_STEPS}
+                  canGoNext={canGoNext}
+                  onBack={handleBack}
+                  onNext={handleNext}
+                  isLoading={isLoading}
+                />
+              </div>
             </div>
           </div>
 
-          {/* Navigation footer */}
-          <NavigationFooter
-            currentStep={currentStep}
-            totalSteps={TOTAL_STEPS}
-            canGoNext={canGoNext}
-            onBack={handleBack}
-            onNext={handleNext}
-            isLoading={isLoading}
-          />
+          {/* Navigation footer — mobile: pinned at bottom */}
+          <div className="md:hidden">
+            <NavigationFooter
+              currentStep={currentStep}
+              totalSteps={TOTAL_STEPS}
+              canGoNext={canGoNext}
+              onBack={handleBack}
+              onNext={handleNext}
+              isLoading={isLoading}
+              variant="mobile"
+            />
+          </div>
         </main>
 
         {/* Desktop sidebar */}

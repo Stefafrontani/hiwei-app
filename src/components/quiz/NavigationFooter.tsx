@@ -7,6 +7,7 @@ interface NavigationFooterProps {
   onBack: () => void
   onNext: () => void
   isLoading?: boolean
+  variant?: 'mobile' | 'desktop'
 }
 
 export function NavigationFooter({
@@ -16,12 +17,23 @@ export function NavigationFooter({
   onBack,
   onNext,
   isLoading = false,
+  variant = 'desktop',
 }: NavigationFooterProps) {
   const isFirst = currentStep === 1
   const isLast = currentStep === totalSteps
 
+  const footerClass =
+    variant === 'mobile'
+      ? 'flex h-20 items-center gap-3 border-t border-border bg-card px-5'
+      : 'mt-6 flex items-center justify-between'
+
+  const nextClass =
+    variant === 'mobile'
+      ? 'flex h-11 flex-1 items-center justify-center gap-1.5 rounded-[10px] text-[14px] font-semibold text-white transition-opacity'
+      : 'flex h-11 w-auto items-center justify-center gap-1.5 rounded-[10px] px-8 text-[14px] font-semibold text-white transition-opacity'
+
   return (
-    <footer className="flex h-20 items-center gap-3 border-t border-border bg-card px-5">
+    <footer className={footerClass}>
       {/* Back button */}
       <button
         onClick={onBack}
@@ -37,7 +49,7 @@ export function NavigationFooter({
       <button
         onClick={onNext}
         disabled={!canGoNext || isLoading}
-        className={`flex h-11 flex-1 items-center justify-center gap-1.5 rounded-[10px] text-[14px] font-semibold text-white transition-opacity
+        className={`${nextClass}
           ${!canGoNext || isLoading ? 'cursor-not-allowed opacity-50' : 'hover:opacity-90'}
           ${isLast ? 'bg-success' : 'bg-brand'}`}
       >
