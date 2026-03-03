@@ -2,8 +2,6 @@ import type { IDashcamRepository } from '@/domain/ports/IDashcamRepository'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 
-const RECORDING_TIME_ORDER: Record<string, number> = { '1h': 1, '2h': 2, '4h': 4, '8h': 8 }
-
 export interface ScoredProduct {
   product: DashcamProduct
   matchScore: number
@@ -47,16 +45,6 @@ export class DashcamRecommendationService {
       } else if (answers.videoQuality === 'muy-buena') {
         score += 15
         reasons.push('Muy buena calidad de imagen')
-      }
-    }
-
-    // Recording time match
-    if (answers.recordingTime) {
-      const needed = RECORDING_TIME_ORDER[answers.recordingTime] ?? 1
-      const available = RECORDING_TIME_ORDER[product.maxRecordingTime] ?? 1
-      if (available >= needed) {
-        score += 20
-        reasons.push(`Graba hasta ${product.maxRecordingTime} en bucle`)
       }
     }
 

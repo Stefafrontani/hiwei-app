@@ -18,7 +18,7 @@ import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import type { VehicleType } from '@/domain/value-objects/VehicleType'
 import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
 import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
-import type { RecordingTime } from '@/domain/value-objects/RecordingTime'
+import type { VehicleUsage } from '@/domain/value-objects/VehicleUsage'
 import type { Extra } from '@/domain/value-objects/Extra'
 import type { Installation } from '@/domain/value-objects/Installation'
 
@@ -118,8 +118,8 @@ export default function QuizPage() {
               )}
               {currentStep === 4 && (
                 <Step4
-                  recordingTime={answers.recordingTime}
-                  onChange={(v) => update('recordingTime', v as RecordingTime)}
+                  vehicleUsage={answers.vehicleUsage}
+                  onChange={(v) => update('vehicleUsage', v as VehicleUsage)}
                 />
               )}
               {currentStep === 5 && (

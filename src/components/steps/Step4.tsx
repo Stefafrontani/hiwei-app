@@ -1,21 +1,21 @@
 import { Timer, Info } from 'lucide-react'
 import { OptionCard } from '@/components/quiz/OptionCard'
 import { InfoBox } from '@/components/quiz/InfoBox'
-import type { RecordingTime } from '@/domain/value-objects/RecordingTime'
+import type { VehicleUsage } from '@/domain/value-objects/VehicleUsage'
 
-const TIME_OPTIONS: { value: RecordingTime; label: string; subLabel: string }[] = [
-  { value: '1h', label: '1 h', subLabel: 'Básico' },
-  { value: '2h', label: '2 h', subLabel: 'Popular' },
-  { value: '4h', label: '4 h', subLabel: 'Recomendado' },
-  { value: '8h', label: '8 h', subLabel: 'Máximo' },
+const USAGE_OPTIONS: { value: VehicleUsage; label: string; subLabel: string }[] = [
+  { value: 'work_tool', label: 'Trabajo', subLabel: 'Taxi, delivery, remis' },
+  { value: 'commute', label: 'Viaje ocasional', subLabel: 'Uso diario' },
+  { value: 'recreational', label: 'Recreativo', subLabel: 'Uso ocasional' },
+  { value: 'other', label: 'Otro', subLabel: 'Sin preferencia' },
 ]
 
 interface Step4Props {
-  recordingTime?: RecordingTime
-  onChange: (time: RecordingTime) => void
+  vehicleUsage?: VehicleUsage
+  onChange: (usage: VehicleUsage) => void
 }
 
-export function Step4({ recordingTime, onChange }: Step4Props) {
+export function Step4({ vehicleUsage, onChange }: Step4Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* Step title */}
@@ -25,26 +25,26 @@ export function Step4({ recordingTime, onChange }: Step4Props) {
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
-            ¿Cuánto tiempo querés grabar?
+            ¿Qué uso le das al vehículo?
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
-            La grabación es continua en bucle
+            Esto nos ayuda a saber cuanto tiempo pasas por día arriba del auto y así poder calcular que duración de grabación continua necesitás
           </p>
         </div>
       </div>
 
-      {/* Time grid */}
+      {/* Usage options */}
       <div className="flex flex-col gap-2.5">
         <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
-          TIEMPO ESTIMADO DE GRABACIÓN CONTINUA *
+          USO PRINCIPAL DEL VEHÍCULO *
         </p>
         <div className="flex flex-wrap gap-2.5">
-          {TIME_OPTIONS.map(({ value, label, subLabel }) => (
+          {USAGE_OPTIONS.map(({ value, label, subLabel }) => (
             <OptionCard
               key={value}
               label={label}
               subLabel={subLabel}
-              isActive={recordingTime === value}
+              isActive={vehicleUsage === value}
               onClick={() => onChange(value)}
             />
           ))}
@@ -53,7 +53,7 @@ export function Step4({ recordingTime, onChange }: Step4Props) {
 
       <InfoBox
         icon={Info}
-        text="La dashcam graba en bucle sobreescribiendo los archivos más antiguos."
+        text="A mayor uso del vehículo, recomendamos una tarjeta de memoria con más capacidad para mayor tiempo de grabación."
         variant="orange"
       />
     </div>

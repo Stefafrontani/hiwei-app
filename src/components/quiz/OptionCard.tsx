@@ -23,7 +23,7 @@ export function OptionCard({ icon: Icon, label, subLabel, isActive, onClick }: O
         className={`h-[22px] w-[22px] md:h-7 md:w-7 ${isActive ? 'text-brand' : 'text-muted-foreground'}`}
       />}
       {label && <span
-        className={`text-[18px] font-semibold md:text-[13px] ${isActive ? 'text-brand' : 'text-muted-foreground'}`}
+        className={`text-[12px] font-semibold md:text-[13px] ${isActive ? 'text-brand' : 'text-muted-foreground'}`}
       >
         {label}
       </span>}

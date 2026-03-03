@@ -28,7 +28,10 @@ export function ConfigSummaryCard({ answers }: ConfigSummaryCardProps) {
   if (answers.vehicleType) tags.push({ label: VEHICLE_LABELS[answers.vehicleType] ?? answers.vehicleType, active: true })
   if (answers.videoQuality) tags.push({ label: QUALITY_LABELS[answers.videoQuality] ?? answers.videoQuality, active: false })
   if (answers.cameraPosition) tags.push({ label: CAMERA_LABELS[answers.cameraPosition] ?? answers.cameraPosition, active: false })
-  if (answers.recordingTime) tags.push({ label: answers.recordingTime, active: false })
+  const usageLabels: Record<string, string> = {
+    commute: 'Uso diario', work_tool: 'Trabajo', recreational: 'Recreativo', other: 'Otro',
+  }
+  if (answers.vehicleUsage) tags.push({ label: usageLabels[answers.vehicleUsage] ?? answers.vehicleUsage, active: false })
   answers.extras.forEach((e) => tags.push({ label: EXTRA_LABELS[e] ?? e, active: false }))
 
   return (
