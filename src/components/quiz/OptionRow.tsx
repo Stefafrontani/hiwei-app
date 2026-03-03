@@ -47,7 +47,7 @@ export function OptionRow({
       onClick={onClick}
       className={`flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left transition-all
         ${isActive
-          ? `border-2 ${c!.border} ${c!.bg}`
+          ? `border ${c!.border} ${c!.bg}`
           : 'border border-border bg-card hover:border-brand/40'}`}
     >
       {/* Icon */}
