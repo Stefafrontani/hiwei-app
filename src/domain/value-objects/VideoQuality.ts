@@ -1,1 +1,1 @@
-export type VideoQuality = 'muy-buena' | 'superior'
+export type VideoQuality = 'buena' | 'muy-buena' | 'superior'
