@@ -1,8 +1,8 @@
 import type { LucideIcon } from 'lucide-react'
 
 interface OptionCardProps {
-  icon: LucideIcon
-  label: string
+  icon?: LucideIcon
+  label?: string
   subLabel?: string
   isActive: boolean
   onClick: () => void
@@ -19,14 +19,14 @@ export function OptionCard({ icon: Icon, label, subLabel, isActive, onClick }: O
           ? 'border-2 border-brand bg-brand/10'
           : 'border border-border bg-card hover:border-brand/40'}`}
     >
-      <Icon
+      {Icon && <Icon
         className={`h-[22px] w-[22px] md:h-7 md:w-7 ${isActive ? 'text-brand' : 'text-muted-foreground'}`}
-      />
-      <span
-        className={`text-[11px] font-semibold md:text-[13px] ${isActive ? 'text-brand' : 'text-muted-foreground'}`}
+      />}
+      {label && <span
+        className={`text-[18px] font-semibold md:text-[13px] ${isActive ? 'text-brand' : 'text-muted-foreground'}`}
       >
         {label}
-      </span>
+      </span>}
       {subLabel && (
         <span className={`text-[10px] font-medium ${isActive ? 'text-brand/80' : 'text-muted-foreground'}`}>
           {subLabel}
