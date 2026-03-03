@@ -3,12 +3,12 @@ import { OptionRow } from '@/components/quiz/OptionRow'
 import { InfoBox } from '@/components/quiz/InfoBox'
 import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
 
-interface Step2QualityProps {
+interface Step2Props {
   videoQuality?: VideoQuality
   onChange: (quality: VideoQuality) => void
 }
 
-export function Step2Quality({ videoQuality, onChange }: Step2QualityProps) {
+export function Step2({ videoQuality, onChange }: Step2Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* Step title */}

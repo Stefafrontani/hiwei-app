@@ -38,12 +38,12 @@ const EXTRAS_CONFIG = [
   },
 ]
 
-interface Step5ExtrasProps {
+interface Step5Props {
   extras: Extra[]
   onChange: (extras: Extra[]) => void
 }
 
-export function Step5Extras({ extras, onChange }: Step5ExtrasProps) {
+export function Step5({ extras, onChange }: Step5Props) {
   const toggle = (value: Extra, checked: boolean) => {
     if (checked) {
       onChange([...extras, value])

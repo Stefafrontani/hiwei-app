@@ -2,12 +2,12 @@ import { Camera } from 'lucide-react'
 import { OptionRow } from '@/components/quiz/OptionRow'
 import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 
-interface Step3CamerasProps {
+interface Step3Props {
   cameraPosition?: CameraPosition
   onChange: (position: CameraPosition) => void
 }
 
-export function Step3Cameras({ cameraPosition, onChange }: Step3CamerasProps) {
+export function Step3({ cameraPosition, onChange }: Step3Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* Step title */}

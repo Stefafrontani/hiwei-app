@@ -7,12 +7,12 @@ import { SubtitleBar } from '@/components/quiz/SubtitleBar'
 import { ProgressBar } from '@/components/quiz/ProgressBar'
 import { NavigationFooter } from '@/components/quiz/NavigationFooter'
 import { DesktopSidebar } from '@/components/quiz/DesktopSidebar'
-import { Step1Vehicle } from '@/components/steps/Step1Vehicle'
-import { Step2Quality } from '@/components/steps/Step2Quality'
-import { Step3Cameras } from '@/components/steps/Step3Cameras'
-import { Step4Time } from '@/components/steps/Step4Time'
-import { Step5Extras } from '@/components/steps/Step5Extras'
-import { Step6Installation } from '@/components/steps/Step6Installation'
+import { Step1 } from '@/components/steps/Step1'
+import { Step2 } from '@/components/steps/Step2'
+import { Step3 } from '@/components/steps/Step3'
+import { Step4 } from '@/components/steps/Step4'
+import { Step5 } from '@/components/steps/Step5'
+import { Step6 } from '@/components/steps/Step6'
 import { createEmptyAnswers, isStepComplete } from '@/domain/entities/QuizAnswers'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import type { VehicleType } from '@/domain/value-objects/VehicleType'
@@ -96,7 +96,7 @@ export default function QuizPage() {
           <div className="flex-1 overflow-y-auto px-5 py-4 md:px-12 md:py-8">
             <div className="mx-auto max-w-2xl">
               {currentStep === 1 && (
-                <Step1Vehicle
+                <Step1
                   vehicleType={answers.vehicleType}
                   vehicleYear={answers.vehicleYear}
                   showYearError={showYearError}
@@ -105,31 +105,31 @@ export default function QuizPage() {
                 />
               )}
               {currentStep === 2 && (
-                <Step2Quality
+                <Step2
                   videoQuality={answers.videoQuality}
                   onChange={(v) => update('videoQuality', v as VideoQuality)}
                 />
               )}
               {currentStep === 3 && (
-                <Step3Cameras
+                <Step3
                   cameraPosition={answers.cameraPosition}
                   onChange={(v) => update('cameraPosition', v as CameraPosition)}
                 />
               )}
               {currentStep === 4 && (
-                <Step4Time
+                <Step4
                   recordingTime={answers.recordingTime}
                   onChange={(v) => update('recordingTime', v as RecordingTime)}
                 />
               )}
               {currentStep === 5 && (
-                <Step5Extras
+                <Step5
                   extras={answers.extras}
                   onChange={(v) => update('extras', v as Extra[])}
                 />
               )}
               {currentStep === 6 && (
-                <Step6Installation
+                <Step6
                   installation={answers.installation}
                   onChange={(v) => update('installation', v as Installation)}
                 />

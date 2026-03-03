@@ -10,12 +10,12 @@ const TIME_OPTIONS: { value: RecordingTime; label: string; subLabel: string }[] 
   { value: '8h', label: '8 h', subLabel: 'Máximo' },
 ]
 
-interface Step4TimeProps {
+interface Step4Props {
   recordingTime?: RecordingTime
   onChange: (time: RecordingTime) => void
 }
 
-export function Step4Time({ recordingTime, onChange }: Step4TimeProps) {
+export function Step4({ recordingTime, onChange }: Step4Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* Step title */}

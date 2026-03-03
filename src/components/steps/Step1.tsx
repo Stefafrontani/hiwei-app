@@ -21,7 +21,7 @@ const VEHICLE_OPTIONS: { type: VehicleType; label: string; icon: typeof Car }[] 
 
 const YEARS = Array.from({ length: 30 }, (_, i) => String(new Date().getFullYear() - i))
 
-interface Step1VehicleProps {
+interface Step1Props {
   vehicleType?: VehicleType
   vehicleYear?: number
   showYearError: boolean
@@ -29,13 +29,13 @@ interface Step1VehicleProps {
   onVehicleYearChange: (year: number) => void
 }
 
-export function Step1Vehicle({
+export function Step1({
   vehicleType,
   vehicleYear,
   showYearError,
   onVehicleTypeChange,
   onVehicleYearChange,
-}: Step1VehicleProps) {
+}: Step1Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* Step title */}
