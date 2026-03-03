@@ -63,7 +63,7 @@ export function Step1({
             <OptionCard
               key={type}
               icon={icon}
-              label={label}
+              subLabel={label}
               isActive={vehicleType === type}
               onClick={() => onVehicleTypeChange(type)}
             />

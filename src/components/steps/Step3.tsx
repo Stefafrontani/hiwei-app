@@ -20,7 +20,7 @@ export function Step3({ cameraPosition, onChange }: Step3Props) {
             ¿Cuántas cámaras necesitás?
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
-            Cada opción incluye todo lo necesario
+            Podés grabar distintos ángulos.
           </p>
         </div>
       </div>
@@ -50,7 +50,7 @@ export function Step3({ cameraPosition, onChange }: Step3Props) {
         <OptionRow
           icon={Camera}
           title="Frontal + Trasera + Interior"
-          description="Cobertura completa: ruta y habitáculo"
+          description="Cubre adelante atras y tambien el interior de tu vehiculo"
           isActive={cameraPosition === 'frontal-trasera-interior'}
           onClick={() => onChange('frontal-trasera-interior')}
         />

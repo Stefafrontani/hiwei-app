@@ -36,13 +36,12 @@ export function Step4({ recordingTime, onChange }: Step4Props) {
       {/* Time grid */}
       <div className="flex flex-col gap-2.5">
         <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
-          TIEMPO CONTINUO DE GRABACIÓN *
+          TIEMPO ESTIMADO DE GRABACIÓN CONTINUA *
         </p>
         <div className="flex flex-wrap gap-2.5">
           {TIME_OPTIONS.map(({ value, label, subLabel }) => (
             <OptionCard
               key={value}
-              icon={Timer}
               label={label}
               subLabel={subLabel}
               isActive={recordingTime === value}
@@ -55,7 +54,7 @@ export function Step4({ recordingTime, onChange }: Step4Props) {
       <InfoBox
         icon={Info}
         text="La dashcam graba en bucle sobreescribiendo los archivos más antiguos."
-        variant="blue"
+        variant="orange"
       />
     </div>
   )
