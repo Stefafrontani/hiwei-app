@@ -32,9 +32,9 @@ export class SupabaseDashcamRepository implements IDashcamRepository {
   async getAll(): Promise<DashcamProduct[]> {
     const client = createServerClient()
     const { data, error } = await client
-      .from('dashcam_products')
+      .from('dashcam')
       .select('*')
-      .order('price', { ascending: true })
+      .order('price_final_display', { ascending: true })
 
     if (error) throw new Error(`Failed to fetch products: ${error.message}`)
     return (data ?? []).map(rowToProduct)
@@ -43,7 +43,7 @@ export class SupabaseDashcamRepository implements IDashcamRepository {
   async getById(id: string): Promise<DashcamProduct | undefined> {
     const client = createServerClient()
     const { data, error } = await client
-      .from('dashcam_products')
+      .from('dashcam')
       .select('*')
       .eq('id', id)
       .maybeSingle()
