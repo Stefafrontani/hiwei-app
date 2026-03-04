@@ -1,7 +1,6 @@
 export type { VehicleType } from './VehicleType'
 export type { VideoQuality } from './VideoQuality'
 export type { CameraPosition } from './CameraPosition'
-export type { RecordingTime } from './RecordingTime'
 export type { ParkingMode } from './ParkingMode'
 export type { VehicleUsage } from './VehicleUsage'
 export type { Installation } from './Installation'
