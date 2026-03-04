@@ -1,32 +1,26 @@
-import { Star, ShoppingCart } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 
 interface MainRecommendationCardProps {
   product: DashcamProduct
+  matchScore: number
 }
 
-export function MainRecommendationCard({ product }: MainRecommendationCardProps) {
+export function MainRecommendationCard({ product, matchScore }: MainRecommendationCardProps) {
   return (
     <div className="flex flex-col gap-3 rounded-xl bg-brand p-4 md:gap-3.5 md:p-5">
-      {/* Badge */}
-      <div>
+      {/* Badge + Score */}
+      <div className="flex items-center justify-between">
         <span className="rounded-md bg-brand/90 px-2 py-1 text-[10px] font-semibold tracking-[0.5px] text-white/70">
           RECOMENDACIÓN PRINCIPAL
+        </span>
+        <span className="rounded-full bg-white/20 px-2.5 py-1 text-[12px] font-bold text-white">
+          {matchScore}%
         </span>
       </div>
 
       {/* Name */}
       <p className="text-[20px] font-bold text-white md:text-[24px]">{product.name}</p>
-
-      {/* Stars */}
-      <div className="flex items-center gap-1.5">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star key={i} className="h-3.5 w-3.5 fill-[#FCD34D] text-[#FCD34D] md:h-4 md:w-4" />
-        ))}
-        <span className="text-[12px] font-medium text-white/70 md:text-[13px]">
-          {product.rating} ({product.reviewCount} reseñas)
-        </span>
-      </div>
 
       {/* Description */}
       <p className="text-[12px] leading-relaxed text-white/70 md:text-[13px]">
