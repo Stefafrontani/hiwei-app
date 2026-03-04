@@ -21,7 +21,7 @@ const STEP_CONFIG = [
     }
     return a.vehicleUsage ? labels[a.vehicleUsage] : 'Pendiente'
   }},
-  { step: 5, label: 'Extras', getSummary: (a: QuizAnswers) => a.extras.length > 0 ? `${a.extras.length} extra${a.extras.length > 1 ? 's' : ''}` : 'Ninguno' },
+  { step: 5, label: 'Modo estacionamiento', getSummary: (a: QuizAnswers) => a.parkingMode === 'si' ? 'Sí' : a.parkingMode === 'no' ? 'No' : 'Pendiente' },
   { step: 6, label: 'Instalación', getSummary: (a: QuizAnswers) => a.installation === 'si' ? 'Con instalación' : a.installation === 'no' ? 'Sin instalación' : 'Pendiente' },
 ]
 

@@ -38,7 +38,7 @@ export function Step6({ installation, onChange }: Step6Props) {
 
         <OptionRow
           icon={Package}
-          title="No, solo quiero el producto"
+          title="No, prefiero instalarlo por mi cuenta"
           description="Te enviamos con todo lo necesario para instalar."
           isActive={installation === 'no'}
           onClick={() => onChange('no')}

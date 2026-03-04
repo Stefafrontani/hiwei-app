@@ -19,7 +19,7 @@ import type { VehicleType } from '@/domain/value-objects/VehicleType'
 import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
 import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 import type { VehicleUsage } from '@/domain/value-objects/VehicleUsage'
-import type { Extra } from '@/domain/value-objects/Extra'
+import type { ParkingMode } from '@/domain/value-objects/ParkingMode'
 import type { Installation } from '@/domain/value-objects/Installation'
 
 const TOTAL_STEPS = 6
@@ -124,8 +124,8 @@ export default function QuizPage() {
               )}
               {currentStep === 5 && (
                 <Step5
-                  extras={answers.extras}
-                  onChange={(v) => update('extras', v as Extra[])}
+                  parkingMode={answers.parkingMode}
+                  onChange={(v) => update('parkingMode', v as ParkingMode)}
                 />
               )}
               {currentStep === 6 && (

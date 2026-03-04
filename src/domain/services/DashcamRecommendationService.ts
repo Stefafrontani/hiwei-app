@@ -48,16 +48,6 @@ export class DashcamRecommendationService {
       }
     }
 
-    // Extras
-    if (answers.extras.includes('modo-estacionamiento') && product.supportsParking) {
-      score += 10
-      reasons.push('Compatible con modo estacionamiento')
-    }
-    if (answers.extras.includes('control-bluetooth') && product.supportsBluetooth) {
-      score += 5
-      reasons.push('Compatible con control Bluetooth')
-    }
-
     // Installation
     if (answers.installation === 'si' && product.supportsInstallation) {
       score += 5

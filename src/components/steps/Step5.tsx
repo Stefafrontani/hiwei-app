@@ -1,92 +1,55 @@
-import { Package, Sun, Bluetooth, Car, Info } from 'lucide-react'
-import { CheckboxRow } from '@/components/quiz/CheckboxRow'
+import { Car, X, Check, Info } from 'lucide-react'
+import { OptionRow } from '@/components/quiz/OptionRow'
 import { InfoBox } from '@/components/quiz/InfoBox'
-import type { Extra } from '@/domain/value-objects/Extra'
-
-const EXTRAS_CONFIG = [
-  {
-    value: 'filtro-polarizador' as Extra,
-    icon: Sun,
-    title: 'Filtro polarizador',
-    description: 'Mejora imagen filtrando reflejos y luz.',
-  },
-  {
-    value: 'control-bluetooth' as Extra,
-    icon: Bluetooth,
-    title: 'Control Bluetooth',
-    description: 'Botón para guardar clips rápidamente.',
-    note: (
-      <InfoBox
-        icon={Info}
-        text="Disponibilidad según modelo."
-        variant="blue"
-      />
-    ),
-  },
-  {
-    value: 'modo-estacionamiento' as Extra,
-    icon: Car,
-    title: 'Modo estacionamiento',
-    description: 'Permite grabar cuando el auto está apagado.',
-    note: (
-      <InfoBox
-        icon={Info}
-        text="Requiere kit de estacionamiento para un uso seguro y prolijo."
-        variant="amber"
-      />
-    ),
-  },
-]
+import type { ParkingMode } from '@/domain/value-objects/ParkingMode'
 
 interface Step5Props {
-  extras: Extra[]
-  onChange: (extras: Extra[]) => void
+  parkingMode?: ParkingMode
+  onChange: (mode: ParkingMode) => void
 }
 
-export function Step5({ extras, onChange }: Step5Props) {
-  const toggle = (value: Extra, checked: boolean) => {
-    if (checked) {
-      onChange([...extras, value])
-    } else {
-      onChange(extras.filter((e) => e !== value))
-    }
-  }
-
+export function Step5({ parkingMode, onChange }: Step5Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* Step title */}
       <div className="flex items-start gap-2.5">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-brand/10">
-          <Package className="h-[18px] w-[18px] text-brand" />
+          <Car className="h-[18px] w-[18px] text-brand" />
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
-            Extras sugeridos
+            ¿Querés que la dashcam funcione con el auto apagado?
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
-            Seleccioná los que quieras agregar
+            Esto se conoce como &quot;modo estacionamiento&quot;
           </p>
         </div>
       </div>
 
-      {/* Checkboxes */}
+      {/* Options */}
       <div className="flex flex-col gap-3">
-        <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
-          ACCESORIOS OPCIONALES
-        </p>
+        <OptionRow
+          icon={Check}
+          title="Sí, quiero que grabe con el auto apagado"
+          description="Se incluirá un hardwire kit para conectar la dashcam a la fusilera del auto."
+          isActive={parkingMode === 'si'}
+          onClick={() => onChange('si')}
+        />
 
-        {EXTRAS_CONFIG.map(({ value, icon, title, description, note }) => (
-          <CheckboxRow
-            key={value}
-            icon={icon}
-            title={title}
-            description={description}
-            isChecked={extras.includes(value)}
-            onChange={(checked) => toggle(value, checked)}
-            note={note}
-          />
-        ))}
+        <OptionRow
+          icon={X}
+          title="No, solo cuando manejo"
+          description="La dashcam grabará únicamente con el motor encendido."
+          isActive={parkingMode === 'no'}
+          onClick={() => onChange('no')}
+        />
       </div>
+
+      <InfoBox
+        icon={Info}
+        text="El modo estacionamiento requiere un hardwire kit que conecta la dashcam a la fusilera del auto, permitiendo que funcione con el motor apagado."
+        variant="amber"
+      />
     </div>
   )
 }

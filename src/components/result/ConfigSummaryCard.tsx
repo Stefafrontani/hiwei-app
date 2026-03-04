@@ -12,11 +12,6 @@ const CAMERA_LABELS: Record<string, string> = {
   'frontal-trasera': 'Frontal + Trasera',
   'frontal-trasera-interior': 'F+T+Interior',
 }
-const EXTRA_LABELS: Record<string, string> = {
-  'filtro-polarizador': 'Polarizador',
-  'control-bluetooth': 'Bluetooth',
-  'modo-estacionamiento': 'Estacionamiento',
-}
 
 interface ConfigSummaryCardProps {
   answers: QuizAnswers
@@ -32,7 +27,7 @@ export function ConfigSummaryCard({ answers }: ConfigSummaryCardProps) {
     commute: 'Uso diario', work_tool: 'Trabajo', recreational: 'Recreativo', other: 'Otro',
   }
   if (answers.vehicleUsage) tags.push({ label: usageLabels[answers.vehicleUsage] ?? answers.vehicleUsage, active: false })
-  answers.extras.forEach((e) => tags.push({ label: EXTRA_LABELS[e] ?? e, active: false }))
+  if (answers.parkingMode === 'si') tags.push({ label: 'Modo estacionamiento', active: false })
 
   return (
     <div className="flex flex-col gap-2.5 rounded-xl border border-border bg-card p-3.5 md:p-4">

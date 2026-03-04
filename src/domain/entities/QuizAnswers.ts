@@ -2,7 +2,7 @@ import type { VehicleType } from '@/domain/value-objects/VehicleType'
 import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
 import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 import type { VehicleUsage } from '@/domain/value-objects/VehicleUsage'
-import type { Extra } from '@/domain/value-objects/Extra'
+import type { ParkingMode } from '@/domain/value-objects/ParkingMode'
 import type { Installation } from '@/domain/value-objects/Installation'
 
 export interface QuizAnswers {
@@ -11,7 +11,7 @@ export interface QuizAnswers {
   videoQuality?: VideoQuality
   cameraPosition?: CameraPosition
   vehicleUsage?: VehicleUsage
-  extras: Extra[]
+  parkingMode?: ParkingMode
   installation?: Installation
 }
 
@@ -21,12 +21,12 @@ export function isStepComplete(answers: QuizAnswers, step: number): boolean {
     case 2: return !!answers.videoQuality
     case 3: return !!answers.cameraPosition
     case 4: return !!answers.vehicleUsage
-    case 5: return true // extras are optional
+    case 5: return !!answers.parkingMode
     case 6: return !!answers.installation
     default: return false
   }
 }
 
 export function createEmptyAnswers(): QuizAnswers {
-  return { extras: [] }
+  return {}
 }
