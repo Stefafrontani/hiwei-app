@@ -57,6 +57,9 @@ export default function ResultadoPage() {
     router.push('/quiz')
   }
 
+  console.log("result");
+  console.log(result);
+
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-background">
       <AppHeader />

@@ -96,7 +96,7 @@ const PRODUCTS: DashcamProduct[] = [
     ],
     tags: ['económico', 'básico', 'frontal'],
     cameraPositions: ['frontal'],
-    maxQuality: 'muy-buena',
+    maxQuality: 'buena',
     maxRecordingTime: '1h',
     supportsParking: false,
     supportsBluetooth: false,
