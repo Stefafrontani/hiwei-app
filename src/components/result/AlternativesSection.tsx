@@ -35,9 +35,9 @@ export function AlternativesSection({ alternatives }: AlternativesSectionProps) 
                 </span>
                 <span className="text-[12px] text-muted-foreground">{alt.product.priceDisplay}</span>
               </div>
-              <button className="shrink-0 rounded-lg bg-muted px-3 py-2 text-[12px] font-semibold text-foreground transition-colors hover:bg-muted">
-                Ver
-              </button>
+              <span className="shrink-0 rounded-full bg-muted px-2 py-1 text-[11px] font-bold text-muted-foreground">
+                {alt.matchScore}%
+              </span>
             </div>
           )
         })}

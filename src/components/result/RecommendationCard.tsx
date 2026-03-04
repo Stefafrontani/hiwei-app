@@ -1,10 +1,6 @@
-import { Check, Star, Tag } from 'lucide-react'
+import { Check, Star } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
-
-function formatPrice(price: number) {
-  return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(price)
-}
 
 interface RecommendationCardProps {
   product: DashcamProduct
@@ -18,9 +14,6 @@ export function RecommendationCard({ product, matchScore, reasons }: Recommendat
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
-          <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground">
-            {product.brand}
-          </p>
           <h2 className="text-[22px] font-bold text-foreground md:text-[26px]">{product.name}</h2>
         </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
@@ -34,8 +27,7 @@ export function RecommendationCard({ product, matchScore, reasons }: Recommendat
 
       {/* Price */}
       <div className="flex items-center gap-2">
-        <Tag className="h-4 w-4 text-muted-foreground" />
-        <span className="text-[24px] font-bold text-foreground">{formatPrice(product.price)}</span>
+        <span className="text-[24px] font-bold text-foreground">{product.priceFinalDisplay}</span>
       </div>
 
       {/* Description */}

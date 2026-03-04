@@ -2,15 +2,17 @@ import { ClipboardList } from 'lucide-react'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 
 const VEHICLE_LABELS: Record<string, string> = {
-  auto: 'Auto', pickup: 'Pickup', suv: 'SUV', moto: 'Moto',
+  auto: 'Auto', pickup: 'Pickup', suv: 'SUV',
 }
 const QUALITY_LABELS: Record<string, string> = {
-  'muy-buena': 'Muy buena', superior: 'Superior',
+  'buena': 'Calidad buena',
+  'muy-buena': 'Calidad muy buena',
+  'superior': 'Calidad superior',
 }
-const CAMERA_LABELS: Record<string, string> = {
-  frontal: 'Frontal',
-  'frontal-trasera': 'Frontal + Trasera',
-  'frontal-trasera-interior': 'F+T+Interior',
+const CAMERA_COUNT_LABELS: Record<number, string> = {
+  1: 'Frontal',
+  2: 'Frontal + Trasera',
+  3: 'Frontal + Trasera + Interior',
 }
 
 interface ConfigSummaryCardProps {
@@ -20,9 +22,9 @@ interface ConfigSummaryCardProps {
 export function ConfigSummaryCard({ answers }: ConfigSummaryCardProps) {
   const tags: { label: string; active: boolean }[] = []
 
-  if (answers.vehicleType) tags.push({ label: VEHICLE_LABELS[answers.vehicleType] ?? answers.vehicleType, active: true })
+  if (answers.vehicleType) tags.push({ label: VEHICLE_LABELS[answers.vehicleType] ?? answers.vehicleType, active: false })
   if (answers.videoQuality) tags.push({ label: QUALITY_LABELS[answers.videoQuality] ?? answers.videoQuality, active: false })
-  if (answers.cameraPosition) tags.push({ label: CAMERA_LABELS[answers.cameraPosition] ?? answers.cameraPosition, active: false })
+  if (answers.cameraPositions?.length) tags.push({ label: CAMERA_COUNT_LABELS[answers.cameraPositions.length] ?? `${answers.cameraPositions.length} cámaras`, active: false })
   const usageLabels: Record<string, string> = {
     commute: 'Uso diario', work_tool: 'Trabajo', recreational: 'Recreativo', other: 'Otro',
   }
@@ -36,7 +38,7 @@ export function ConfigSummaryCard({ answers }: ConfigSummaryCardProps) {
         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand/10">
           <ClipboardList className="h-3.5 w-3.5 text-brand" />
         </div>
-        <span className="text-[13px] font-semibold text-foreground md:text-[14px]">Tu configuración</span>
+        <span className="text-[13px] font-semibold text-foreground md:text-[14px]">Recordá tus preferencias</span>
       </div>
       {/* Divider */}
       <div className="h-px bg-muted" />

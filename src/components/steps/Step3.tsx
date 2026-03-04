@@ -3,11 +3,16 @@ import { OptionRow } from '@/components/quiz/OptionRow'
 import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 
 interface Step3Props {
-  cameraPosition?: CameraPosition
-  onChange: (position: CameraPosition) => void
+  cameraPositions?: CameraPosition[]
+  onChange: (positions: CameraPosition[]) => void
 }
 
-export function Step3({ cameraPosition, onChange }: Step3Props) {
+function arraysEqual(a?: CameraPosition[], b?: CameraPosition[]) {
+  if (!a || !b || a.length !== b.length) return false
+  return a.every((v, i) => v === b[i])
+}
+
+export function Step3({ cameraPositions, onChange }: Step3Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* Step title */}
@@ -35,24 +40,24 @@ export function Step3({ cameraPosition, onChange }: Step3Props) {
           icon={Camera}
           title="Frontal"
           description="Una cámara apuntando hacia el frente"
-          isActive={cameraPosition === 'frontal'}
-          onClick={() => onChange('frontal')}
+          isActive={arraysEqual(cameraPositions, ['frontal'])}
+          onClick={() => onChange(['frontal'])}
         />
 
         <OptionRow
           icon={Camera}
           title="Frontal + Trasera"
           description="Cubre adelante y atrás del vehículo"
-          isActive={cameraPosition === 'frontal-trasera'}
-          onClick={() => onChange('frontal-trasera')}
+          isActive={arraysEqual(cameraPositions, ['frontal', 'trasera'])}
+          onClick={() => onChange(['frontal', 'trasera'])}
         />
 
         <OptionRow
           icon={Camera}
           title="Frontal + Trasera + Interior"
           description="Cubre adelante atras y tambien el interior de tu vehiculo"
-          isActive={cameraPosition === 'frontal-trasera-interior'}
-          onClick={() => onChange('frontal-trasera-interior')}
+          isActive={arraysEqual(cameraPositions, ['frontal', 'trasera', 'interior'])}
+          onClick={() => onChange(['frontal', 'trasera', 'interior'])}
         />
       </div>
     </div>

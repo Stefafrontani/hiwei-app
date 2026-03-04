@@ -9,7 +9,7 @@ export interface QuizAnswers {
   vehicleType?: VehicleType
   vehicleYear?: number
   videoQuality?: VideoQuality
-  cameraPosition?: CameraPosition
+  cameraPositions?: CameraPosition[]
   vehicleUsage?: VehicleUsage
   parkingMode?: ParkingMode
   installation?: Installation
@@ -19,7 +19,7 @@ export function isStepComplete(answers: QuizAnswers, step: number): boolean {
   switch (step) {
     case 1: return !!answers.vehicleType && !!answers.vehicleYear
     case 2: return !!answers.videoQuality
-    case 3: return !!answers.cameraPosition
+    case 3: return !!answers.cameraPositions?.length
     case 4: return !!answers.vehicleUsage
     case 5: return !!answers.parkingMode
     case 6: return !!answers.installation

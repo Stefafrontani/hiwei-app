@@ -57,6 +57,9 @@ export default function ResultadoPage() {
     router.push('/quiz')
   }
 
+  console.log("result");
+  console.log(result);
+
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-background">
       <AppHeader />
@@ -113,7 +116,7 @@ export default function ResultadoPage() {
               <ConfigSummaryCard answers={answers} />
 
               {/* Main Recommendation */}
-              <MainRecommendationCard product={result.main.product} />
+              <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} />
 
               {/* Installation card (only when user chose installation) */}
               {answers.installation === 'si' && <InstallationCard />}

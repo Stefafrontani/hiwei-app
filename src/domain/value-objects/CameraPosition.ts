@@ -1,1 +1,1 @@
-export type CameraPosition = 'frontal' | 'frontal-trasera' | 'frontal-trasera-interior'
+export type CameraPosition = 'frontal' | 'trasera' | 'interior'

@@ -5,12 +5,12 @@ const STEP_CONFIG = [
   { step: 1, label: 'Vehículo', getSummary: (a: QuizAnswers) => a.vehicleType ? `${capitalize(a.vehicleType)} · Año: ${a.vehicleYear ?? '—'}` : 'Pendiente' },
   { step: 2, label: 'Calidad de grabación', getSummary: (a: QuizAnswers) => a.videoQuality ? (a.videoQuality === 'muy-buena' ? 'Muy buena' : 'Calidad superior') : 'Pendiente' },
   { step: 3, label: 'Cantidad de cámaras', getSummary: (a: QuizAnswers) => {
-    const labels: Record<string, string> = {
-      'frontal': 'Solo frontal',
-      'frontal-trasera': 'Frontal + Trasera',
-      'frontal-trasera-interior': 'Frontal + Trasera + Interior',
+    const labels: Record<number, string> = {
+      1: 'Solo frontal',
+      2: 'Frontal + Trasera',
+      3: 'Frontal + Trasera + Interior',
     }
-    return a.cameraPosition ? labels[a.cameraPosition] : 'Pendiente'
+    return a.cameraPositions?.length ? labels[a.cameraPositions.length] ?? `${a.cameraPositions.length} cámaras` : 'Pendiente'
   }},
   { step: 4, label: 'Uso del vehículo', getSummary: (a: QuizAnswers) => {
     const labels: Record<string, string> = {
