@@ -3,28 +3,22 @@ import type { IDashcamRepository } from '@/domain/ports/IDashcamRepository'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
-import type { RecordingTime } from '@/domain/value-objects/RecordingTime'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function rowToProduct(row: Record<string, any>): DashcamProduct {
   return {
     id: row.id as string,
     name: row.name as string,
-    brand: row.brand as string,
     description: row.description as string,
-    price: row.price as number,
     priceDisplay: row.price_display as string,
-    rating: Number(row.rating),
-    reviewCount: row.review_count as number,
+    priceFinalDisplay: row.price_final_display as string,
+    discount: (row.discount as string) ?? null,
+    priceAllCashDisplay: row.price_all_cash_display as string,
     specs: row.specs as string[],
     features: row.features as string[],
     tags: row.tags as string[],
     cameraPositions: row.camera_positions as CameraPosition[],
     maxQuality: row.max_quality as VideoQuality,
-    maxRecordingTime: row.max_recording_time as RecordingTime,
-    supportsParking: row.supports_parking as boolean,
-    supportsBluetooth: row.supports_bluetooth as boolean,
-    supportsInstallation: row.supports_installation as boolean,
   }
 }
 
