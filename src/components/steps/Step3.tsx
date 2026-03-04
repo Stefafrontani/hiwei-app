@@ -2,12 +2,12 @@ import { Camera } from 'lucide-react'
 import { OptionRow } from '@/components/quiz/OptionRow'
 import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 
-interface Step3CamerasProps {
+interface Step3Props {
   cameraPosition?: CameraPosition
   onChange: (position: CameraPosition) => void
 }
 
-export function Step3Cameras({ cameraPosition, onChange }: Step3CamerasProps) {
+export function Step3({ cameraPosition, onChange }: Step3Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* Step title */}
@@ -20,7 +20,7 @@ export function Step3Cameras({ cameraPosition, onChange }: Step3CamerasProps) {
             ¿Cuántas cámaras necesitás?
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
-            Cada opción incluye todo lo necesario
+            Podés grabar distintos ángulos.
           </p>
         </div>
       </div>
@@ -50,7 +50,7 @@ export function Step3Cameras({ cameraPosition, onChange }: Step3CamerasProps) {
         <OptionRow
           icon={Camera}
           title="Frontal + Trasera + Interior"
-          description="Cobertura completa: ruta y habitáculo"
+          description="Cubre adelante atras y tambien el interior de tu vehiculo"
           isActive={cameraPosition === 'frontal-trasera-interior'}
           onClick={() => onChange('frontal-trasera-interior')}
         />

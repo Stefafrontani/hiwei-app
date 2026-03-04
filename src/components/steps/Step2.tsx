@@ -3,12 +3,12 @@ import { OptionRow } from '@/components/quiz/OptionRow'
 import { InfoBox } from '@/components/quiz/InfoBox'
 import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
 
-interface Step2QualityProps {
+interface Step2Props {
   videoQuality?: VideoQuality
   onChange: (quality: VideoQuality) => void
 }
 
-export function Step2Quality({ videoQuality, onChange }: Step2QualityProps) {
+export function Step2({ videoQuality, onChange }: Step2Props) {
   return (
     <div className="flex flex-col gap-5">
       {/* Step title */}
@@ -21,7 +21,7 @@ export function Step2Quality({ videoQuality, onChange }: Step2QualityProps) {
             ¿Qué calidad de imagen preferís?
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
-            Elegí según tu prioridad de uso
+            Elegí según tus preferencias.
           </p>
         </div>
       </div>
@@ -34,16 +34,23 @@ export function Step2Quality({ videoQuality, onChange }: Step2QualityProps) {
 
         <OptionRow
           icon={Video}
-          title="Muy buena (recomendada)"
-          description="Se ve excelente para el uso diario."
-          isActive={videoQuality === 'muy-buena'}
-          onClick={() => onChange('muy-buena')}
-          badge="Recomendada"
+          title="Buena"
+          description="La calidad es suficiente para grabar lo que importa: patentes."
+          isActive={videoQuality === 'buena'}
+          onClick={() => onChange('buena')}
         />
 
         <OptionRow
           icon={Video}
-          title="Calidad superior (máximo detalle)"
+          title="Muy buena"
+          description="Además de registrar lo importante, tambien captura otros detalles."
+          isActive={videoQuality === 'muy-buena'}
+          onClick={() => onChange('muy-buena')}
+        />
+
+        <OptionRow
+          icon={Video}
+          title="Calidad superior"
           description="Mejor lectura de detalles y nitidez, ideal si querés lo mejor."
           isActive={videoQuality === 'superior'}
           onClick={() => onChange('superior')}

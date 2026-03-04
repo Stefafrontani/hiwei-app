@@ -7,30 +7,30 @@ import { SubtitleBar } from '@/components/quiz/SubtitleBar'
 import { ProgressBar } from '@/components/quiz/ProgressBar'
 import { NavigationFooter } from '@/components/quiz/NavigationFooter'
 import { DesktopSidebar } from '@/components/quiz/DesktopSidebar'
-import { Step1Vehicle } from '@/components/steps/Step1Vehicle'
-import { Step2Quality } from '@/components/steps/Step2Quality'
-import { Step3Cameras } from '@/components/steps/Step3Cameras'
-import { Step4Time } from '@/components/steps/Step4Time'
-import { Step5Extras } from '@/components/steps/Step5Extras'
-import { Step6Installation } from '@/components/steps/Step6Installation'
+import { Step1 } from '@/components/steps/Step1'
+import { Step2 } from '@/components/steps/Step2'
+import { Step3 } from '@/components/steps/Step3'
+import { Step4 } from '@/components/steps/Step4'
+import { Step5 } from '@/components/steps/Step5'
+import { Step6 } from '@/components/steps/Step6'
 import { createEmptyAnswers, isStepComplete } from '@/domain/entities/QuizAnswers'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import type { VehicleType } from '@/domain/value-objects/VehicleType'
 import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
 import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
-import type { RecordingTime } from '@/domain/value-objects/RecordingTime'
-import type { Extra } from '@/domain/value-objects/Extra'
+import type { VehicleUsage } from '@/domain/value-objects/VehicleUsage'
+import type { ParkingMode } from '@/domain/value-objects/ParkingMode'
 import type { Installation } from '@/domain/value-objects/Installation'
 
 const TOTAL_STEPS = 6
 
 const SUBTITLE_CONFIG: Record<number, { variant: 'blue' | 'green'; title: string; subtitle: string }> = {
-  1: { variant: 'blue', title: 'Asesor Inteligente de Dashcams', subtitle: 'Respondé 6 preguntas y encontrá tu dashcam ideal' },
-  2: { variant: 'blue', title: 'Asesor Inteligente de Dashcams', subtitle: 'Respondé 6 preguntas y encontrá tu dashcam ideal' },
-  3: { variant: 'blue', title: 'Asesor Inteligente de Dashcams', subtitle: 'Respondé 6 preguntas y encontrá tu dashcam ideal' },
-  4: { variant: 'blue', title: 'Asesor Inteligente de Dashcams', subtitle: 'Respondé 6 preguntas y encontrá tu dashcam ideal' },
-  5: { variant: 'blue', title: 'Asesor Inteligente de Dashcams', subtitle: 'Respondé 6 preguntas y encontrá tu dashcam ideal' },
-  6: { variant: 'green', title: 'Asesor Inteligente de Dashcams', subtitle: '¡Último paso! Ya casi tenés tu recomendación' },
+  1: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
+  2: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
+  3: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
+  4: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
+  5: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
+  6: { variant: 'green', title: '¡Encontrá tu DASHCAM!', subtitle: '¡Último paso! Ya casi estamos' },
 }
 
 export default function QuizPage() {
@@ -92,11 +92,11 @@ export default function QuizPage() {
           {/* Progress */}
           <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
 
-          {/* Step content */}
+          {/* Step content + navigation */}
           <div className="flex-1 overflow-y-auto px-5 py-4 md:px-12 md:py-8">
             <div className="mx-auto max-w-2xl">
               {currentStep === 1 && (
-                <Step1Vehicle
+                <Step1
                   vehicleType={answers.vehicleType}
                   vehicleYear={answers.vehicleYear}
                   showYearError={showYearError}
@@ -105,47 +105,62 @@ export default function QuizPage() {
                 />
               )}
               {currentStep === 2 && (
-                <Step2Quality
+                <Step2
                   videoQuality={answers.videoQuality}
                   onChange={(v) => update('videoQuality', v as VideoQuality)}
                 />
               )}
               {currentStep === 3 && (
-                <Step3Cameras
+                <Step3
                   cameraPosition={answers.cameraPosition}
                   onChange={(v) => update('cameraPosition', v as CameraPosition)}
                 />
               )}
               {currentStep === 4 && (
-                <Step4Time
-                  recordingTime={answers.recordingTime}
-                  onChange={(v) => update('recordingTime', v as RecordingTime)}
+                <Step4
+                  vehicleUsage={answers.vehicleUsage}
+                  onChange={(v) => update('vehicleUsage', v as VehicleUsage)}
                 />
               )}
               {currentStep === 5 && (
-                <Step5Extras
-                  extras={answers.extras}
-                  onChange={(v) => update('extras', v as Extra[])}
+                <Step5
+                  parkingMode={answers.parkingMode}
+                  onChange={(v) => update('parkingMode', v as ParkingMode)}
                 />
               )}
               {currentStep === 6 && (
-                <Step6Installation
+                <Step6
                   installation={answers.installation}
                   onChange={(v) => update('installation', v as Installation)}
                 />
               )}
+
+              {/* Navigation footer — desktop: inline after content */}
+              <div className="hidden md:block">
+                <NavigationFooter
+                  currentStep={currentStep}
+                  totalSteps={TOTAL_STEPS}
+                  canGoNext={canGoNext}
+                  onBack={handleBack}
+                  onNext={handleNext}
+                  isLoading={isLoading}
+                />
+              </div>
             </div>
           </div>
 
-          {/* Navigation footer */}
-          <NavigationFooter
-            currentStep={currentStep}
-            totalSteps={TOTAL_STEPS}
-            canGoNext={canGoNext}
-            onBack={handleBack}
-            onNext={handleNext}
-            isLoading={isLoading}
-          />
+          {/* Navigation footer — mobile: pinned at bottom */}
+          <div className="md:hidden">
+            <NavigationFooter
+              currentStep={currentStep}
+              totalSteps={TOTAL_STEPS}
+              canGoNext={canGoNext}
+              onBack={handleBack}
+              onNext={handleNext}
+              isLoading={isLoading}
+              variant="mobile"
+            />
+          </div>
         </main>
 
         {/* Desktop sidebar */}
