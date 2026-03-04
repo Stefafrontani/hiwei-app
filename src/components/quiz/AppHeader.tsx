@@ -1,7 +1,8 @@
 'use client'
 
-import { MessageCircle } from 'lucide-react'
+import { MessageCircle, Gift } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface StepPillsProps {
   currentStep: number
@@ -64,19 +65,31 @@ export function AppHeader({ currentStep, showStepPills = false }: AppHeaderProps
         </div>
       )}
 
-      {/* WhatsApp CTA */}
-      <a
-        href="https://wa.me/1141695824"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="border border-whatsapp flex items-center gap-1.5 rounded-lg px-3 py-2 text-white transition-opacity hover:opacity-90 md:gap-2 md:px-[18px] md:py-2.5"
-      >
-        <MessageCircle className="h-3.5 w-3.5 md:h-4 md:w-4 text-whatsapp" />
-        <span className="text-[11px] font-semibold md:text-[14px] text-whatsapp">
-          <span className="md:hidden">¡Hablemos!</span>
-          <span className="hidden md:inline">¡Hablemos!</span>
-        </span>
-      </a>
+      {/* CTAs */}
+      <div className="flex items-center gap-2">
+        <Link
+          href="/beneficios"
+          className="flex items-center gap-1.5 rounded-lg border border-brand px-3 py-2 transition-opacity hover:opacity-90 md:gap-2 md:px-[18px] md:py-2.5"
+        >
+          <Gift className="h-3.5 w-3.5 text-brand md:h-4 md:w-4" />
+          <span className="text-[11px] font-semibold text-brand md:text-[14px]">
+            <span className="md:hidden">Beneficios</span>
+            <span className="hidden md:inline">Beneficios exclusivos</span>
+          </span>
+        </Link>
+        <a
+          href="https://wa.me/1141695824"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 rounded-lg border border-whatsapp px-3 py-2 transition-opacity hover:opacity-90 md:gap-2 md:px-[18px] md:py-2.5"
+        >
+          <MessageCircle className="h-3.5 w-3.5 text-whatsapp md:h-4 md:w-4" />
+          <span className="text-[11px] font-semibold text-whatsapp md:text-[14px]">
+            <span className="md:hidden">¡Hablemos!</span>
+            <span className="hidden md:inline">¡Hablemos!</span>
+          </span>
+        </a>
+      </div>
     </header>
   )
 }
