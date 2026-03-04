@@ -2,7 +2,6 @@ import type { IDashcamRepository } from '@/domain/ports/IDashcamRepository'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
-import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 
 export interface ScoredProduct {
   product: DashcamProduct
@@ -16,15 +15,15 @@ const QUALITY_LEVEL: Record<VideoQuality, number> = {
   'superior': 3,
 }
 
-const CAMERA_LEVEL: Record<CameraPosition, number> = {
-  'frontal': 1,
-  'frontal-trasera': 2,
-  'frontal-trasera-interior': 3,
-}
-
 const MAX_SCORE_PER_DIMENSION = 50
-const DEFICIT_PENALTY = 10 // product has LESS than user wants
+const DEFICIT_PENALTY = 15 // product has LESS than user wants
 const EXCESS_PENALTY = 5   // product has MORE than user wants
+
+const CAMERA_COUNT_LABELS: Record<number, string> = {
+  1: 'cámara frontal',
+  2: 'cámaras frontal y trasera',
+  3: 'cobertura total (frontal, trasera e interior)',
+}
 
 export class DashcamRecommendationService {
   constructor(private readonly repository: IDashcamRepository) {}
@@ -47,10 +46,6 @@ export class DashcamRecommendationService {
     return MAX_SCORE_PER_DIMENSION - Math.abs(distance) * penalty
   }
 
-  private maxCameraLevel(product: DashcamProduct): number {
-    return Math.max(...product.cameraPositions.map((pos) => CAMERA_LEVEL[pos]))
-  }
-
   private score(product: DashcamProduct, answers: QuizAnswers): ScoredProduct {
     const reasons: string[] = []
 
@@ -70,21 +65,16 @@ export class DashcamRecommendationService {
       }
     }
 
-    // Camera position dimension (50 points max)
+    // Camera count dimension (50 points max)
     let cameraScore = MAX_SCORE_PER_DIMENSION
-    if (answers.cameraPosition) {
-      const userLevel = CAMERA_LEVEL[answers.cameraPosition]
-      const productLevel = this.maxCameraLevel(product)
-      cameraScore = this.dimensionScore(productLevel, userLevel)
+    if (answers.cameraPositions?.length) {
+      const userCount = answers.cameraPositions.length
+      const productCount = product.cameraPositions.length
+      cameraScore = this.dimensionScore(productCount, userCount)
 
-      const cameraLabels: Record<CameraPosition, string> = {
-        'frontal': 'cámara frontal',
-        'frontal-trasera': 'cámaras frontal y trasera',
-        'frontal-trasera-interior': 'cobertura total (frontal, trasera e interior)',
-      }
-      if (productLevel === userLevel) {
-        reasons.push(`Incluye ${cameraLabels[answers.cameraPosition]}`)
-      } else if (productLevel > userLevel) {
+      if (productCount === userCount) {
+        reasons.push(`Incluye ${CAMERA_COUNT_LABELS[userCount] ?? `${userCount} cámaras`}`)
+      } else if (productCount > userCount) {
         reasons.push('Más cámaras de las que necesitás')
       } else {
         reasons.push('Menos cobertura de cámaras que la preferida')

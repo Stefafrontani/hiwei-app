@@ -112,8 +112,8 @@ export default function QuizPage() {
               )}
               {currentStep === 3 && (
                 <Step3
-                  cameraPosition={answers.cameraPosition}
-                  onChange={(v) => update('cameraPosition', v as CameraPosition)}
+                  cameraPositions={answers.cameraPositions}
+                  onChange={(v) => update('cameraPositions', v as CameraPosition[])}
                 />
               )}
               {currentStep === 4 && (
