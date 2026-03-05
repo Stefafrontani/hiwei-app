@@ -1,4 +1,4 @@
-import { ShoppingCart } from 'lucide-react'
+import { Flame } from 'lucide-react'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 
 interface MainRecommendationCardProps {
@@ -8,49 +8,43 @@ interface MainRecommendationCardProps {
 
 export function MainRecommendationCard({ product, matchScore }: MainRecommendationCardProps) {
   return (
-    <div className="flex flex-col gap-3 rounded-xl bg-brand p-4 md:gap-3.5 md:p-5">
-      {/* Badge + Score */}
-      <div className="flex items-center justify-between">
-        <span className="rounded-md bg-brand/90 px-2 py-1 text-[10px] font-semibold tracking-[0.5px] text-white/70">
-          RECOMENDACIÓN PRINCIPAL
-        </span>
-        <span className="rounded-full bg-white/20 px-2.5 py-1 text-[12px] font-bold text-white">
+    <div className="relative flex flex-col gap-3 overflow-hidden rounded-xl border-2 border-brand bg-brand/5 p-4 shadow-md shadow-brand/10 md:gap-3.5 md:p-5">
+      {/* Accent bar */}
+      <div className="absolute inset-x-0 top-0 h-1 bg-brand" />
+
+      {/* Name + Score row */}
+      <div className="flex items-start justify-between gap-3 pt-1">
+        <p className="text-[18px] font-bold text-foreground md:text-[22px]">{product.name}</p>
+        <span className="shrink-0 rounded-lg bg-brand px-3 py-1.5 text-[13px] font-bold text-white md:text-[14px]">
           {matchScore}%
         </span>
       </div>
 
-      {/* Name */}
-      <p className="text-[20px] font-bold text-white md:text-[24px]">{product.name}</p>
+      {/* Discount badge */}
+      {product.discount && (
+        <div>
+          <span className="inline-flex items-center gap-1 rounded-md bg-warning/20 px-2.5 py-1 text-[11px] font-bold text-warning">
+            <Flame className="h-3.5 w-3.5" />
+            {product.discount}
+          </span>
+        </div>
+      )}
 
-      {/* Description */}
-      <p className="text-[12px] leading-relaxed text-white/70 md:text-[13px]">
+      {/* Description — truncated to 2 lines */}
+      <p className="line-clamp-2 text-[12px] leading-relaxed text-muted-foreground md:text-[13px]">
         {product.description}
       </p>
 
-      {/* Spec tags */}
+      {/* Spec chips — first 3 only */}
       <div className="flex flex-wrap gap-1.5">
-        {product.specs.map((spec) => (
+        {product.specs.slice(0, 3).map((spec) => (
           <span
             key={spec}
-            className="rounded-md bg-brand/90 px-2 py-1 text-[10px] font-semibold text-white/70"
+            className="rounded-full bg-brand/15 px-3 py-1 text-[11px] font-semibold text-brand"
           >
             {spec}
           </span>
         ))}
-      </div>
-
-      {/* Divider */}
-      <div className="h-px bg-brand/90" />
-
-      {/* Price row */}
-      <div className="flex items-center justify-between">
-        <span className="text-[15px] font-bold text-white md:text-[17px]">
-          {product.priceDisplay}
-        </span>
-        <button className="flex items-center gap-1.5 rounded-lg bg-white px-3.5 py-2.5 text-[12px] font-bold text-brand transition-opacity hover:opacity-90">
-          <ShoppingCart className="h-3.5 w-3.5" />
-          Ver precio
-        </button>
       </div>
     </div>
   )

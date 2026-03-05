@@ -6,7 +6,7 @@ import { Camera, Headphones, Send, RotateCcw } from 'lucide-react'
 import { AppHeader } from '@/components/quiz/AppHeader'
 import { ResultSummaryBanner } from '@/components/result/ResultSummaryBanner'
 import { MainRecommendationCard } from '@/components/result/MainRecommendationCard'
-import { InstallationCard } from '@/components/result/InstallationCard'
+import { BudgetBreakdown } from '@/components/result/BudgetBreakdown'
 import { AlternativesSection } from '@/components/result/AlternativesSection'
 import { ResultDesktopSidebar } from '@/components/result/ResultDesktopSidebar'
 import { ContactAdvisorOverlay } from '@/components/overlays/ContactAdvisorOverlay'
@@ -98,8 +98,8 @@ export default function ResultadoPage() {
               {/* Main Recommendation */}
               <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} />
 
-              {/* Installation card (only when user chose installation) */}
-              {answers.installation === 'si' && <InstallationCard />}
+              {/* Budget Breakdown */}
+              <BudgetBreakdown product={result.main.product} answers={answers} />
 
               {/* Alternatives */}
               <AlternativesSection alternatives={result.alternatives} />
