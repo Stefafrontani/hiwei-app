@@ -14,6 +14,7 @@ import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendat
 import { createEmptyAnswers } from '@/domain/entities/QuizAnswers'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import type { RecommendationResult } from '@/application/use-cases/dashcam/GetRecommendation/GetRecommendation.dto'
+import type { MemoryCard } from '@/domain/entities/MemoryCard'
 
 /* Flow: Recommendation - (1): UI */
 export default function ResultadoPage() {
@@ -27,6 +28,7 @@ export default function ResultadoPage() {
   const [result, setResult] = useState<RecommendationResult | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [memoryCards, setMemoryCards] = useState<MemoryCard[]>([])
   const [showContact, setShowContact] = useState(false)
   const [showSend, setShowSend] = useState(false)
 
@@ -37,15 +39,18 @@ export default function ResultadoPage() {
       return
     }
 
-    fetch('/api/recommendation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(answers),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.error) throw new Error(data.error)
-        setResult(data.data)
+    Promise.all([
+      fetch('/api/recommendation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(answers),
+      }).then((r) => r.json()),
+      fetch('/api/memory-cards').then((r) => r.json()),
+    ])
+      .then(([recData, cardsData]) => {
+        if (recData.error) throw new Error(recData.error)
+        setResult(recData.data)
+        if (cardsData.data) setMemoryCards(cardsData.data)
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
@@ -99,7 +104,7 @@ export default function ResultadoPage() {
               <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} />
 
               {/* Budget Breakdown */}
-              <BudgetBreakdown product={result.main.product} answers={answers} />
+              <BudgetBreakdown product={result.main.product} answers={answers} memoryCards={memoryCards} />
 
               {/* Alternatives */}
               <AlternativesSection alternatives={result.alternatives} />

@@ -1,9 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Receipt, HardDrive, MemoryStick, CreditCard, Banknote } from 'lucide-react'
+import { Receipt, HardDrive, MemoryStick, CreditCard, Banknote, Pencil } from 'lucide-react'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
+import type { MemoryCard } from '@/domain/entities/MemoryCard'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
+import { getRecommendedMemoryCardSize } from '@/domain/services/getRecommendedMemoryCardSize'
+import { MemoryCardPicker } from './MemoryCardPicker'
 
 const HWK_PRICE = 70000
 const INSTALLATION_PRICE = 210000
@@ -38,16 +41,24 @@ function MiniCheckbox({ checked, onChange }: { checked: boolean; onChange: () =>
 interface BudgetBreakdownProps {
   product: DashcamProduct
   answers: QuizAnswers
+  memoryCards: MemoryCard[]
 }
 
-export function BudgetBreakdown({ product, answers }: BudgetBreakdownProps) {
+export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdownProps) {
   const dashcamPrice = parsePrice(product.priceFinalDisplay)
+  const recommendedSize = getRecommendedMemoryCardSize(answers.vehicleUsage)
+  const defaultCard = memoryCards.find((c) => c.size === recommendedSize) ?? memoryCards[0]
 
+  const [selectedCard, setSelectedCard] = useState<MemoryCard | null>(defaultCard ?? null)
+  const [showCardPicker, setShowCardPicker] = useState(false)
   const [includeHWK, setIncludeHWK] = useState(answers.parkingMode === 'si')
   const [includeInstallation, setIncludeInstallation] = useState(answers.installation === 'si')
 
+  const memoryCardPrice = selectedCard ? parsePrice(selectedCard.priceFinalDisplay) : 0
+
   const total =
     dashcamPrice +
+    memoryCardPrice +
     (includeHWK ? HWK_PRICE : 0) +
     (includeInstallation ? INSTALLATION_PRICE : 0)
 
@@ -79,24 +90,42 @@ export function BudgetBreakdown({ product, answers }: BudgetBreakdownProps) {
               <span className="text-[13px] font-semibold text-foreground">
                 {product.name.length > 20 ? `${product.name.slice(0, 20)}…` : product.name}
               </span>
-              <span className="text-[11px] text-muted-foreground">Cámara seleccionada</span>
+              <span className="text-[11px] text-muted-foreground">Camara seleccionada</span>
             </div>
           </div>
           <span className="shrink-0 text-[13px] font-semibold text-foreground">{product.priceFinalDisplay}</span>
         </div>
 
-        {/* Memory card — placeholder */}
+        {/* Memory card */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-2.5">
             <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-brand/10">
               <MemoryStick className="h-3 w-3 text-brand" />
             </div>
             <div className="flex flex-col">
-              <span className="text-[13px] font-semibold text-foreground">Tarjeta de memoria</span>
-              <span className="text-[11px] text-muted-foreground">Según uso del vehículo — por definir</span>
+              <span className="text-[13px] font-semibold text-foreground">
+                {selectedCard ? `Tarjeta ${selectedCard.name}` : 'Tarjeta de memoria'}
+              </span>
+              <div className="flex items-center gap-1">
+                <span className="text-[11px] text-muted-foreground">
+                  {selectedCard ? `~X hs de grabacion` : 'Sin tarjetas disponibles'}
+                </span>
+                {memoryCards.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowCardPicker(true)}
+                    className="flex items-center gap-0.5 text-[10px] font-medium text-brand/70 transition-colors hover:text-brand"
+                  >
+                    <Pencil className="h-2.5 w-2.5" />
+                    editar
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-          <span className="shrink-0 text-[12px] font-medium text-muted-foreground">—</span>
+          <span className="shrink-0 text-[13px] font-semibold text-foreground">
+            {selectedCard ? selectedCard.priceFinalDisplay : '—'}
+          </span>
         </div>
       </div>
 
@@ -108,7 +137,7 @@ export function BudgetBreakdown({ product, answers }: BudgetBreakdownProps) {
           Extras opcionales
         </p>
         <p className="text-[10px] text-muted-foreground">
-          Podés incluir o quitar extras de tu presupuesto
+          Podes incluir o quitar extras de tu presupuesto
         </p>
       </div>
 
@@ -121,7 +150,7 @@ export function BudgetBreakdown({ product, answers }: BudgetBreakdownProps) {
             </div>
             <div className="flex flex-col">
               <span className="text-[13px] font-semibold text-foreground">Hardwire Kit (HWK)</span>
-              <span className="text-[11px] text-muted-foreground">Modo estacionamiento — conexión a fusilera</span>
+              <span className="text-[11px] text-muted-foreground">Modo estacionamiento — conexion a fusilera</span>
             </div>
           </div>
           <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeHWK ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
@@ -136,8 +165,8 @@ export function BudgetBreakdown({ product, answers }: BudgetBreakdownProps) {
               <MiniCheckbox checked={includeInstallation} onChange={() => setIncludeInstallation((v) => !v)} />
             </div>
             <div className="flex flex-col">
-              <span className="text-[13px] font-semibold text-foreground">Instalación profesional</span>
-              <span className="text-[11px] text-muted-foreground">Técnico certificado — en taller</span>
+              <span className="text-[13px] font-semibold text-foreground">Instalacion profesional</span>
+              <span className="text-[11px] text-muted-foreground">Tecnico certificado — en taller</span>
             </div>
           </div>
           <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeInstallation ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
@@ -160,16 +189,28 @@ export function BudgetBreakdown({ product, answers }: BudgetBreakdownProps) {
         <div className="flex items-center gap-1.5">
           <CreditCard className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-[11px] font-medium text-muted-foreground md:text-[12px]">
-            Todo el presupuesto en 6 cuotas sin interés
+            <span className="font-bold text-foreground">6</span> cuotas <span className="font-bold text-foreground">sin interes</span> de <span className="font-bold text-foreground">{formatARS(Math.round(total / 6))}</span>
           </span>
         </div>
         <div className="flex items-center gap-1.5">
           <Banknote className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-[11px] font-medium text-muted-foreground md:text-[12px]">
-            10% off en efectivo o transferencia
+            <span className="font-bold text-foreground">10% off</span> en <span className="font-bold text-foreground">efectivo o transferencia</span>
           </span>
         </div>
       </div>
+
+      {/* Memory Card Picker Modal */}
+      {selectedCard && memoryCards.length > 0 && (
+        <MemoryCardPicker
+          open={showCardPicker}
+          onClose={() => setShowCardPicker(false)}
+          memoryCards={memoryCards}
+          selectedId={selectedCard.id}
+          recommendedSize={recommendedSize}
+          onSelect={setSelectedCard}
+        />
+      )}
     </div>
   )
 }
