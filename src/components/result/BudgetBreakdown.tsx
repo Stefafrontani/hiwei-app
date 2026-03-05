@@ -1,4 +1,7 @@
-import { Receipt, HardDrive, Plug, Wrench, MemoryStick, CreditCard, Banknote } from 'lucide-react'
+'use client'
+
+import { useState } from 'react'
+import { Receipt, HardDrive, MemoryStick, CreditCard, Banknote } from 'lucide-react'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 
@@ -14,6 +17,24 @@ function formatARS(amount: number): string {
   return `$${amount.toLocaleString('es-AR')} ARS`
 }
 
+function MiniCheckbox({ checked, onChange }: { checked: boolean; onChange: () => void }) {
+  return (
+    <button
+      type="button"
+      role="checkbox"
+      aria-checked={checked}
+      onClick={onChange}
+      className={`flex h-4.5 w-4.5 shrink-0 cursor-pointer items-center justify-center rounded border-2 transition-colors ${checked ? 'border-brand bg-brand text-white' : 'border-muted-foreground/40 bg-transparent'}`}
+    >
+      {checked && (
+        <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none">
+          <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )}
+    </button>
+  )
+}
+
 interface BudgetBreakdownProps {
   product: DashcamProduct
   answers: QuizAnswers
@@ -25,7 +46,13 @@ export function BudgetBreakdown({ product, answers }: BudgetBreakdownProps) {
   const addInstallation = answers.installation === 'si'
   const hasExtras = addHWK || addInstallation
 
-  const total = dashcamPrice + (addHWK ? HWK_PRICE : 0) + (addInstallation ? INSTALLATION_PRICE : 0)
+  const [includeHWK, setIncludeHWK] = useState(true)
+  const [includeInstallation, setIncludeInstallation] = useState(true)
+
+  const total =
+    dashcamPrice +
+    (addHWK && includeHWK ? HWK_PRICE : 0) +
+    (addInstallation && includeInstallation ? INSTALLATION_PRICE : 0)
 
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 shadow-sm md:p-5">
@@ -81,40 +108,49 @@ export function BudgetBreakdown({ product, answers }: BudgetBreakdownProps) {
         <>
           <div className="h-px bg-border" />
 
-          <p className="text-[10px] font-semibold uppercase tracking-[1px] text-muted-foreground">
-            Extras opcionales
-          </p>
+          <div className="flex flex-col gap-0.5">
+            <p className="text-[10px] font-semibold uppercase tracking-[1px] text-muted-foreground">
+              Extras opcionales
+            </p>
+            <p className="text-[10px] text-muted-foreground">
+              Podés incluir o quitar extras de tu presupuesto
+            </p>
+          </div>
 
           <div className="flex flex-col gap-3">
             {/* HWK */}
             {addHWK && (
-              <div className="flex items-start justify-between gap-3">
+              <div className={`flex items-start justify-between gap-3 transition-opacity ${includeHWK ? '' : 'opacity-50'}`}>
                 <div className="flex items-start gap-2.5">
-                  <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-muted">
-                    <Plug className="h-3 w-3 text-muted-foreground" />
+                  <div className="mt-0.5 shrink-0">
+                    <MiniCheckbox checked={includeHWK} onChange={() => setIncludeHWK((v) => !v)} />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[13px] font-semibold text-foreground">Hardwire Kit (HWK)</span>
                     <span className="text-[11px] text-muted-foreground">Modo estacionamiento — conexión a fusilera</span>
                   </div>
                 </div>
-                <span className="shrink-0 text-[13px] font-semibold text-foreground">{formatARS(HWK_PRICE)}</span>
+                <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeHWK ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
+                  {formatARS(HWK_PRICE)}
+                </span>
               </div>
             )}
 
             {/* Installation */}
             {addInstallation && (
-              <div className="flex items-start justify-between gap-3">
+              <div className={`flex items-start justify-between gap-3 transition-opacity ${includeInstallation ? '' : 'opacity-50'}`}>
                 <div className="flex items-start gap-2.5">
-                  <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-muted">
-                    <Wrench className="h-3 w-3 text-muted-foreground" />
+                  <div className="mt-0.5 shrink-0">
+                    <MiniCheckbox checked={includeInstallation} onChange={() => setIncludeInstallation((v) => !v)} />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[13px] font-semibold text-foreground">Instalación profesional</span>
                     <span className="text-[11px] text-muted-foreground">Técnico certificado — en taller</span>
                   </div>
                 </div>
-                <span className="shrink-0 text-[13px] font-semibold text-foreground">{formatARS(INSTALLATION_PRICE)}</span>
+                <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeInstallation ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
+                  {formatARS(INSTALLATION_PRICE)}
+                </span>
               </div>
             )}
           </div>
