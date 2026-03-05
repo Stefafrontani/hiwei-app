@@ -68,7 +68,7 @@ export default function ResultadoPage() {
         {/* Main scrollable column */}
         <main className="flex flex-1 flex-col overflow-y-auto">
           {/* Summary Banner */}
-          <ResultSummaryBanner answers={answers} />
+          {result && !loading && <ResultSummaryBanner answers={answers} />}
 
           {/* Loading */}
           {loading && (
