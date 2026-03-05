@@ -42,17 +42,14 @@ interface BudgetBreakdownProps {
 
 export function BudgetBreakdown({ product, answers }: BudgetBreakdownProps) {
   const dashcamPrice = parsePrice(product.priceFinalDisplay)
-  const addHWK = answers.parkingMode === 'si'
-  const addInstallation = answers.installation === 'si'
-  const hasExtras = addHWK || addInstallation
 
-  const [includeHWK, setIncludeHWK] = useState(true)
-  const [includeInstallation, setIncludeInstallation] = useState(true)
+  const [includeHWK, setIncludeHWK] = useState(answers.parkingMode === 'si')
+  const [includeInstallation, setIncludeInstallation] = useState(answers.installation === 'si')
 
   const total =
     dashcamPrice +
-    (addHWK && includeHWK ? HWK_PRICE : 0) +
-    (addInstallation && includeInstallation ? INSTALLATION_PRICE : 0)
+    (includeHWK ? HWK_PRICE : 0) +
+    (includeInstallation ? INSTALLATION_PRICE : 0)
 
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 shadow-sm md:p-5">
@@ -104,58 +101,50 @@ export function BudgetBreakdown({ product, answers }: BudgetBreakdownProps) {
       </div>
 
       {/* === EXTRAS section === */}
-      {hasExtras && (
-        <>
-          <div className="h-px bg-border" />
+      <div className="h-px bg-border" />
 
-          <div className="flex flex-col gap-0.5">
-            <p className="text-[10px] font-semibold uppercase tracking-[1px] text-muted-foreground">
-              Extras opcionales
-            </p>
-            <p className="text-[10px] text-muted-foreground">
-              Podés incluir o quitar extras de tu presupuesto
-            </p>
+      <div className="flex flex-col gap-0.5">
+        <p className="text-[10px] font-semibold uppercase tracking-[1px] text-muted-foreground">
+          Extras opcionales
+        </p>
+        <p className="text-[10px] text-muted-foreground">
+          Podés incluir o quitar extras de tu presupuesto
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        {/* HWK */}
+        <div className={`flex items-start justify-between gap-3 transition-opacity ${includeHWK ? '' : 'opacity-50'}`}>
+          <div className="flex items-start gap-2.5">
+            <div className="mt-0.5 shrink-0">
+              <MiniCheckbox checked={includeHWK} onChange={() => setIncludeHWK((v) => !v)} />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[13px] font-semibold text-foreground">Hardwire Kit (HWK)</span>
+              <span className="text-[11px] text-muted-foreground">Modo estacionamiento — conexión a fusilera</span>
+            </div>
           </div>
+          <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeHWK ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
+            {formatARS(HWK_PRICE)}
+          </span>
+        </div>
 
-          <div className="flex flex-col gap-3">
-            {/* HWK */}
-            {addHWK && (
-              <div className={`flex items-start justify-between gap-3 transition-opacity ${includeHWK ? '' : 'opacity-50'}`}>
-                <div className="flex items-start gap-2.5">
-                  <div className="mt-0.5 shrink-0">
-                    <MiniCheckbox checked={includeHWK} onChange={() => setIncludeHWK((v) => !v)} />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[13px] font-semibold text-foreground">Hardwire Kit (HWK)</span>
-                    <span className="text-[11px] text-muted-foreground">Modo estacionamiento — conexión a fusilera</span>
-                  </div>
-                </div>
-                <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeHWK ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
-                  {formatARS(HWK_PRICE)}
-                </span>
-              </div>
-            )}
-
-            {/* Installation */}
-            {addInstallation && (
-              <div className={`flex items-start justify-between gap-3 transition-opacity ${includeInstallation ? '' : 'opacity-50'}`}>
-                <div className="flex items-start gap-2.5">
-                  <div className="mt-0.5 shrink-0">
-                    <MiniCheckbox checked={includeInstallation} onChange={() => setIncludeInstallation((v) => !v)} />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[13px] font-semibold text-foreground">Instalación profesional</span>
-                    <span className="text-[11px] text-muted-foreground">Técnico certificado — en taller</span>
-                  </div>
-                </div>
-                <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeInstallation ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
-                  {formatARS(INSTALLATION_PRICE)}
-                </span>
-              </div>
-            )}
+        {/* Installation */}
+        <div className={`flex items-start justify-between gap-3 transition-opacity ${includeInstallation ? '' : 'opacity-50'}`}>
+          <div className="flex items-start gap-2.5">
+            <div className="mt-0.5 shrink-0">
+              <MiniCheckbox checked={includeInstallation} onChange={() => setIncludeInstallation((v) => !v)} />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[13px] font-semibold text-foreground">Instalación profesional</span>
+              <span className="text-[11px] text-muted-foreground">Técnico certificado — en taller</span>
+            </div>
           </div>
-        </>
-      )}
+          <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeInstallation ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
+            {formatARS(INSTALLATION_PRICE)}
+          </span>
+        </div>
+      </div>
 
       {/* Divider */}
       <div className="h-px bg-border" />
