@@ -15,6 +15,7 @@ const PRODUCTS: DashcamProduct[] = [
     tags: ['Más vendido', 'Detector de radares', 'Económico', 'Precio-calidad', 'Flota', 'Taxi / Remis', 'Full HD Frontal', 'Full HD Trasera', 'Doble cobertura', 'WiFi', 'Grabación en bucle', 'GPS integrado', 'Bloqueo por impacto', 'G-Sensor'],
     cameraPositions: ['frontal', 'trasera'],
     maxQuality: 'buena',
+    cycle_size: 0.8,
   },
   {
     id: 'f7np',
@@ -29,6 +30,7 @@ const PRODUCTS: DashcamProduct[] = [
     tags: ['Recomendado', 'Precio-calidad', '4K Frontal', 'HD Trasera', 'Doble cobertura', 'WiFi', 'Grabación en bucle', 'GPS integrado', 'Bloqueo por impacto', 'G-Sensor'],
     cameraPositions: ['frontal', 'trasera'],
     maxQuality: 'superior',
+    cycle_size: 1.1,
   },
   {
     id: 'vs1',
@@ -43,6 +45,7 @@ const PRODUCTS: DashcamProduct[] = [
     tags: ['Discreto', 'Premium', '2K Frontal', 'WiFi', 'Grabación en bucle', 'GPS integrado', 'Bloqueo por impacto', 'G-Sensor'],
     cameraPositions: ['frontal'],
     maxQuality: 'superior',
+    cycle_size: 0.7,
   },
   {
     id: 'radares-4k',
@@ -57,6 +60,7 @@ const PRODUCTS: DashcamProduct[] = [
     tags: ['Recomendado', 'Precio-calidad', 'Detector de radares', '4K Frontal', '4K Trasera', 'Doble cobertura', 'WiFi', 'Grabación en bucle', 'GPS integrado', 'Bloqueo por impacto', 'G-Sensor'],
     cameraPositions: ['frontal', 'trasera'],
     maxQuality: 'muy-buena',
+    cycle_size: 2.3,
   },
   {
     id: 'f17-elite',
@@ -71,7 +75,8 @@ const PRODUCTS: DashcamProduct[] = [
     tags: ['Premium', 'Graba Interior', '4K Frontal', '2.5K Trasera', '1080p Interior', 'Triple cobertura', 'Alta nitidez', 'WiFi', 'Grabación en bucle', 'GPS integrado', 'Bloqueo por impacto', 'G-Sensor'],
     cameraPositions: ['frontal', 'trasera', 'interior'],
     maxQuality: 'superior',
-  },
+    cycle_size: 2.2,
+  }
 ]
 
 export class InMemoryDashcamRepository implements IDashcamRepository {
