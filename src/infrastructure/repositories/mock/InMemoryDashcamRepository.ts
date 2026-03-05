@@ -14,7 +14,7 @@ const PRODUCTS: DashcamProduct[] = [
     features: ['Cámara frontal Full HD 1080p', 'Cámara trasera HD 720p', 'Visión nocturna mejorada', 'Pantalla LCD 2.4"', 'Detección de movimiento'],
     tags: ['Más vendido', 'Detector de radares', 'Económico', 'Precio-calidad', 'Flota', 'Taxi / Remis', 'Full HD Frontal', 'Full HD Trasera', 'Doble cobertura', 'WiFi', 'Grabación en bucle', 'GPS integrado', 'Bloqueo por impacto', 'G-Sensor'],
     cameraPositions: ['frontal', 'trasera'],
-    maxQuality: 'muy-buena',
+    maxQuality: 'buena',
   },
   {
     id: 'f7np',
