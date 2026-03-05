@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Camera, Gift, Headphones, Send, RotateCcw } from 'lucide-react'
+import { Camera, Headphones, Send, RotateCcw } from 'lucide-react'
 import { AppHeader } from '@/components/quiz/AppHeader'
-import { ConfigSummaryCard } from '@/components/result/ConfigSummaryCard'
+import { ResultSummaryBanner } from '@/components/result/ResultSummaryBanner'
 import { MainRecommendationCard } from '@/components/result/MainRecommendationCard'
-import { InstallationCard } from '@/components/result/InstallationCard'
+import { BudgetBreakdown } from '@/components/result/BudgetBreakdown'
 import { AlternativesSection } from '@/components/result/AlternativesSection'
 import { ResultDesktopSidebar } from '@/components/result/ResultDesktopSidebar'
 import { ContactAdvisorOverlay } from '@/components/overlays/ContactAdvisorOverlay'
@@ -15,6 +14,7 @@ import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendat
 import { createEmptyAnswers } from '@/domain/entities/QuizAnswers'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import type { RecommendationResult } from '@/application/use-cases/dashcam/GetRecommendation/GetRecommendation.dto'
+import type { MemoryCard } from '@/domain/entities/MemoryCard'
 
 /* Flow: Recommendation - (1): UI */
 export default function ResultadoPage() {
@@ -28,6 +28,7 @@ export default function ResultadoPage() {
   const [result, setResult] = useState<RecommendationResult | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [memoryCards, setMemoryCards] = useState<MemoryCard[]>([])
   const [showContact, setShowContact] = useState(false)
   const [showSend, setShowSend] = useState(false)
 
@@ -38,15 +39,18 @@ export default function ResultadoPage() {
       return
     }
 
-    fetch('/api/recommendation', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(answers),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.error) throw new Error(data.error)
-        setResult(data.data)
+    Promise.all([
+      fetch('/api/recommendation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(answers),
+      }).then((r) => r.json()),
+      fetch('/api/memory-cards').then((r) => r.json()),
+    ])
+      .then(([recData, cardsData]) => {
+        if (recData.error) throw new Error(recData.error)
+        setResult(recData.data)
+        if (cardsData.data) setMemoryCards(cardsData.data)
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
@@ -68,15 +72,8 @@ export default function ResultadoPage() {
       <div className="flex flex-1 overflow-hidden">
         {/* Main scrollable column */}
         <main className="flex flex-1 flex-col overflow-y-auto">
-          {/* Success Banner */}
-          <div className="flex flex-col gap-1 bg-success/10 px-5 py-3.5 md:px-12">
-            <p className="text-[14px] font-bold text-success md:text-[16px]">
-              ¡Tu recomendación está lista!
-            </p>
-            <p className="text-[12px] text-success/70 md:text-[13px]">
-              Basada en tu configuración personalizada
-            </p>
-          </div>
+          {/* Summary Banner */}
+          {result && !loading && <ResultSummaryBanner answers={answers} />}
 
           {/* Loading */}
           {loading && (
@@ -103,23 +100,11 @@ export default function ResultadoPage() {
           {/* Content */}
           {result && !loading && (
             <div className="flex flex-col gap-4 px-4 py-4 md:px-12 md:py-8">
-              {/* Mobile CTA Beneficios (hidden on desktop — shown in sidebar) */}
-              <Link
-                href="/beneficios"
-                className="flex h-[54px] w-full items-center justify-center gap-2.5 rounded-xl bg-gradient-to-b from-brand to-brand/90 text-[15px] font-bold text-white transition-opacity hover:opacity-90 md:hidden"
-              >
-                <Gift className="h-5 w-5" />
-                Obtener beneficios exclusivos
-              </Link>
-
-              {/* Config Summary */}
-              <ConfigSummaryCard answers={answers} />
-
               {/* Main Recommendation */}
               <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} />
 
-              {/* Installation card (only when user chose installation) */}
-              {answers.installation === 'si' && <InstallationCard />}
+              {/* Budget Breakdown */}
+              <BudgetBreakdown product={result.main.product} answers={answers} memoryCards={memoryCards} />
 
               {/* Alternatives */}
               <AlternativesSection alternatives={result.alternatives} />
