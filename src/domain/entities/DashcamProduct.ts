@@ -14,5 +14,5 @@ export interface DashcamProduct {
   tags: string[]
   cameraPositions: CameraPosition[]
   maxQuality: VideoQuality
-  cycle_size: number
+  cycleSize: number
 }
