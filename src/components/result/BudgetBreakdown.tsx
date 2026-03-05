@@ -6,6 +6,7 @@ import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 import type { MemoryCard } from '@/domain/entities/MemoryCard'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import { getRecommendedMemoryCardSize } from '@/domain/services/getRecommendedMemoryCardSize'
+import { calculateRecordingHours } from '@/domain/services/calculateRecordingHours'
 import { MemoryCardPicker } from './MemoryCardPicker'
 
 const HWK_PRICE = 70000
@@ -108,7 +109,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
               </span>
               <div className="flex items-center gap-1">
                 <span className="text-[11px] text-muted-foreground">
-                  {selectedCard ? `~X hs de grabacion` : 'Sin tarjetas disponibles'}
+                  {selectedCard ? `${calculateRecordingHours(selectedCard.size, product.cycleSize)}+ hs de grabacion` : 'Sin tarjetas disponibles'}
                 </span>
                 {memoryCards.length > 0 && (
                   <button
@@ -208,6 +209,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
           memoryCards={memoryCards}
           selectedId={selectedCard.id}
           recommendedSize={recommendedSize}
+          cycleSize={product.cycleSize}
           onSelect={setSelectedCard}
         />
       )}

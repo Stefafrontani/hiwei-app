@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import type { MemoryCard } from '@/domain/entities/MemoryCard'
+import { calculateRecordingHours } from '@/domain/services/calculateRecordingHours'
 
 interface MemoryCardPickerProps {
   open: boolean
@@ -15,6 +16,7 @@ interface MemoryCardPickerProps {
   memoryCards: MemoryCard[]
   selectedId: number
   recommendedSize: number
+  cycleSize: number
   onSelect: (card: MemoryCard) => void
 }
 
@@ -34,6 +36,7 @@ function PickerContent({
   memoryCards,
   selectedId,
   recommendedSize,
+  cycleSize,
   onSelect,
   onClose,
 }: Omit<MemoryCardPickerProps, 'open'>) {
@@ -78,7 +81,7 @@ function PickerContent({
                   )}
                 </div>
                 <span className="text-[11px] text-muted-foreground">
-                  ~X hs de grabacion
+                  {calculateRecordingHours(card.size, cycleSize)}+ hs de grabacion
                 </span>
               </div>
               <span className="shrink-0 text-[13px] font-semibold text-foreground">
@@ -107,6 +110,7 @@ export function MemoryCardPicker({
   memoryCards,
   selectedId,
   recommendedSize,
+  cycleSize,
   onSelect,
 }: MemoryCardPickerProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
@@ -124,6 +128,7 @@ export function MemoryCardPicker({
             memoryCards={memoryCards}
             selectedId={selectedId}
             recommendedSize={recommendedSize}
+            cycleSize={cycleSize}
             onSelect={onSelect}
             onClose={onClose}
           />
@@ -154,6 +159,7 @@ export function MemoryCardPicker({
             memoryCards={memoryCards}
             selectedId={selectedId}
             recommendedSize={recommendedSize}
+            cycleSize={cycleSize}
             onSelect={onSelect}
             onClose={onClose}
           />
