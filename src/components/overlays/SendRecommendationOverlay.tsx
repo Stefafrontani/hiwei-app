@@ -9,15 +9,19 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { FeedbackState } from './FeedbackState'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import type { SendRecommendationForm } from '@/domain/entities/SendRecommendationForm'
+
+type RecommendationContext = Omit<SendRecommendationForm, 'name' | 'email' | 'phone'>
 
 interface SendRecommendationOverlayProps {
   open: boolean
   onClose: () => void
+  context?: RecommendationContext
 }
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
-function SendForm({ onClose }: { onClose: () => void }) {
+function SendForm({ onClose, context }: { onClose: () => void; context?: RecommendationContext }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -29,10 +33,16 @@ function SendForm({ onClose }: { onClose: () => void }) {
     setStatus('loading')
     setErrorMsg('')
     try {
+      const payload: SendRecommendationForm = {
+        ...context!,
+        name: name.trim() || undefined,
+        email: email.trim() || undefined,
+        phone: phone.trim() || undefined,
+      }
       const res = await fetch('/api/send-recommendation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone }),
+        body: JSON.stringify(payload),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Error al enviar')
@@ -79,22 +89,20 @@ function SendForm({ onClose }: { onClose: () => void }) {
 
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
-          <Label className="text-[12px] font-semibold text-foreground">Nombre y apellido *</Label>
+          <Label className="text-[12px] font-medium text-muted-foreground">Nombre y apellido (opcional)</Label>
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Ej: Juan Pérez"
-            required
             className="h-11 rounded-[10px] border-border text-[13px]"
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label className="text-[12px] font-semibold text-foreground">Email *</Label>
+          <Label className="text-[12px] font-medium text-muted-foreground">Email (opcional)</Label>
           <Input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="tu@email.com"
-            required
             type="email"
             className="h-11 rounded-[10px] border-border text-[13px]"
           />
@@ -113,7 +121,7 @@ function SendForm({ onClose }: { onClose: () => void }) {
 
       <Button
         type="submit"
-        disabled={status === 'loading'}
+        disabled={status === 'loading' || !context}
         variant="brand"
         className="flex h-[50px] w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
       >
@@ -124,7 +132,7 @@ function SendForm({ onClose }: { onClose: () => void }) {
   )
 }
 
-export function SendRecommendationOverlay({ open, onClose }: SendRecommendationOverlayProps) {
+export function SendRecommendationOverlay({ open, onClose, context }: SendRecommendationOverlayProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
   const title = 'Enviar recomendación'
@@ -136,7 +144,7 @@ export function SendRecommendationOverlay({ open, onClose }: SendRecommendationO
           <DialogHeader>
             <DialogTitle className="text-[20px] font-bold text-foreground">{title}</DialogTitle>
           </DialogHeader>
-          <SendForm onClose={onClose} />
+          <SendForm onClose={onClose} context={context} />
         </DialogContent>
       </Dialog>
     )
@@ -161,7 +169,7 @@ export function SendRecommendationOverlay({ open, onClose }: SendRecommendationO
               </button>
             </div>
           </SheetHeader>
-          <SendForm onClose={onClose} />
+          <SendForm onClose={onClose} context={context} />
         </div>
       </SheetContent>
     </Sheet>

@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Camera, Headphones, Send, RotateCcw } from 'lucide-react'
+import { buildDefaultBudget } from '@/domain/services/buildDefaultBudget'
 import { AppHeader } from '@/components/quiz/AppHeader'
 import { ResultSummaryBanner } from '@/components/result/ResultSummaryBanner'
 import { MainRecommendationCard } from '@/components/result/MainRecommendationCard'
@@ -56,13 +57,23 @@ export default function ResultadoPage() {
       .finally(() => setLoading(false))
   }, [router, answers])
 
+  const sendContext = useMemo(() => {
+    if (!result) return undefined
+    const budget = buildDefaultBudget(result.main.product, answers, memoryCards)
+    return {
+      quizAnswers: answers,
+      recommendedProductId: result.main.product.id,
+      recommendedProductName: result.main.product.name,
+      matchScore: result.main.matchScore,
+      budgetItems: budget.items,
+      budgetTotal: budget.total,
+    }
+  }, [result, answers, memoryCards])
+
   const handleRestart = () => {
     localStorage.removeItem('hiwei-quiz')
     router.push('/quiz')
   }
-
-  console.log("result");
-  console.log(result);
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-background">
@@ -147,13 +158,14 @@ export default function ResultadoPage() {
             onSendOpen={() => setShowSend(true)}
             onSendClose={() => setShowSend(false)}
             onRestart={handleRestart}
+            sendContext={sendContext}
           />
         )}
       </div>
 
       {/* Mobile overlays */}
       <ContactAdvisorOverlay open={showContact} onClose={() => setShowContact(false)} />
-      <SendRecommendationOverlay open={showSend} onClose={() => setShowSend(false)} />
+      <SendRecommendationOverlay open={showSend} onClose={() => setShowSend(false)} context={sendContext} />
     </div>
   )
 }

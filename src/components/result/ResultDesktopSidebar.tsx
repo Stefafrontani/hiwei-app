@@ -4,6 +4,9 @@ import Link from 'next/link'
 import { Gift, Headphones, Send, RotateCcw } from 'lucide-react'
 import { ContactAdvisorOverlay } from '@/components/overlays/ContactAdvisorOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
+import type { SendRecommendationForm } from '@/domain/entities/SendRecommendationForm'
+
+type RecommendationContext = Omit<SendRecommendationForm, 'name' | 'email' | 'phone'>
 
 interface ResultDesktopSidebarProps {
   showContact: boolean
@@ -13,6 +16,7 @@ interface ResultDesktopSidebarProps {
   onSendOpen: () => void
   onSendClose: () => void
   onRestart: () => void
+  sendContext?: RecommendationContext
 }
 
 export function ResultDesktopSidebar({
@@ -23,6 +27,7 @@ export function ResultDesktopSidebar({
   onSendOpen,
   onSendClose,
   onRestart,
+  sendContext,
 }: ResultDesktopSidebarProps) {
   return (
     <>
@@ -85,7 +90,7 @@ export function ResultDesktopSidebar({
       </aside>
 
       <ContactAdvisorOverlay open={showContact} onClose={onContactClose} />
-      <SendRecommendationOverlay open={showSend} onClose={onSendClose} />
+      <SendRecommendationOverlay open={showSend} onClose={onSendClose} context={sendContext} />
     </>
   )
 }
