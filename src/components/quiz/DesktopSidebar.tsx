@@ -1,5 +1,6 @@
 import { LayoutList, Check } from 'lucide-react'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
+import { buildWhatsAppUrl } from '@/lib/buildWhatsAppUrl'
 
 const STEP_CONFIG = [
   { step: 1, label: 'Vehículo', getSummary: (a: QuizAnswers) => a.vehicleType ? `${capitalize(a.vehicleType)} · Año: ${a.vehicleYear ?? '—'}` : 'Pendiente' },
@@ -88,7 +89,7 @@ export function DesktopSidebar({ currentStep, answers }: DesktopSidebarProps) {
       {/* Bottom CTA */}
       <div className="mt-auto border-t border-border bg-card p-5">
         <a
-          href="https://wa.me/5491100000000"
+          href={buildWhatsAppUrl({ answers, currentStep })}
           target="_blank"
           rel="noopener noreferrer"
           className="flex h-[46px] w-full items-center justify-center gap-2 rounded-[10px] bg-whatsapp text-[13px] font-semibold text-white transition-opacity hover:opacity-90"

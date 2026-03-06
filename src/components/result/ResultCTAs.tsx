@@ -5,12 +5,16 @@ import { Headphones, Send, MessageCircle, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ContactAdvisorOverlay } from '@/components/overlays/ContactAdvisorOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
+import { buildWhatsAppUrl } from '@/lib/buildWhatsAppUrl'
+import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 
 interface ResultCTAsProps {
   onRestart?: () => void
+  answers?: QuizAnswers
+  productName?: string
 }
 
-export function ResultCTAs({ onRestart }: ResultCTAsProps) {
+export function ResultCTAs({ onRestart, answers, productName }: ResultCTAsProps) {
   const [showContact, setShowContact] = useState(false)
   const [showSend, setShowSend] = useState(false)
 
@@ -36,7 +40,7 @@ export function ResultCTAs({ onRestart }: ResultCTAsProps) {
         </Button>
 
         <a
-          href="https://wa.me/5491100000000"
+          href={buildWhatsAppUrl({ answers, productName })}
           target="_blank"
           rel="noopener noreferrer"
           className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-whatsapp text-[14px] font-semibold text-white transition-opacity hover:opacity-90"

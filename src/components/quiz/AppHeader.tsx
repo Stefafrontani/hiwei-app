@@ -3,6 +3,8 @@
 import { MessageCircle, Gift } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { buildWhatsAppUrl } from '@/lib/buildWhatsAppUrl'
+import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 
 interface StepPillsProps {
   currentStep: number
@@ -39,9 +41,10 @@ function StepPills({ currentStep, totalSteps = 6 }: StepPillsProps) {
 interface AppHeaderProps {
   currentStep?: number
   showStepPills?: boolean
+  answers?: QuizAnswers
 }
 
-export function AppHeader({ currentStep, showStepPills = false }: AppHeaderProps) {
+export function AppHeader({ currentStep, showStepPills = false, answers }: AppHeaderProps) {
   return (
     <header className="flex h-[60px] w-full items-center justify-between border-b border-border bg-card px-5 md:h-16 md:px-4">
       {/* Logo */}
@@ -78,7 +81,7 @@ export function AppHeader({ currentStep, showStepPills = false }: AppHeaderProps
           </span>
         </Link>
         <a
-          href="https://wa.me/1141695824"
+          href={buildWhatsAppUrl({ answers, currentStep })}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 rounded-lg border border-whatsapp px-3 py-2 transition-opacity hover:opacity-90 md:gap-2 md:px-[18px] md:py-2.5"
