@@ -76,7 +76,7 @@ export default function QuizPage() {
   return (
     <div className="flex h-screen flex-col bg-white">
       {/* Header */}
-      <AppHeader currentStep={currentStep} showStepPills />
+      <AppHeader currentStep={currentStep} showStepPills answers={answers} />
 
       {/* Desktop layout */}
       <div className="flex flex-1 overflow-hidden">
