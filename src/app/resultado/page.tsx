@@ -1,9 +1,8 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Camera, Headphones, Send, RotateCcw } from 'lucide-react'
-import { buildDefaultBudget } from '@/domain/services/buildDefaultBudget'
 import { AppHeader } from '@/components/quiz/AppHeader'
 import { ResultSummaryBanner } from '@/components/result/ResultSummaryBanner'
 import { MainRecommendationCard } from '@/components/result/MainRecommendationCard'
@@ -30,6 +29,7 @@ export default function ResultadoPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [memoryCards, setMemoryCards] = useState<MemoryCard[]>([])
+  const [recommendationId, setRecommendationId] = useState<string | null>(null)
   const [showContact, setShowContact] = useState(false)
   const [showSend, setShowSend] = useState(false)
 
@@ -51,24 +51,12 @@ export default function ResultadoPage() {
       .then(([recData, cardsData]) => {
         if (recData.error) throw new Error(recData.error)
         setResult(recData.data)
+        if (recData.data?.recommendationId) setRecommendationId(recData.data.recommendationId)
         if (cardsData.data) setMemoryCards(cardsData.data)
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
   }, [router, answers])
-
-  const sendContext = useMemo(() => {
-    if (!result) return undefined
-    const budget = buildDefaultBudget(result.main.product, answers, memoryCards)
-    return {
-      quizAnswers: answers,
-      recommendedProductId: result.main.product.id,
-      recommendedProductName: result.main.product.name,
-      matchScore: result.main.matchScore,
-      budgetItems: budget.items,
-      budgetTotal: budget.total,
-    }
-  }, [result, answers, memoryCards])
 
   const handleRestart = () => {
     localStorage.removeItem('hiwei-quiz')
@@ -134,7 +122,7 @@ export default function ResultadoPage() {
                   className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card text-[14px] font-medium text-muted-foreground transition-colors hover:bg-muted"
                 >
                   <Send className="h-4 w-4" />
-                  Enviar recomendación
+                  Enviarme la recomendación
                 </button>
                 <button
                   onClick={handleRestart}
@@ -158,14 +146,14 @@ export default function ResultadoPage() {
             onSendOpen={() => setShowSend(true)}
             onSendClose={() => setShowSend(false)}
             onRestart={handleRestart}
-            sendContext={sendContext}
+            recommendationId={recommendationId}
           />
         )}
       </div>
 
       {/* Mobile overlays */}
       <ContactAdvisorOverlay open={showContact} onClose={() => setShowContact(false)} />
-      <SendRecommendationOverlay open={showSend} onClose={() => setShowSend(false)} context={sendContext} />
+      <SendRecommendationOverlay open={showSend} onClose={() => setShowSend(false)} recommendationId={recommendationId} />
     </div>
   )
 }

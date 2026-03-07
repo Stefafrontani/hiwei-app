@@ -4,3 +4,4 @@ export type { ISendRecommendationRepository } from './ISendRecommendationReposit
 export type { IBenefitsRepository } from './IBenefitsRepository'
 export type { IClockPort } from './IClockPort'
 export type { IDbHealthRepository } from './IDbHealthRepository'
+export type { ILeadRepository } from './ILeadRepository'

@@ -6,9 +6,6 @@ export interface BudgetItem {
 }
 
 export interface SendRecommendationForm {
-  name?: string
-  email?: string
-  phone?: string
   quizAnswers: QuizAnswers
   recommendedProductId: string
   recommendedProductName: string

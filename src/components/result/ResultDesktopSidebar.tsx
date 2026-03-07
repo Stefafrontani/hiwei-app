@@ -4,9 +4,6 @@ import Link from 'next/link'
 import { Gift, Headphones, Send, RotateCcw } from 'lucide-react'
 import { ContactAdvisorOverlay } from '@/components/overlays/ContactAdvisorOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
-import type { SendRecommendationForm } from '@/domain/entities/SendRecommendationForm'
-
-type RecommendationContext = Omit<SendRecommendationForm, 'name' | 'email' | 'phone'>
 
 interface ResultDesktopSidebarProps {
   showContact: boolean
@@ -16,7 +13,7 @@ interface ResultDesktopSidebarProps {
   onSendOpen: () => void
   onSendClose: () => void
   onRestart: () => void
-  sendContext?: RecommendationContext
+  recommendationId?: string | null
 }
 
 export function ResultDesktopSidebar({
@@ -27,7 +24,7 @@ export function ResultDesktopSidebar({
   onSendOpen,
   onSendClose,
   onRestart,
-  sendContext,
+  recommendationId,
 }: ResultDesktopSidebarProps) {
   return (
     <>
@@ -73,7 +70,7 @@ export function ResultDesktopSidebar({
             className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card text-[14px] font-medium text-muted-foreground transition-colors hover:bg-muted"
           >
             <Send className="h-4 w-4" />
-            Enviar recomendación
+            Enviarme la recomendación
           </button>
         </div>
 
@@ -90,7 +87,7 @@ export function ResultDesktopSidebar({
       </aside>
 
       <ContactAdvisorOverlay open={showContact} onClose={onContactClose} />
-      <SendRecommendationOverlay open={showSend} onClose={onSendClose} context={sendContext} />
+      <SendRecommendationOverlay open={showSend} onClose={onSendClose} recommendationId={recommendationId} />
     </>
   )
 }

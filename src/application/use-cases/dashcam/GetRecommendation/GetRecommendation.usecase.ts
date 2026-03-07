@@ -23,25 +23,23 @@ export class GetRecommendationUseCase {
       this.memoryCardRepository.getAll(),
     ])
 
-    const result: RecommendationResult = {
-      main: all[0],
+    const main = all[0]
+    const { product } = main
+    const budget = buildDefaultBudget(product, answers, memoryCards)
+
+    const recommendationId = await this.sendRecommendationRepository.save({
+      quizAnswers: answers,
+      recommendedProductId: product.id,
+      recommendedProductName: product.name,
+      matchScore: main.matchScore,
+      budgetItems: budget.items,
+      budgetTotal: budget.total,
+    })
+
+    return {
+      recommendationId,
+      main,
       alternatives: all.slice(1, 4),
     }
-
-    // Auto-save recommendation (fire-and-forget)
-    const { product } = result.main
-    const budget = buildDefaultBudget(product, answers, memoryCards)
-    this.sendRecommendationRepository
-      .save({
-        quizAnswers: answers,
-        recommendedProductId: product.id,
-        recommendedProductName: product.name,
-        matchScore: result.main.matchScore,
-        budgetItems: budget.items,
-        budgetTotal: budget.total,
-      })
-      .catch(() => {})
-
-    return result
   }
 }
