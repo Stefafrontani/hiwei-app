@@ -13,6 +13,7 @@ interface ResultDesktopSidebarProps {
   onSendOpen: () => void
   onSendClose: () => void
   onRestart: () => void
+  recommendationId?: string | null
 }
 
 export function ResultDesktopSidebar({
@@ -23,6 +24,7 @@ export function ResultDesktopSidebar({
   onSendOpen,
   onSendClose,
   onRestart,
+  recommendationId,
 }: ResultDesktopSidebarProps) {
   return (
     <>
@@ -68,7 +70,7 @@ export function ResultDesktopSidebar({
             className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card text-[14px] font-medium text-muted-foreground transition-colors hover:bg-muted"
           >
             <Send className="h-4 w-4" />
-            Enviar recomendación
+            Enviarme la recomendación
           </button>
         </div>
 
@@ -85,7 +87,7 @@ export function ResultDesktopSidebar({
       </aside>
 
       <ContactAdvisorOverlay open={showContact} onClose={onContactClose} />
-      <SendRecommendationOverlay open={showSend} onClose={onSendClose} />
+      <SendRecommendationOverlay open={showSend} onClose={onSendClose} recommendationId={recommendationId} />
     </>
   )
 }

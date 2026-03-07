@@ -13,14 +13,16 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 interface SendRecommendationOverlayProps {
   open: boolean
   onClose: () => void
+  recommendationId?: string | null
 }
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
-function SendForm({ onClose }: { onClose: () => void }) {
+function SendForm({ onClose, recommendationId }: { onClose: () => void; recommendationId?: string | null }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [optInMarketing, setOptInMarketing] = useState(false)
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -32,7 +34,13 @@ function SendForm({ onClose }: { onClose: () => void }) {
       const res = await fetch('/api/send-recommendation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone }),
+        body: JSON.stringify({
+          recommendationId,
+          name: name.trim(),
+          email: email.trim(),
+          phone: phone.trim() || undefined,
+          optInMarketing,
+        }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Error al enviar')
@@ -111,23 +119,36 @@ function SendForm({ onClose }: { onClose: () => void }) {
         </div>
       </div>
 
+      {/* Opt-in marketing checkbox */}
+      <label className="flex cursor-pointer items-start gap-2.5">
+        <input
+          type="checkbox"
+          checked={optInMarketing}
+          onChange={(e) => setOptInMarketing(e.target.checked)}
+          className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-brand"
+        />
+        <span className="text-[12px] leading-relaxed text-muted-foreground">
+          Quiero recibir noticias, ofertas exclusivas y descuentos de Hiwei
+        </span>
+      </label>
+
       <Button
         type="submit"
-        disabled={status === 'loading'}
+        disabled={status === 'loading' || !recommendationId}
         variant="brand"
         className="flex h-[50px] w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
       >
         <Send className="h-4 w-4" />
-        {status === 'loading' ? 'Enviando...' : 'Enviar recomendación'}
+        {status === 'loading' ? 'Enviando...' : 'Enviar a mi mail'}
       </Button>
     </form>
   )
 }
 
-export function SendRecommendationOverlay({ open, onClose }: SendRecommendationOverlayProps) {
+export function SendRecommendationOverlay({ open, onClose, recommendationId }: SendRecommendationOverlayProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  const title = 'Enviar recomendación'
+  const title = 'Recibí tu recomendación por email'
 
   if (isDesktop) {
     return (
@@ -136,7 +157,7 @@ export function SendRecommendationOverlay({ open, onClose }: SendRecommendationO
           <DialogHeader>
             <DialogTitle className="text-[20px] font-bold text-foreground">{title}</DialogTitle>
           </DialogHeader>
-          <SendForm onClose={onClose} />
+          <SendForm onClose={onClose} recommendationId={recommendationId} />
         </DialogContent>
       </Dialog>
     )
@@ -161,7 +182,7 @@ export function SendRecommendationOverlay({ open, onClose }: SendRecommendationO
               </button>
             </div>
           </SheetHeader>
-          <SendForm onClose={onClose} />
+          <SendForm onClose={onClose} recommendationId={recommendationId} />
         </div>
       </SheetContent>
     </Sheet>

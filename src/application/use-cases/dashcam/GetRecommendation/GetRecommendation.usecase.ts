@@ -1,19 +1,44 @@
 import { DashcamRecommendationService } from '@/domain/services/DashcamRecommendationService'
+import { buildDefaultBudget } from '@/domain/services/buildDefaultBudget'
 import type { IDashcamRepository } from '@/domain/ports/IDashcamRepository'
+import type { IMemoryCardRepository } from '@/domain/ports/IMemoryCardRepository'
+import type { ISendRecommendationRepository } from '@/domain/ports/ISendRecommendationRepository'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import type { RecommendationResult } from './GetRecommendation.dto'
 
 export class GetRecommendationUseCase {
   private readonly service: DashcamRecommendationService
 
-  constructor(repository: IDashcamRepository) {
+  constructor(
+    repository: IDashcamRepository,
+    private readonly memoryCardRepository: IMemoryCardRepository,
+    private readonly sendRecommendationRepository: ISendRecommendationRepository,
+  ) {
     this.service = new DashcamRecommendationService(repository)
   }
 
   async execute(answers: QuizAnswers): Promise<RecommendationResult> {
-    const all = await this.service.recommendAll(answers)
+    const [all, memoryCards] = await Promise.all([
+      this.service.recommendAll(answers),
+      this.memoryCardRepository.getAll(),
+    ])
+
+    const main = all[0]
+    const { product } = main
+    const budget = buildDefaultBudget(product, answers, memoryCards)
+
+    const recommendationId = await this.sendRecommendationRepository.save({
+      quizAnswers: answers,
+      recommendedProductId: product.id,
+      recommendedProductName: product.name,
+      matchScore: main.matchScore,
+      budgetItems: budget.items,
+      budgetTotal: budget.total,
+    })
+
     return {
-      main: all[0],
+      recommendationId,
+      main,
       alternatives: all.slice(1, 4),
     }
   }
