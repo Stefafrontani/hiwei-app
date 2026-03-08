@@ -1,11 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Headphones, Send, MessageCircle, RotateCcw } from 'lucide-react'
+import { Headphones, Send, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { ContactAdvisorOverlay } from '@/components/overlays/ContactAdvisorOverlay'
+import { ContactMethodOverlay } from '@/components/overlays/ContactMethodOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
-import { buildWhatsAppUrl } from '@/lib/buildWhatsAppUrl'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 
 interface ResultCTAsProps {
@@ -16,6 +15,7 @@ interface ResultCTAsProps {
 
 export function ResultCTAs({ onRestart, answers, productName }: ResultCTAsProps) {
   const [showContact, setShowContact] = useState(false)
+  const [showEmailForm, setShowEmailForm] = useState(false)
   const [showSend, setShowSend] = useState(false)
 
   return (
@@ -27,7 +27,7 @@ export function ResultCTAs({ onRestart, answers, productName }: ResultCTAsProps)
           className="flex h-12 w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
         >
           <Headphones className="h-4 w-4" />
-          Contactar con un asesor
+          Consultanos
         </Button>
 
         <Button
@@ -38,16 +38,6 @@ export function ResultCTAs({ onRestart, answers, productName }: ResultCTAsProps)
           <Send className="h-4 w-4" />
           Enviarme la recomendación
         </Button>
-
-        <a
-          href={buildWhatsAppUrl({ answers, productName })}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-whatsapp text-[14px] font-semibold text-white transition-opacity hover:opacity-90"
-        >
-          <MessageCircle className="h-4 w-4" />
-          Consultar por WhatsApp
-        </a>
 
         {onRestart && (
           <button
@@ -60,7 +50,14 @@ export function ResultCTAs({ onRestart, answers, productName }: ResultCTAsProps)
         )}
       </div>
 
-      <ContactAdvisorOverlay open={showContact} onClose={() => setShowContact(false)} />
+      <ContactMethodOverlay
+        open={showContact}
+        onClose={() => setShowContact(false)}
+        showEmailForm={showEmailForm}
+        onEmailFormOpen={() => setShowEmailForm(true)}
+        onEmailFormClose={() => setShowEmailForm(false)}
+        whatsAppProps={{ answers, productName }}
+      />
       <SendRecommendationOverlay open={showSend} onClose={() => setShowSend(false)} />
     </>
   )

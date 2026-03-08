@@ -9,7 +9,7 @@ import { MainRecommendationCard } from '@/components/result/MainRecommendationCa
 import { BudgetBreakdown } from '@/components/result/BudgetBreakdown'
 import { AlternativesSection } from '@/components/result/AlternativesSection'
 import { ResultDesktopSidebar } from '@/components/result/ResultDesktopSidebar'
-import { ContactAdvisorOverlay } from '@/components/overlays/ContactAdvisorOverlay'
+import { ContactMethodOverlay } from '@/components/overlays/ContactMethodOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
 import { createEmptyAnswers } from '@/domain/entities/QuizAnswers'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
@@ -31,6 +31,7 @@ export default function ResultadoPage() {
   const [memoryCards, setMemoryCards] = useState<MemoryCard[]>([])
   const [recommendationId, setRecommendationId] = useState<string | null>(null)
   const [showContact, setShowContact] = useState(false)
+  const [showEmailForm, setShowEmailForm] = useState(false)
   const [showSend, setShowSend] = useState(false)
 
   useEffect(() => {
@@ -89,6 +90,8 @@ export default function ResultadoPage() {
     router.push('/quiz')
   }
 
+  const productName = result?.main.product.name
+
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-background">
       <AppHeader />
@@ -141,7 +144,7 @@ export default function ResultadoPage() {
                   className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-brand bg-card text-[14px] font-semibold text-brand transition-colors hover:bg-brand/10"
                 >
                   <Headphones className="h-4 w-4" />
-                  Contactar con un asesor
+                  Consultanos
                 </button>
                 <button
                   onClick={() => setShowSend(true)}
@@ -167,18 +170,30 @@ export default function ResultadoPage() {
           <ResultDesktopSidebar
             showContact={showContact}
             showSend={showSend}
+            showEmailForm={showEmailForm}
             onContactOpen={() => setShowContact(true)}
             onContactClose={() => setShowContact(false)}
+            onEmailFormOpen={() => setShowEmailForm(true)}
+            onEmailFormClose={() => setShowEmailForm(false)}
             onSendOpen={() => setShowSend(true)}
             onSendClose={() => setShowSend(false)}
             onRestart={handleRestart}
             recommendationId={recommendationId}
+            answers={answers}
+            productName={productName}
           />
         )}
       </div>
 
       {/* Mobile overlays */}
-      <ContactAdvisorOverlay open={showContact} onClose={() => setShowContact(false)} />
+      <ContactMethodOverlay
+        open={showContact}
+        onClose={() => setShowContact(false)}
+        showEmailForm={showEmailForm}
+        onEmailFormOpen={() => setShowEmailForm(true)}
+        onEmailFormClose={() => setShowEmailForm(false)}
+        whatsAppProps={{ answers, productName }}
+      />
       <SendRecommendationOverlay open={showSend} onClose={() => setShowSend(false)} recommendationId={recommendationId} />
     </div>
   )
