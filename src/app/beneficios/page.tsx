@@ -102,7 +102,7 @@ export default function BeneficiosPage() {
     e.preventDefault()
     setSubmitting(true)
     try {
-      const res = await fetch('/api/beneficios', {
+      const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phone: phone || undefined }),

@@ -1,7 +1,6 @@
 export type { IDashcamRepository } from './IDashcamRepository'
 export type { IContactRepository } from './IContactRepository'
 export type { ISendRecommendationRepository } from './ISendRecommendationRepository'
-export type { IBenefitsRepository } from './IBenefitsRepository'
 export type { IClockPort } from './IClockPort'
 export type { IDbHealthRepository } from './IDbHealthRepository'
 export type { ILeadRepository } from './ILeadRepository'
