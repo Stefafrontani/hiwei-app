@@ -1,14 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { RegisterLeadUseCase } from '@/application/use-cases/dashcam/RegisterLead/RegisterLead.usecase'
 import { SupabaseLeadRepository } from '@/infrastructure/repositories/supabase/SupabaseLeadRepository'
+import { SupabaseSendRecommendationRepository } from '@/infrastructure/repositories/supabase/SupabaseSendRecommendationRepository'
 import { presentError } from '@/infrastructure/presenters/api'
 import type { ApiResponse } from '@/types'
 
 export async function POST(request: NextRequest) {
   try {
-    const input = await request.json()
+    const { recommendationId, ...leadInput } = await request.json()
     const useCase = new RegisterLeadUseCase(new SupabaseLeadRepository())
-    await useCase.execute(input)
+    const leadId = await useCase.execute(leadInput)
+
+    if (recommendationId) {
+      const recommendationRepo = new SupabaseSendRecommendationRepository()
+      await recommendationRepo.assignLead(recommendationId, leadId)
+    }
 
     const response: ApiResponse<{ success: boolean }> = {
       data: { success: true },

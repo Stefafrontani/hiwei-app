@@ -102,10 +102,13 @@ export default function BeneficiosPage() {
     e.preventDefault()
     setSubmitting(true)
     try {
+      const cached = localStorage.getItem('hiwei-recommendation')
+      const recommendationId = cached ? JSON.parse(cached)?.recommendationId : undefined
+
       const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone: phone || undefined }),
+        body: JSON.stringify({ name, email, phone: phone || undefined, recommendationId }),
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
