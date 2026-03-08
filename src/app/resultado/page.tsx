@@ -40,6 +40,23 @@ export default function ResultadoPage() {
       return
     }
 
+    // Check localStorage cache — skip API if answers haven't changed
+    const cached = localStorage.getItem('hiwei-recommendation')
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached)
+        if (parsed.answers === raw) {
+          setResult(parsed.result)
+          setRecommendationId(parsed.recommendationId)
+          setMemoryCards(parsed.memoryCards ?? [])
+          setLoading(false)
+          return
+        }
+      } catch {
+        localStorage.removeItem('hiwei-recommendation')
+      }
+    }
+
     Promise.all([
       fetch('/api/recommendation', {
         method: 'POST',
@@ -53,6 +70,14 @@ export default function ResultadoPage() {
         setResult(recData.data)
         if (recData.data?.recommendationId) setRecommendationId(recData.data.recommendationId)
         if (cardsData.data) setMemoryCards(cardsData.data)
+
+        // Cache in localStorage for this session
+        localStorage.setItem('hiwei-recommendation', JSON.stringify({
+          answers: raw,
+          result: recData.data,
+          recommendationId: recData.data?.recommendationId ?? null,
+          memoryCards: cardsData.data ?? [],
+        }))
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
@@ -60,6 +85,7 @@ export default function ResultadoPage() {
 
   const handleRestart = () => {
     localStorage.removeItem('hiwei-quiz')
+    localStorage.removeItem('hiwei-recommendation')
     router.push('/quiz')
   }
 
