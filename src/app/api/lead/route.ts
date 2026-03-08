@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   try {
     const { recommendationId, ...leadInput } = await request.json()
     const useCase = new RegisterLeadUseCase(new SupabaseLeadRepository())
-    const leadId = await useCase.execute(leadInput)
+    const leadId = await useCase.execute({ ...leadInput, source: 'benefits' as const })
 
     if (recommendationId) {
       const recommendationRepo = new SupabaseSendRecommendationRepository()

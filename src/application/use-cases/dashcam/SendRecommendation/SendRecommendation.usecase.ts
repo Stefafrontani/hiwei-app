@@ -26,6 +26,7 @@ export class SendRecommendationUseCase {
         name: input.name,
         email: input.email,
         phone: input.phone,
+        source: 'recommendation',
       })
       await this.repository.assignLead(input.recommendationId, leadId)
     }
