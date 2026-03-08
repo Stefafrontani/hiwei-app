@@ -22,6 +22,26 @@ export class SupabaseSendRecommendationRepository implements ISendRecommendation
     return data.id
   }
 
+  async findById(id: string): Promise<SendRecommendationForm | null> {
+    const client = createServerClient()
+    const { data, error } = await client
+      .from('recommendation_sent')
+      .select('quiz_answers, recommended_product_id, recommended_product_name, match_score, budget_items, budget_total')
+      .eq('id', id)
+      .single()
+
+    if (error || !data) return null
+
+    return {
+      quizAnswers: data.quiz_answers,
+      recommendedProductId: data.recommended_product_id,
+      recommendedProductName: data.recommended_product_name,
+      matchScore: data.match_score,
+      budgetItems: data.budget_items,
+      budgetTotal: data.budget_total,
+    }
+  }
+
   async assignLead(recommendationId: string, leadId: string): Promise<void> {
     const client = createServerClient()
     const { error } = await client

@@ -1,13 +1,16 @@
 import type { ISendRecommendationRepository } from '@/domain/ports/ISendRecommendationRepository'
 import type { ILeadRepository } from '@/domain/ports/ILeadRepository'
+import type { IEmailService } from '@/domain/ports/IEmailService'
 import { MissingRequiredFieldsError } from '@/domain/errors/MissingRequiredFieldsError'
 import { validateEmail } from '@/domain/errors/validators'
+import { buildRecommendationEmail } from '@/infrastructure/email/buildRecommendationEmail'
 import type { SendRecommendationInput, SendRecommendationResult } from './SendRecommendation.dto'
 
 export class SendRecommendationUseCase {
   constructor(
     private readonly repository: ISendRecommendationRepository,
     private readonly leadRepository: ILeadRepository,
+    private readonly emailService: IEmailService,
   ) {}
 
   async execute(input: SendRecommendationInput): Promise<SendRecommendationResult> {
@@ -27,7 +30,22 @@ export class SendRecommendationUseCase {
       await this.repository.assignLead(input.recommendationId, leadId)
     }
 
-    // TODO: send email
+    const recommendation = await this.repository.findById(input.recommendationId)
+    if (!recommendation) throw new Error('Recommendation not found')
+
+    const html = buildRecommendationEmail({
+      recipientName: input.name.trim(),
+      productName: recommendation.recommendedProductName,
+      matchScore: recommendation.matchScore,
+      budgetItems: recommendation.budgetItems,
+      budgetTotal: recommendation.budgetTotal,
+    })
+
+    await this.emailService.send({
+      to: input.email.trim(),
+      subject: `Tu recomendación personalizada de dashcam – ${recommendation.recommendedProductName}`,
+      html,
+    })
 
     return { success: true }
   }

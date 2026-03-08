@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS dashcam_products (
   created_at            TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS contact_requests (
+CREATE TABLE IF NOT EXISTS contact_request (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name       TEXT NOT NULL,
   phone      TEXT NOT NULL,
@@ -53,14 +53,14 @@ CREATE TABLE IF NOT EXISTS sent_recommendations (
 
 -- ── Indexes ───────────────────────────────────────────────────────────────────
 
-CREATE INDEX IF NOT EXISTS idx_contact_requests_email        ON contact_requests(email);
+CREATE INDEX IF NOT EXISTS idx_contact_request_email        ON contact_request(email);
 CREATE INDEX IF NOT EXISTS idx_benefits_registrations_email  ON benefits_registrations(email);
 CREATE INDEX IF NOT EXISTS idx_sent_recommendations_email    ON sent_recommendations(email);
 
 -- ── Row Level Security ────────────────────────────────────────────────────────
 
 ALTER TABLE dashcam_products        ENABLE ROW LEVEL SECURITY;
-ALTER TABLE contact_requests        ENABLE ROW LEVEL SECURITY;
+ALTER TABLE contact_request        ENABLE ROW LEVEL SECURITY;
 ALTER TABLE benefits_registrations  ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sent_recommendations    ENABLE ROW LEVEL SECURITY;
 

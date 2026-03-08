@@ -5,7 +5,7 @@ import type { ContactAdvisorForm } from '@/domain/entities/ContactAdvisorForm'
 export class SupabaseContactRepository implements IContactRepository {
   async save(form: ContactAdvisorForm): Promise<void> {
     const client = createServerClient()
-    const { error } = await client.from('contact_requests').insert({
+    const { error } = await client.from('contact_request').insert({
       name: form.name,
       phone: form.phone,
       email: form.email,
