@@ -3,4 +3,5 @@ import type { SendRecommendationForm } from '@/domain/entities/SendRecommendatio
 export interface ISendRecommendationRepository {
   save(form: SendRecommendationForm): Promise<string>
   assignLead(recommendationId: string, leadId: string): Promise<void>
+  findById(id: string): Promise<SendRecommendationForm | null>
 }
