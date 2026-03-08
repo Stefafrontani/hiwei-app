@@ -104,10 +104,10 @@ supabase/
 
 | Table | Purpose |
 |---|---|
-| `dashcam_products` | Product catalog (read-only from app, seeded via migration) |
-| `contact_requests` | Advisor contact form submissions |
-| `benefits_registrations` | Benefits sign-up form submissions |
-| `sent_recommendations` | Send-recommendation form submissions |
+| `dashcam_product` | Product catalog (read-only from app, seeded via migration) |
+| `contact_request` | Advisor contact form submissions |
+| `benefits_registration` | Benefits sign-up form submissions |
+| `recommendation_sent` | Send-recommendation form submissions |
 
 ## API Endpoints
 
