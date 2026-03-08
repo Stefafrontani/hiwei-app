@@ -9,7 +9,6 @@ import {
   Percent,
   UserCheck,
   PackageCheck,
-  BellRing,
   Sparkles,
   CircleCheck,
   Check,
@@ -35,7 +34,7 @@ const BENEFITS: {
     iconClass: 'text-success',
     titleClass: 'text-success',
     subClass: 'text-success/70',
-    title: 'Descuento exclusivo',
+    title: 'Ofertas exclusivas',
     sub: 'Precio preferencial en tu primera compra',
   },
   {
@@ -56,22 +55,12 @@ const BENEFITS: {
     title: 'Prioridad en stock',
     sub: 'Reservá antes que nadie los nuevos modelos',
   },
-  {
-    Icon: BellRing,
-    containerClass: 'bg-info/10',
-    iconClass: 'text-info',
-    titleClass: 'text-info',
-    subClass: 'text-info/70',
-    title: 'Promociones anticipadas',
-    sub: 'Enteráte antes de ofertas y lanzamientos',
-  },
 ]
 
 const SUCCESS_ITEMS = [
-  'Descuento exclusivo activado',
+  'Ofertas exclusivas activadas',
   'Prioridad en nuevos lanzamientos',
   'Asesoramiento personalizado',
-  'Promociones anticipadas',
 ]
 
 function BenefitCard({ Icon, containerClass, iconClass, titleClass, subClass, title, sub }: (typeof BENEFITS)[0]) {
