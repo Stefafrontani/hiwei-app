@@ -6,7 +6,7 @@
 
 -- ── 1. Create enum type for lead sources ──────────────────────────────────────
 
-CREATE TYPE lead_source AS ENUM ('benefits', 'recommendation', 'other');
+CREATE TYPE lead_source AS ENUM ('benefits', 'recommendation', 'consult', 'other');
 
 -- ── 2. Add source column to lead table ────────────────────────────────────────
 

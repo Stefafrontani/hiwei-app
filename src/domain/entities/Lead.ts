@@ -1,4 +1,4 @@
-export type LeadSource = 'benefits' | 'recommendation' | 'other'
+export type LeadSource = 'benefits' | 'recommendation' | 'consult' | 'other'
 
 export interface Lead {
   id: string

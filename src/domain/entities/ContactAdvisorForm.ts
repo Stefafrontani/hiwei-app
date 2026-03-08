@@ -1,6 +1,7 @@
 export interface ContactAdvisorForm {
   name: string
-  phone: string
   email: string
+  phone?: string
   query?: string
+  optInMarketing?: boolean
 }
