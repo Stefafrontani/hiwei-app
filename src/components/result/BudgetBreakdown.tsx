@@ -8,9 +8,7 @@ import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import { getRecommendedMemoryCardSize } from '@/domain/services/getRecommendedMemoryCardSize'
 import { calculateRecordingHours } from '@/domain/services/calculateRecordingHours'
 import { MemoryCardPicker } from './MemoryCardPicker'
-
-const HWK_PRICE = 70000
-const INSTALLATION_PRICE = 210000
+import { HWK_PRICE, INSTALLATION_PRICE } from '@/lib/constants'
 
 function parsePrice(display: string): number {
   const cleaned = display.replace(/[^0-9.,]/g, '').replace(/\./g, '').replace(',', '.')
