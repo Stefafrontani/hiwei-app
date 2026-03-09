@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import { Flame, Send } from 'lucide-react'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 
@@ -8,6 +11,8 @@ interface MainRecommendationCardProps {
 }
 
 export function MainRecommendationCard({ product, matchScore, onSendRecommendation }: MainRecommendationCardProps) {
+  const [expanded, setExpanded] = useState(false)
+
   return (
     <div className="relative flex flex-col gap-3 overflow-hidden rounded-xl border-2 border-brand bg-brand/5 p-4 shadow-md shadow-brand/10 md:gap-3.5 md:p-5">
       {/* Accent bar */}
@@ -31,10 +36,19 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
         </div>
       )}
 
-      {/* Description — truncated to 2 lines */}
-      <p className="line-clamp-2 text-[12px] leading-relaxed text-muted-foreground md:text-[13px]">
-        {product.description}
-      </p>
+      {/* Description — expandable */}
+      <div>
+        <p className={`text-[12px] leading-relaxed text-muted-foreground md:text-[13px] ${expanded ? '' : 'line-clamp-2'}`}>
+          {product.description}
+        </p>
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="mt-1 text-[12px] font-semibold text-brand hover:underline"
+        >
+          {expanded ? 'Ver menos' : 'Ver más'}
+        </button>
+      </div>
 
       {/* Spec chips — first 3 only */}
       <div className="flex flex-wrap gap-1.5">
