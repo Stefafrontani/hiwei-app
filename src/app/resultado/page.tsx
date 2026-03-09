@@ -129,7 +129,7 @@ export default function ResultadoPage() {
           {result && !loading && (
             <div className="flex flex-col gap-4 px-4 py-4 md:px-12 md:py-8">
               {/* Main Recommendation */}
-              <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} />
+              <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} onSendRecommendation={() => setShowSend(true)} />
 
               {/* Budget Breakdown */}
               <BudgetBreakdown product={result.main.product} answers={answers} memoryCards={memoryCards} />
