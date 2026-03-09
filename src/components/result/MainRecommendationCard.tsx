@@ -8,7 +8,11 @@ interface MainRecommendationCardProps {
 
 export function MainRecommendationCard({ product, matchScore }: MainRecommendationCardProps) {
   return (
-    <div className="relative flex flex-col gap-3 overflow-hidden rounded-xl border-2 border-brand bg-brand/5 p-4 shadow-md shadow-brand/10 md:gap-3.5 md:p-5">
+    <a
+      href={product.ecommerceUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="relative flex flex-col gap-3 overflow-hidden rounded-xl border-2 border-brand bg-brand/5 p-4 shadow-md shadow-brand/10 transition-shadow hover:shadow-lg hover:shadow-brand/20 md:gap-3.5 md:p-5">
       {/* Accent bar */}
       <div className="absolute inset-x-0 top-0 h-1 bg-brand" />
 
@@ -46,6 +50,11 @@ export function MainRecommendationCard({ product, matchScore }: MainRecommendati
           </span>
         ))}
       </div>
-    </div>
+
+      {/* CTA */}
+      <span className="mt-1 inline-flex w-full items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-[14px] font-bold text-white transition-colors hover:bg-brand/90 md:text-[15px]">
+        Comprar
+      </span>
+    </a>
   )
 }

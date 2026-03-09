@@ -105,7 +105,7 @@ supabase/
 | Table | Purpose |
 |---|---|
 | `dashcam_product` | Product catalog (read-only from app, seeded via migration) |
-| `contact_request` | Advisor contact form submissions |
+| `inquiry` | Advisor contact form submissions |
 | `benefits_registration` | Benefits sign-up form submissions |
 | `recommendation_sent` | Send-recommendation form submissions |
 

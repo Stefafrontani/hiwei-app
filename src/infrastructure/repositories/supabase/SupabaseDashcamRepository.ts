@@ -20,6 +20,7 @@ function rowToProduct(row: Record<string, any>): DashcamProduct {
     cameraPositions: row.camera_positions as CameraPosition[],
     maxQuality: row.max_quality as VideoQuality,
     cycleSize: row.cycle_size as number,
+    ecommerceUrl: (row.ecommerce_url as string),
   }
 }
 
