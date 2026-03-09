@@ -2,29 +2,40 @@
 
 import Link from 'next/link'
 import { Gift, Headphones, Send, RotateCcw } from 'lucide-react'
-import { ContactAdvisorOverlay } from '@/components/overlays/ContactAdvisorOverlay'
+import { ContactMethodOverlay } from '@/components/overlays/ContactMethodOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
+import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 
 interface ResultDesktopSidebarProps {
   showContact: boolean
   showSend: boolean
+  showEmailForm: boolean
   onContactOpen: () => void
   onContactClose: () => void
+  onEmailFormOpen: () => void
+  onEmailFormClose: () => void
   onSendOpen: () => void
   onSendClose: () => void
   onRestart: () => void
   recommendationId?: string | null
+  answers?: QuizAnswers
+  productName?: string
 }
 
 export function ResultDesktopSidebar({
   showContact,
   showSend,
+  showEmailForm,
   onContactOpen,
   onContactClose,
+  onEmailFormOpen,
+  onEmailFormClose,
   onSendOpen,
   onSendClose,
   onRestart,
   recommendationId,
+  answers,
+  productName,
 }: ResultDesktopSidebarProps) {
   return (
     <>
@@ -48,7 +59,7 @@ export function ResultDesktopSidebar({
               Obtener beneficios exclusivos
             </Link>
             <p className="text-[11px] text-muted-foreground">
-              Accedé a descuentos, prioridad en stock y más.
+              Accedé a descuentos, ofertas, prioridad en stock, noticias y más.
             </p>
           </div>
 
@@ -61,7 +72,7 @@ export function ResultDesktopSidebar({
             className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-brand bg-card text-[14px] font-semibold text-brand transition-colors hover:bg-brand/10"
           >
             <Headphones className="h-4 w-4" />
-            Contactar con un asesor
+            Consultanos
           </button>
 
           {/* Send CTA */}
@@ -86,7 +97,14 @@ export function ResultDesktopSidebar({
         </div>
       </aside>
 
-      <ContactAdvisorOverlay open={showContact} onClose={onContactClose} />
+      <ContactMethodOverlay
+        open={showContact}
+        onClose={onContactClose}
+        showEmailForm={showEmailForm}
+        onEmailFormOpen={onEmailFormOpen}
+        onEmailFormClose={onEmailFormClose}
+        whatsAppProps={{ answers, productName }}
+      />
       <SendRecommendationOverlay open={showSend} onClose={onSendClose} recommendationId={recommendationId} />
     </>
   )

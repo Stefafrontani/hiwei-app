@@ -9,7 +9,6 @@ import {
   Percent,
   UserCheck,
   PackageCheck,
-  BellRing,
   Sparkles,
   CircleCheck,
   Check,
@@ -35,7 +34,7 @@ const BENEFITS: {
     iconClass: 'text-success',
     titleClass: 'text-success',
     subClass: 'text-success/70',
-    title: 'Descuento exclusivo',
+    title: 'Ofertas exclusivas',
     sub: 'Precio preferencial en tu primera compra',
   },
   {
@@ -56,22 +55,12 @@ const BENEFITS: {
     title: 'Prioridad en stock',
     sub: 'Reservá antes que nadie los nuevos modelos',
   },
-  {
-    Icon: BellRing,
-    containerClass: 'bg-info/10',
-    iconClass: 'text-info',
-    titleClass: 'text-info',
-    subClass: 'text-info/70',
-    title: 'Promociones anticipadas',
-    sub: 'Enteráte antes de ofertas y lanzamientos',
-  },
 ]
 
 const SUCCESS_ITEMS = [
-  'Descuento exclusivo activado',
-  'Prioridad en nuevos lanzamientos',
+  'Ofertas exclusivas',
   'Asesoramiento personalizado',
-  'Promociones anticipadas',
+  'Prioridad en stock',
 ]
 
 function BenefitCard({ Icon, containerClass, iconClass, titleClass, subClass, title, sub }: (typeof BENEFITS)[0]) {
@@ -102,10 +91,13 @@ export default function BeneficiosPage() {
     e.preventDefault()
     setSubmitting(true)
     try {
-      const res = await fetch('/api/beneficios', {
+      const cached = localStorage.getItem('hiwei-recommendation')
+      const recommendationId = cached ? JSON.parse(cached)?.recommendationId : undefined
+
+      const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone: phone || undefined }),
+        body: JSON.stringify({ name, email, phone: phone || undefined, recommendationId }),
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)

@@ -5,12 +5,12 @@ import type { ContactAdvisorForm } from '@/domain/entities/ContactAdvisorForm'
 export class SupabaseContactRepository implements IContactRepository {
   async save(form: ContactAdvisorForm): Promise<void> {
     const client = createServerClient()
-    const { error } = await client.from('contact_request').insert({
+    const { error } = await client.from('inquiry').insert({
       name: form.name,
-      phone: form.phone,
       email: form.email,
+      phone: form.phone ?? null,
       query: form.query ?? null,
     })
-    if (error) throw new Error(`Failed to save contact request: ${error.message}`)
+    if (error) throw new Error(`Failed to save inquiry: ${error.message}`)
   }
 }

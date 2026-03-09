@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Headphones, CircleCheck, AlertCircle, X } from 'lucide-react'
+import { Send, CircleCheck, AlertCircle, X } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -19,9 +19,10 @@ type Status = 'idle' | 'loading' | 'success' | 'error'
 
 function ContactForm({ onClose }: { onClose: () => void }) {
   const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [query, setQuery] = useState('')
+  const [optInMarketing, setOptInMarketing] = useState(false)
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -33,7 +34,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, email, query }),
+        body: JSON.stringify({ name, email, phone: phone || undefined, query, optInMarketing }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Error al enviar')
@@ -74,8 +75,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <p className="text-[13px] leading-relaxed text-muted-foreground">
-        Un experto te va a contactar para resolver todas tus dudas sobre productos, instalación y
-        proceso de compra.
+        A la brevedad nos estaremos comunicando con vos para ayudarte en lo que necesites.
       </p>
 
       <div className="flex flex-col gap-3">
@@ -86,17 +86,6 @@ function ContactForm({ onClose }: { onClose: () => void }) {
             onChange={(e) => setName(e.target.value)}
             placeholder="Ej: Juan Pérez"
             required
-            className="h-11 rounded-[10px] border-border text-[13px]"
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label className="text-[12px] font-semibold text-foreground">Teléfono *</Label>
-          <Input
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+54 11 1234-5678"
-            required
-            type="tel"
             className="h-11 rounded-[10px] border-border text-[13px]"
           />
         </div>
@@ -112,16 +101,40 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label className="text-[12px] font-medium text-muted-foreground">Consulta (opcional)</Label>
+          <Label className="text-[12px] font-medium text-muted-foreground">Teléfono (opcional)</Label>
+          <Input
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="+54 11 1234-5678"
+            type="tel"
+            className="h-11 rounded-[10px] border-border text-[13px]"
+          />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label className="text-[12px] font-semibold text-foreground">Consulta *</Label>
           <textarea
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Escribí tu consulta..."
+            required
             rows={3}
             className="rounded-[10px] border border-border px-3.5 py-3 text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-brand/30 resize-none"
           />
         </div>
       </div>
+
+      {/* Opt-in marketing checkbox */}
+      <label className="flex cursor-pointer items-start gap-2.5">
+        <input
+          type="checkbox"
+          checked={optInMarketing}
+          onChange={(e) => setOptInMarketing(e.target.checked)}
+          className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-brand"
+        />
+        <span className="text-[12px] leading-relaxed text-muted-foreground">
+          Quiero recibir noticias, ofertas exclusivas y descuentos de Hiwei
+        </span>
+      </label>
 
       <Button
         type="submit"
@@ -129,8 +142,8 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         variant="brand"
         className="flex h-[50px] w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
       >
-        <Headphones className="h-4 w-4" />
-        {status === 'loading' ? 'Enviando...' : 'Solicitar contacto'}
+        <Send className="h-4 w-4" />
+        {status === 'loading' ? 'Enviando...' : 'Enviar consulta'}
       </Button>
     </form>
   )
@@ -139,7 +152,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
 export function ContactAdvisorOverlay({ open, onClose }: ContactAdvisorOverlayProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  const title = 'Contactar con un asesor'
+  const title = 'Dejanos tu consulta'
 
   if (isDesktop) {
     return (

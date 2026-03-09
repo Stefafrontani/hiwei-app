@@ -1,15 +1,15 @@
 import type { ISendRecommendationRepository } from '@/domain/ports/ISendRecommendationRepository'
-import type { ILeadRepository } from '@/domain/ports/ILeadRepository'
 import type { IEmailService } from '@/domain/ports/IEmailService'
 import { MissingRequiredFieldsError } from '@/domain/errors/MissingRequiredFieldsError'
 import { validateEmail } from '@/domain/errors/validators'
 import { buildRecommendationEmail } from '@/infrastructure/email/buildRecommendationEmail'
+import { RegisterLeadUseCase } from '@/application/use-cases/dashcam/RegisterLead/RegisterLead.usecase'
 import type { SendRecommendationInput, SendRecommendationResult } from './SendRecommendation.dto'
 
 export class SendRecommendationUseCase {
   constructor(
     private readonly repository: ISendRecommendationRepository,
-    private readonly leadRepository: ILeadRepository,
+    private readonly registerLeadUseCase: RegisterLeadUseCase,
     private readonly emailService: IEmailService,
   ) {}
 
@@ -22,10 +22,11 @@ export class SendRecommendationUseCase {
     validateEmail(input.email)
 
     if (input.optInMarketing) {
-      const leadId = await this.leadRepository.upsertByEmail({
-        name: input.name.trim(),
-        email: input.email.trim(),
-        phone: input.phone?.trim() || undefined,
+      const leadId = await this.registerLeadUseCase.execute({
+        name: input.name,
+        email: input.email,
+        phone: input.phone,
+        source: 'recommendation',
       })
       await this.repository.assignLead(input.recommendationId, leadId)
     }
