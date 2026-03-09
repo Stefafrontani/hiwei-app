@@ -43,9 +43,9 @@ export function ResultDesktopSidebar({
         {/* Top content */}
         <div className="flex flex-1 flex-col gap-4 p-7">
           <div className="flex flex-col gap-1">
-            <p className="text-[16px] font-bold text-foreground">¿Qué querés hacer?</p>
+            <p className="text-[16px] font-bold text-foreground">¿Cómo podemos ayudarte?</p>
             <p className="text-[13px] leading-relaxed text-muted-foreground">
-              Elegí una opción para continuar con tu experiencia Hiwei.
+              Elegí una opción para continuar tu experiencia Hiwei.
             </p>
           </div>
 
@@ -58,7 +58,7 @@ export function ResultDesktopSidebar({
               <Gift className="h-5 w-5" />
               Obtener beneficios exclusivos
             </Link>
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-[12px] text-muted-foreground">
               Accedé a descuentos, ofertas, prioridad en stock, noticias y más.
             </p>
           </div>
@@ -85,11 +85,13 @@ export function ResultDesktopSidebar({
           </button>
         </div>
 
-        {/* Footer */}
-        <div className="border-t border-border px-6 py-4">
+        {/* Restart prompt */}
+        <div className="flex flex-col items-center gap-2 border-t border-border px-6 py-5 text-center">
+          <p className="text-[13px] font-semibold text-foreground">¿No es lo que buscabas?</p>
+          <p className="text-[11px] leading-relaxed text-muted-foreground">Podés ajustar tus respuestas y encontrar la dashcam ideal.</p>
           <button
             onClick={onRestart}
-            className="flex w-full items-center justify-center gap-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+            className="mt-1 inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-4 py-2 text-[12px] font-semibold text-foreground transition-colors hover:bg-muted"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             Empezar de nuevo

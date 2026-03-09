@@ -90,7 +90,7 @@ export function AppHeader({ currentStep, showStepPills = false, answers }: AppHe
             className="flex items-center gap-1.5 rounded-lg border border-brand px-3 py-2 transition-opacity hover:opacity-90 md:gap-2 md:px-[18px] md:py-2.5"
           >
             <Headphones className="h-3.5 w-3.5 text-brand md:h-4 md:w-4" />
-            <span className="text-[11px] font-semibold text-brand md:text-[14px]">Consultanos</span>
+            <span className="text-[11px] font-semibold text-brand md:text-[14px]">Contactanos</span>
           </button>
         </div>
       </header>
