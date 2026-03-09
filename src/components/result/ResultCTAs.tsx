@@ -42,7 +42,7 @@ export function ResultCTAs({ onRestart, answers, productName }: ResultCTAsProps)
         {onRestart && (
           <button
             onClick={onRestart}
-            className="flex items-center justify-center gap-1.5 text-[12px] text-muted-foreground transition-colors hover:text-foreground"
+            className="flex cursor-pointer items-center justify-center gap-1.5 text-[12px] text-muted-foreground transition-colors hover:text-foreground"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             Empezar de nuevo

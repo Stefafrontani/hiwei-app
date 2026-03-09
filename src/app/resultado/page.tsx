@@ -143,7 +143,7 @@ export default function ResultadoPage() {
                 <p className="text-[12px] leading-relaxed text-muted-foreground">Podés ajustar tus respuestas y encontrar la dashcam ideal.</p>
                 <button
                   onClick={handleRestart}
-                  className="mt-1 inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-4 py-2 text-[13px] font-semibold text-foreground transition-colors hover:bg-muted"
+                  className="mt-1 inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border bg-card px-4 py-2 text-[13px] font-semibold text-foreground transition-colors hover:bg-muted"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
                   Empezar de nuevo
