@@ -3,6 +3,7 @@ import { ContactAdvisorUseCase } from '@/application/use-cases/dashcam/ContactAd
 import { RegisterLeadUseCase } from '@/application/use-cases/dashcam/RegisterLead/RegisterLead.usecase'
 import { SupabaseContactRepository } from '@/infrastructure/repositories/supabase/SupabaseContactRepository'
 import { SupabaseLeadRepository } from '@/infrastructure/repositories/supabase/SupabaseLeadRepository'
+import { ResendEmailService } from '@/infrastructure/email/ResendEmailService'
 import { presentContact, presentError } from '@/infrastructure/presenters/api'
 
 export async function POST(request: NextRequest) {
@@ -10,7 +11,7 @@ export async function POST(request: NextRequest) {
     const form = await request.json()
     const useCase = new ContactAdvisorUseCase(
       new SupabaseContactRepository(),
-      new RegisterLeadUseCase(new SupabaseLeadRepository()),
+      new RegisterLeadUseCase(new SupabaseLeadRepository(), new ResendEmailService()),
     )
     const result = await useCase.execute(form)
     return NextResponse.json(presentContact(result))

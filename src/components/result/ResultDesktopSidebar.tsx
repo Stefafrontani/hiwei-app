@@ -59,7 +59,7 @@ export function ResultDesktopSidebar({
               Obtener beneficios exclusivos
             </Link>
             <p className="text-[11px] text-muted-foreground">
-              Accedé a descuentos, prioridad en stock y más.
+              Accedé a descuentos, ofertas, prioridad en stock, noticias y más.
             </p>
           </div>
 

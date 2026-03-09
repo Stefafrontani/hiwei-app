@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const input = await request.json()
     const useCase = new SendRecommendationUseCase(
       new SupabaseSendRecommendationRepository(),
-      new RegisterLeadUseCase(new SupabaseLeadRepository()),
+      new RegisterLeadUseCase(new SupabaseLeadRepository(), new ResendEmailService()),
       new ResendEmailService(),
     )
     const result = await useCase.execute(input)

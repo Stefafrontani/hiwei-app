@@ -58,9 +58,9 @@ const BENEFITS: {
 ]
 
 const SUCCESS_ITEMS = [
-  'Ofertas exclusivas activadas',
-  'Prioridad en nuevos lanzamientos',
+  'Ofertas exclusivas',
   'Asesoramiento personalizado',
+  'Prioridad en stock',
 ]
 
 function BenefitCard({ Icon, containerClass, iconClass, titleClass, subClass, title, sub }: (typeof BENEFITS)[0]) {

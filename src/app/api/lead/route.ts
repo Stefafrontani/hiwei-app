@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { RegisterLeadUseCase } from '@/application/use-cases/dashcam/RegisterLead/RegisterLead.usecase'
 import { SupabaseLeadRepository } from '@/infrastructure/repositories/supabase/SupabaseLeadRepository'
 import { SupabaseSendRecommendationRepository } from '@/infrastructure/repositories/supabase/SupabaseSendRecommendationRepository'
+import { ResendEmailService } from '@/infrastructure/email/ResendEmailService'
 import { presentError } from '@/infrastructure/presenters/api'
 import type { ApiResponse } from '@/types'
 
 export async function POST(request: NextRequest) {
   try {
     const { recommendationId, ...leadInput } = await request.json()
-    const useCase = new RegisterLeadUseCase(new SupabaseLeadRepository())
+    const useCase = new RegisterLeadUseCase(new SupabaseLeadRepository(), new ResendEmailService())
     const leadId = await useCase.execute({ ...leadInput, source: 'benefits' as const })
 
     if (recommendationId) {
