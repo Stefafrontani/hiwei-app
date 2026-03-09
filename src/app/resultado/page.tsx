@@ -134,8 +134,8 @@ export default function ResultadoPage() {
               {/* Budget Breakdown */}
               <BudgetBreakdown product={result.main.product} answers={answers} memoryCards={memoryCards} />
 
-              {/* Alternatives */}
-              <AlternativesSection alternatives={result.alternatives} />
+              {/* Alternatives — hidden temporarily, will be redesigned with more detail */}
+              {/* <AlternativesSection alternatives={result.alternatives} /> */}
 
               {/* Mobile CTAs (hidden on desktop — shown in sidebar) */}
               <div className="flex flex-col gap-3 md:hidden">
