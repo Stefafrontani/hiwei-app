@@ -44,7 +44,7 @@ export function QuizSummarySteps({ answers, currentStep }: QuizSummaryStepsProps
             <div
               key={step}
               className={`flex flex-col gap-1.5 rounded-lg px-3.5 py-3 transition-colors
-                ${isActive ? 'border border-brand bg-brand/10' : 'border border-border bg-card'}`}
+                ${isActive ? 'border border-brand bg-brand/10' : isPending ? 'border border-border bg-destructive/3' : 'border border-border bg-card'}`}
             >
               <div className="flex items-center justify-between">
                 <span
@@ -65,7 +65,7 @@ export function QuizSummarySteps({ answers, currentStep }: QuizSummaryStepsProps
                 </div>
               </div>
               <span
-                className={`text-[12px] font-medium ${isPending ? 'text-muted-foreground' : 'text-muted-foreground'}`}
+                className={`text-[12px] font-medium ${isPending ? 'text-destructive' : 'text-muted-foreground'}`}
               >
                 {summary}
               </span>
