@@ -52,27 +52,30 @@ export function ResultDesktopSidebar({
             </p>
           </div>
 
+          {/* Primary */}
           <button
             onClick={onContactOpen}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-brand bg-card text-[14px] font-semibold text-brand transition-colors hover:bg-brand/10"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand text-[14px] font-bold text-white transition-colors hover:bg-brand/90"
           >
             <Headphones className="h-4 w-4" />
             ¿Tenés dudas? Escribinos
           </button>
 
+          {/* Secondary */}
           <button
             onClick={onSendOpen}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card text-[14px] font-medium text-muted-foreground transition-colors hover:bg-muted"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-brand bg-card text-[14px] font-semibold text-brand transition-colors hover:bg-brand/10"
           >
             <Send className="h-4 w-4" />
             Recibir recomendación por mail
           </button>
 
+          {/* Tertiary */}
           <div className="flex flex-col items-center gap-1.5 pt-2 text-center">
             <p className="text-[12px] text-muted-foreground">¿No es lo que buscabas?</p>
             <button
               onClick={onRestart}
-              className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-foreground transition-colors hover:text-brand"
+              className="inline-flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               Empezar de nuevo

@@ -87,10 +87,10 @@ export function AppHeader({ currentStep, showStepPills = false, answers }: AppHe
           </Link>
           <button
             onClick={() => setShowContact(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-brand px-3 py-2 transition-opacity hover:opacity-90 md:gap-2 md:px-[18px] md:py-2.5"
+            className="flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 transition-colors hover:bg-brand/90 md:gap-2 md:px-[18px] md:py-2.5"
           >
-            <Headphones className="h-3.5 w-3.5 text-brand md:h-4 md:w-4" />
-            <span className="text-[11px] font-semibold text-brand md:text-[14px]">Contactanos</span>
+            <Headphones className="h-3.5 w-3.5 text-white md:h-4 md:w-4" />
+            <span className="text-[11px] font-bold text-white md:text-[14px]">Contactanos</span>
           </button>
         </div>
       </header>
