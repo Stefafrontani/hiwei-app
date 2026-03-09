@@ -1,24 +1,10 @@
 'use client'
 
-import { LayoutList, Check, Headphones, Send, RotateCcw } from 'lucide-react'
+import { Headphones, Send, RotateCcw } from 'lucide-react'
 import { ContactMethodOverlay } from '@/components/overlays/ContactMethodOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
+import { QuizSummarySteps } from '@/components/quiz/QuizSummarySteps'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
-
-const STEP_CONFIG = [
-  { step: 1, label: 'Vehículo', getSummary: (a: QuizAnswers) => a.vehicleType ? `${a.vehicleType.charAt(0).toUpperCase() + a.vehicleType.slice(1)} · Año: ${a.vehicleYear ?? '—'}` : '—' },
-  { step: 2, label: 'Calidad de grabación', getSummary: (a: QuizAnswers) => a.videoQuality ? (a.videoQuality === 'muy-buena' ? 'Muy buena' : a.videoQuality === 'buena' ? 'Buena' : 'Superior') : '—' },
-  { step: 3, label: 'Cantidad de cámaras', getSummary: (a: QuizAnswers) => {
-    const labels: Record<number, string> = { 1: 'Solo frontal', 2: 'Frontal + Trasera', 3: 'Frontal + Trasera + Interior' }
-    return a.cameraPositions?.length ? labels[a.cameraPositions.length] ?? `${a.cameraPositions.length} cámaras` : '—'
-  }},
-  { step: 4, label: 'Uso del vehículo', getSummary: (a: QuizAnswers) => {
-    const labels: Record<string, string> = { commute: 'Ir al trabajo', work_tool: 'Herramienta de trabajo', recreational: 'Paseo / recreativo', other: 'No sé / Otro' }
-    return a.vehicleUsage ? labels[a.vehicleUsage] ?? a.vehicleUsage : '—'
-  }},
-  { step: 5, label: 'Modo estacionamiento', getSummary: (a: QuizAnswers) => a.parkingMode === 'si' ? 'Sí' : a.parkingMode === 'no' ? 'No' : '—' },
-  { step: 6, label: 'Instalación', getSummary: (a: QuizAnswers) => a.installation === 'si' ? 'Con instalación' : a.installation === 'no' ? 'Sin instalación' : '—' },
-]
 
 interface ResultDesktopSidebarProps {
   showContact: boolean
@@ -55,34 +41,7 @@ export function ResultDesktopSidebar({
     <>
       <aside className="hidden w-[360px] shrink-0 flex-col border-l border-border bg-muted/30 md:flex">
         {/* Section 1: Quiz Summary */}
-        <div className="flex items-center gap-2 border-b border-border bg-card px-6 py-5">
-          <LayoutList className="h-4 w-4 text-brand" />
-          <span className="text-[14px] font-semibold text-foreground">Resumen</span>
-        </div>
-
-        <div className="flex flex-col gap-1 overflow-y-auto p-3">
-          {answers && STEP_CONFIG.map(({ step, label, getSummary }) => {
-            const summary = getSummary(answers)
-            return (
-              <div
-                key={step}
-                className="flex flex-col gap-1.5 rounded-lg border border-border bg-card px-3.5 py-3"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-semibold uppercase text-brand">
-                    {label}
-                  </span>
-                  <div className="flex h-4 w-4 items-center justify-center rounded-full bg-brand">
-                    <Check className="h-2.5 w-2.5 text-white" />
-                  </div>
-                </div>
-                <span className="text-[12px] font-medium text-muted-foreground">
-                  {summary}
-                </span>
-              </div>
-            )
-          })}
-        </div>
+        {answers && <QuizSummarySteps answers={answers} />}
 
         {/* Section 2: CTAs */}
         <div className="flex flex-col gap-3 border-t border-border bg-card p-6">
