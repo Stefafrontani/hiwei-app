@@ -5,7 +5,7 @@ export interface DashcamProduct {
   id: string
   name: string
   description: string
-  priceDisplay: string
+  basePrice: number
   priceFinalDisplay: string
   discount: number
   priceAllCashDisplay: string
