@@ -26,6 +26,11 @@ export function Step2({ videoQuality, onChange }: Step2Props) {
         </div>
       </div>
 
+      <InfoBox
+        icon={Info}
+        text="A mayor calidad, mayor nitidez en la grabación"
+        variant="orange"
+      />
       {/* Options */}
       <div className="flex flex-col gap-2.5">
         <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
@@ -56,12 +61,6 @@ export function Step2({ videoQuality, onChange }: Step2Props) {
           onClick={() => onChange('superior')}
         />
       </div>
-
-      <InfoBox
-        icon={Info}
-        text="A mayor calidad, mayor consumo de memoria y mayor precio"
-        variant="orange"
-      />
     </div>
   )
 }
