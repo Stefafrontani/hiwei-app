@@ -1,6 +1,6 @@
 'use client'
 
-import { Car, Truck, Bike, Info } from 'lucide-react'
+import { Car, Truck, Info } from 'lucide-react'
 import { OptionCard } from '@/components/quiz/OptionCard'
 import { InfoBox } from '@/components/quiz/InfoBox'
 import {
@@ -16,7 +16,6 @@ const VEHICLE_OPTIONS: { type: VehicleType; label: string; icon: typeof Car }[] 
   { type: 'auto', label: 'Auto', icon: Car },
   { type: 'pickup', label: 'Pickup', icon: Truck },
   { type: 'suv', label: 'SUV', icon: Truck },
-  { type: 'moto', label: 'Moto', icon: Bike },
 ]
 
 const YEARS = Array.from({ length: 30 }, (_, i) => String(new Date().getFullYear() - i))
@@ -48,7 +47,7 @@ export function Step1({
             ¿Qué tipo de vehículo tenés?
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
-            Elegí el que mejor describe tu auto o moto
+            Elegí el que mejor describe tu vehículo
           </p>
         </div>
       </div>
