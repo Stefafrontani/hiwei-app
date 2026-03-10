@@ -53,7 +53,7 @@ export function AppHeader({ currentStep, showStepPills = false, answers }: AppHe
     <>
       <header className="flex h-[60px] w-full items-center justify-between border-b border-border bg-card px-5 md:h-16 md:px-4">
         {/* Logo */}
-        <div className="flex items-center gap-2">
+        <Link href="/cotiza-tu-dashcam" className="flex items-center gap-2">
           <Image
             src="/hiwei-isotipo.png"
             alt="Hiwei"
@@ -64,7 +64,7 @@ export function AppHeader({ currentStep, showStepPills = false, answers }: AppHe
           <div className="hidden md:block">
             <p className="text-[18px] font-bold leading-none text-foreground">Hiwei</p>
           </div>
-        </div>
+        </Link>
 
         {/* Desktop: step pills */}
         {showStepPills && currentStep !== undefined && (
