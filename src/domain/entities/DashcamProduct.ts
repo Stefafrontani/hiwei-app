@@ -10,7 +10,6 @@ export interface DashcamProduct {
   discount: string | null
   priceAllCashDisplay: string
   specs: string[]
-  features: string[]
   tags: string[]
   cameraPositions: CameraPosition[]
   maxQuality: VideoQuality
