@@ -20,11 +20,19 @@ export function buildDefaultBudget(
   const dashcamPrice = parsePrice(product.priceFinalDisplay)
   const items: BudgetItem[] = [{ label: product.name, price: dashcamPrice }]
 
-  const recommendedSize = getRecommendedMemoryCardSize(answers.vehicleUsage)
-  const card = memoryCards.find((c) => c.size === recommendedSize) ?? memoryCards[0]
-  const cardPrice = card ? parsePrice(card.priceFinalDisplay) : 0
-  if (card) {
-    items.push({ label: `Tarjeta ${card.name}`, price: cardPrice })
+  let cardPrice = 0
+
+  if (product.includedMemoryCardSize != null) {
+    // Scenario 2: memory card included in dashcam price
+    items.push({ label: `Memoria incluida (${product.includedMemoryCardSize} GB)`, price: 0 })
+  } else {
+    // Scenario 1: separate memory card purchase
+    const recommendedSize = getRecommendedMemoryCardSize(answers.vehicleUsage)
+    const card = memoryCards.find((c) => c.size === recommendedSize) ?? memoryCards[0]
+    cardPrice = card ? parsePrice(card.priceFinalDisplay) : 0
+    if (card) {
+      items.push({ label: `Tarjeta ${card.name}`, price: cardPrice })
+    }
   }
 
   let total = dashcamPrice + cardPrice

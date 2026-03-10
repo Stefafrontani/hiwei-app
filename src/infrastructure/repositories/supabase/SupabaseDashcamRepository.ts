@@ -21,6 +21,7 @@ function rowToProduct(row: Record<string, any>): DashcamProduct {
     maxQuality: row.max_quality as VideoQuality,
     cycleSize: row.cycle_size as number,
     ecommerceUrl: (row.ecommerce_url as string),
+    includedMemoryCardSize: (row.included_memory_card_size as number) ?? null,
   }
 }
 

@@ -18,6 +18,8 @@ interface MemoryCardPickerProps {
   recommendedSize: number
   cycleSize: number
   onSelect: (card: MemoryCard) => void
+  mode?: 'replace' | 'expand'
+  includedSize?: number
 }
 
 function RadioCircle({ selected }: { selected: boolean }) {
@@ -39,8 +41,11 @@ function PickerContent({
   cycleSize,
   onSelect,
   onClose,
+  mode = 'replace',
+  includedSize,
 }: Omit<MemoryCardPickerProps, 'open'>) {
   const [tempSelectedId, setTempSelectedId] = useState(selectedId)
+  const isExpand = mode === 'expand'
 
   const handleConfirm = () => {
     const card = memoryCards.find((c) => c.id === tempSelectedId)
@@ -51,26 +56,32 @@ function PickerContent({
   return (
     <div className="flex flex-col gap-4">
       <p className="text-[13px] leading-relaxed text-muted-foreground">
-        Elegí la capacidad de memoria que mejor se adapte a tu uso.
+        {isExpand
+          ? `Tu dashcam incluye memoria de ${includedSize} GB. Podés agregar una tarjeta adicional de mayor capacidad.`
+          : 'Elegí la capacidad de memoria que mejor se adapte a tu uso.'}
       </p>
 
       <div className="flex flex-col gap-2">
         {memoryCards.map((card) => {
           const isSelected = card.id === tempSelectedId
-          const isRecommended = card.size === recommendedSize
+          const isRecommended = !isExpand && card.size === recommendedSize
+          const isDisabled = isExpand && includedSize != null && card.size <= includedSize
 
           return (
             <button
               key={card.id}
               type="button"
-              onClick={() => setTempSelectedId(card.id)}
+              onClick={() => !isDisabled && setTempSelectedId(card.id)}
+              disabled={isDisabled}
               className={`flex items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-colors ${
-                isSelected
-                  ? 'border-brand bg-brand/5'
-                  : 'border-border bg-card hover:border-muted-foreground/30'
+                isDisabled
+                  ? 'cursor-not-allowed border-border bg-muted/30 opacity-40'
+                  : isSelected
+                    ? 'border-brand bg-brand/5'
+                    : 'border-border bg-card hover:border-muted-foreground/30'
               }`}
             >
-              <RadioCircle selected={isSelected} />
+              <RadioCircle selected={isSelected && !isDisabled} />
               <div className="flex flex-1 flex-col">
                 <div className="flex items-center gap-2">
                   <span className="text-[14px] font-semibold text-foreground">{card.size} GB</span>
@@ -78,6 +89,11 @@ function PickerContent({
                     <Badge variant="brand" className="px-1.5 py-0 text-[10px]">
                       Recomendada
                     </Badge>
+                  )}
+                  {isDisabled && (
+                    <span className="text-[10px] font-medium text-muted-foreground">
+                      Incluida o menor
+                    </span>
                   )}
                 </div>
                 <span className="text-[11px] text-muted-foreground">
@@ -98,7 +114,7 @@ function PickerContent({
         className="flex h-[50px] w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
       >
         <MemoryStick className="h-4 w-4" />
-        Confirmar seleccion
+        {isExpand ? 'Agregar expansión' : 'Confirmar seleccion'}
       </Button>
     </div>
   )
@@ -112,10 +128,12 @@ export function MemoryCardPicker({
   recommendedSize,
   cycleSize,
   onSelect,
+  mode = 'replace',
+  includedSize,
 }: MemoryCardPickerProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  const title = 'Tarjeta de memoria'
+  const title = mode === 'expand' ? 'Expandir capacidad' : 'Tarjeta de memoria'
 
   if (isDesktop) {
     return (
@@ -131,6 +149,8 @@ export function MemoryCardPicker({
             cycleSize={cycleSize}
             onSelect={onSelect}
             onClose={onClose}
+            mode={mode}
+            includedSize={includedSize}
           />
         </DialogContent>
       </Dialog>
@@ -162,6 +182,8 @@ export function MemoryCardPicker({
             cycleSize={cycleSize}
             onSelect={onSelect}
             onClose={onClose}
+            mode={mode}
+            includedSize={includedSize}
           />
         </div>
       </SheetContent>

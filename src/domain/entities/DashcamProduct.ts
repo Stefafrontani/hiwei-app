@@ -16,4 +16,5 @@ export interface DashcamProduct {
   maxQuality: VideoQuality
   cycleSize: number
   ecommerceUrl: string
+  includedMemoryCardSize: number | null
 }

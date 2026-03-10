@@ -17,6 +17,7 @@ const PRODUCTS: DashcamProduct[] = [
     maxQuality: 'buena',
     cycleSize: 0.8,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/anti-radares-full-hd-preventa-exclusiva/',
+    includedMemoryCardSize: null,
   },
   {
     id: 'f7np',
@@ -33,6 +34,7 @@ const PRODUCTS: DashcamProduct[] = [
     maxQuality: 'superior',
     cycleSize: 1.1,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/f7np/',
+    includedMemoryCardSize: 128,
   },
   {
     id: 'vs1',
@@ -49,6 +51,7 @@ const PRODUCTS: DashcamProduct[] = [
     maxQuality: 'superior',
     cycleSize: 0.7,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/discreto1/',
+    includedMemoryCardSize: 32,
   },
   {
     id: 'radares-4k',
@@ -65,6 +68,7 @@ const PRODUCTS: DashcamProduct[] = [
     maxQuality: 'muy-buena',
     cycleSize: 2.3,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/anti-radares-4k/',
+    includedMemoryCardSize: null,
   },
   {
     id: 'f17-elite',
@@ -81,6 +85,7 @@ const PRODUCTS: DashcamProduct[] = [
     maxQuality: 'superior',
     cycleSize: 2.2,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/triple-cobertura/',
+    includedMemoryCardSize: 128,
   }
 ]
 

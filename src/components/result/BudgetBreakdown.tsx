@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Receipt, HardDrive, MemoryStick, CreditCard, Banknote, Pencil } from 'lucide-react'
+import { Receipt, HardDrive, MemoryStick, CreditCard, Banknote, Pencil, Plus } from 'lucide-react'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 import type { MemoryCard } from '@/domain/entities/MemoryCard'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
@@ -45,21 +45,34 @@ interface BudgetBreakdownProps {
 
 export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdownProps) {
   const dashcamPrice = parsePrice(product.priceFinalDisplay)
+  const hasIncludedCard = product.includedMemoryCardSize != null
   const recommendedSize = getRecommendedMemoryCardSize(answers.vehicleUsage)
   const defaultCard = memoryCards.find((c) => c.size === recommendedSize) ?? memoryCards[0]
 
-  const [selectedCard, setSelectedCard] = useState<MemoryCard | null>(defaultCard ?? null)
+  // Scenario 1: selected card (replaceable)
+  const [selectedCard, setSelectedCard] = useState<MemoryCard | null>(hasIncludedCard ? null : (defaultCard ?? null))
+  // Scenario 2: expansion card (additional)
+  const [expansionCard, setExpansionCard] = useState<MemoryCard | null>(null)
+  const [includeExpansion, setIncludeExpansion] = useState(false)
+
   const [showCardPicker, setShowCardPicker] = useState(false)
   const [includeHWK, setIncludeHWK] = useState(answers.parkingMode === 'si')
   const [includeInstallation, setIncludeInstallation] = useState(answers.installation === 'si')
 
-  const memoryCardPrice = selectedCard ? parsePrice(selectedCard.priceFinalDisplay) : 0
+  const memoryCardPrice = hasIncludedCard ? 0 : (selectedCard ? parsePrice(selectedCard.priceFinalDisplay) : 0)
+  const expansionPrice = hasIncludedCard && includeExpansion && expansionCard ? parsePrice(expansionCard.priceFinalDisplay) : 0
 
   const total =
     dashcamPrice +
     memoryCardPrice +
+    expansionPrice +
     (includeHWK ? HWK_PRICE : 0) +
     (includeInstallation ? INSTALLATION_PRICE : 0)
+
+  const handleExpansionSelect = (card: MemoryCard) => {
+    setExpansionCard(card)
+    setIncludeExpansion(true)
+  }
 
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 shadow-sm md:p-5">
@@ -95,37 +108,73 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
           <span className="shrink-0 text-[13px] font-semibold text-foreground">{product.priceFinalDisplay}</span>
         </div>
 
-        {/* Memory card */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-start gap-2.5">
-            <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-brand/10">
-              <MemoryStick className="h-3 w-3 text-brand" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[13px] font-semibold text-foreground">
-                {selectedCard ? `Tarjeta ${selectedCard.name}` : 'Tarjeta de memoria'}
-              </span>
-              <div className="flex items-center gap-1">
-                <span className="text-[11px] text-muted-foreground">
-                  {selectedCard ? `${calculateRecordingHours(selectedCard.size, product.cycleSize)}+ hs de grabacion` : 'Sin tarjetas disponibles'}
+        {/* Memory card — Scenario 1: separate card */}
+        {!hasIncludedCard && (
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-2.5">
+              <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-brand/10">
+                <MemoryStick className="h-3 w-3 text-brand" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[13px] font-semibold text-foreground">
+                  {selectedCard ? `Tarjeta ${selectedCard.name}` : 'Tarjeta de memoria'}
                 </span>
-                {memoryCards.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setShowCardPicker(true)}
-                    className="flex items-center gap-0.5 text-[10px] font-medium text-brand/70 transition-colors hover:text-brand"
-                  >
-                    <Pencil className="h-2.5 w-2.5" />
-                    editar
-                  </button>
-                )}
+                <div className="flex items-center gap-1">
+                  <span className="text-[11px] text-muted-foreground">
+                    {selectedCard ? `${calculateRecordingHours(selectedCard.size, product.cycleSize)}+ hs de grabacion` : 'Sin tarjetas disponibles'}
+                  </span>
+                  {memoryCards.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setShowCardPicker(true)}
+                      className="flex cursor-pointer items-center gap-0.5 text-[10px] font-medium text-brand/70 transition-colors hover:text-brand"
+                    >
+                      <Pencil className="h-2.5 w-2.5" />
+                      editar
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
+            <span className="shrink-0 text-[13px] font-semibold text-foreground">
+              {selectedCard ? selectedCard.priceFinalDisplay : '—'}
+            </span>
           </div>
-          <span className="shrink-0 text-[13px] font-semibold text-foreground">
-            {selectedCard ? selectedCard.priceFinalDisplay : '—'}
-          </span>
-        </div>
+        )}
+
+        {/* Memory card — Scenario 2: included card */}
+        {hasIncludedCard && (
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-2.5">
+              <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-success/10">
+                <MemoryStick className="h-3 w-3 text-success" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[13px] font-semibold text-foreground">
+                  Memoria incluida ({product.includedMemoryCardSize} GB)
+                </span>
+                <div className="flex items-center gap-1">
+                  <span className="text-[11px] text-muted-foreground">
+                    {calculateRecordingHours(product.includedMemoryCardSize!, product.cycleSize)}+ hs de grabacion
+                  </span>
+                  {memoryCards.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setShowCardPicker(true)}
+                      className="flex cursor-pointer items-center gap-0.5 text-[10px] font-medium text-brand/70 transition-colors hover:text-brand"
+                    >
+                      <Plus className="h-2.5 w-2.5" />
+                      expandir
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+            <span className="shrink-0 text-[12px] font-semibold text-success">
+              Incluida
+            </span>
+          </div>
+        )}
       </div>
 
       {/* === EXTRAS section === */}
@@ -141,6 +190,26 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
       </div>
 
       <div className="flex flex-col gap-3">
+        {/* Expansion card (Scenario 2 only) */}
+        {hasIncludedCard && expansionCard && (
+          <div className={`flex items-start justify-between gap-3 transition-opacity ${includeExpansion ? '' : 'opacity-50'}`}>
+            <div className="flex items-start gap-2.5">
+              <div className="mt-0.5 shrink-0">
+                <MiniCheckbox checked={includeExpansion} onChange={() => setIncludeExpansion((v) => !v)} />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[13px] font-semibold text-foreground">Expansión a {expansionCard.size} GB</span>
+                <span className="text-[11px] text-muted-foreground">
+                  Tarjeta adicional — {calculateRecordingHours(expansionCard.size, product.cycleSize)}+ hs extra
+                </span>
+              </div>
+            </div>
+            <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeExpansion ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
+              {expansionCard.priceFinalDisplay}
+            </span>
+          </div>
+        )}
+
         {/* HWK */}
         <div className={`flex items-start justify-between gap-3 transition-opacity ${includeHWK ? '' : 'opacity-50'}`}>
           <div className="flex items-start gap-2.5">
@@ -200,15 +269,17 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
       </div>
 
       {/* Memory Card Picker Modal */}
-      {selectedCard && memoryCards.length > 0 && (
+      {memoryCards.length > 0 && (
         <MemoryCardPicker
           open={showCardPicker}
           onClose={() => setShowCardPicker(false)}
           memoryCards={memoryCards}
-          selectedId={selectedCard.id}
-          recommendedSize={recommendedSize}
+          selectedId={hasIncludedCard ? (expansionCard?.id ?? -1) : (selectedCard?.id ?? -1)}
+          recommendedSize={hasIncludedCard ? 0 : recommendedSize}
           cycleSize={product.cycleSize}
-          onSelect={setSelectedCard}
+          onSelect={hasIncludedCard ? handleExpansionSelect : setSelectedCard}
+          mode={hasIncludedCard ? 'expand' : 'replace'}
+          includedSize={product.includedMemoryCardSize ?? undefined}
         />
       )}
     </div>
