@@ -4,6 +4,6 @@ export interface MemoryCard {
   name: string
   priceDisplay: string
   priceFinalDisplay: string
-  discount: string | null
+  discount: number
   priceAllCashDisplay: string
 }

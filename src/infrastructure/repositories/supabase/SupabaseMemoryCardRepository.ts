@@ -10,7 +10,7 @@ function rowToMemoryCard(row: Record<string, any>): MemoryCard {
     name: row.name as string,
     priceDisplay: row.price_display as string,
     priceFinalDisplay: row.price_final_display as string,
-    discount: (row.discount as string) ?? null,
+    discount: row.discount as number,
     priceAllCashDisplay: row.price_all_cash_display as string,
   }
 }
