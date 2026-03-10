@@ -39,27 +39,6 @@ export function ProgressBar({ currentStep, totalSteps = 6 }: ProgressBarProps) {
           style={{ width: `${percent === 0 ? 8 : percent}%` }}
         />
       </div>
-
-      {/* Dot indicators */}
-      <div className="flex items-center gap-1.5">
-        {Array.from({ length: totalSteps }, (_, i) => {
-          const step = i + 1
-          const isActive = step === currentStep
-          const isCompleted = step < currentStep
-          const dotColor =
-            isActive || isCompleted
-              ? isLastStep
-                ? 'bg-success'
-                : 'bg-brand'
-              : 'bg-muted'
-          return (
-            <div
-              key={step}
-              className={`rounded-full transition-all ${isActive ? 'h-2 w-2' : 'h-1.5 w-1.5'} ${dotColor}`}
-            />
-          )
-        })}
-      </div>
     </div>
   )
 }
