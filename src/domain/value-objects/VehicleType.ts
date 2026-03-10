@@ -1,1 +1,1 @@
-export type VehicleType = 'auto' | 'pickup' | 'suv' | 'moto'
+export type VehicleType = 'auto' | 'pickup' | 'suv' | 'otro'
