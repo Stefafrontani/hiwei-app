@@ -18,7 +18,6 @@ interface MemoryCardPickerProps {
   recommendedSize: number
   cycleSize: number
   onSelect: (card: MemoryCard) => void
-  mode?: 'replace' | 'expand'
   includedSize?: number
 }
 
@@ -41,11 +40,10 @@ function PickerContent({
   cycleSize,
   onSelect,
   onClose,
-  mode = 'replace',
   includedSize,
 }: Omit<MemoryCardPickerProps, 'open'>) {
   const [tempSelectedId, setTempSelectedId] = useState(selectedId)
-  const isExpand = mode === 'expand'
+  const isExpand = includedSize != null
 
   const handleConfirm = () => {
     const card = memoryCards.find((c) => c.id === tempSelectedId)
@@ -128,12 +126,11 @@ export function MemoryCardPicker({
   recommendedSize,
   cycleSize,
   onSelect,
-  mode = 'replace',
   includedSize,
 }: MemoryCardPickerProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  const title = mode === 'expand' ? 'Expandir capacidad' : 'Tarjeta de memoria'
+  const title = includedSize != null ? 'Expandir capacidad' : 'Tarjeta de memoria'
 
   if (isDesktop) {
     return (
@@ -149,7 +146,6 @@ export function MemoryCardPicker({
             cycleSize={cycleSize}
             onSelect={onSelect}
             onClose={onClose}
-            mode={mode}
             includedSize={includedSize}
           />
         </DialogContent>
@@ -182,7 +178,6 @@ export function MemoryCardPicker({
             cycleSize={cycleSize}
             onSelect={onSelect}
             onClose={onClose}
-            mode={mode}
             includedSize={includedSize}
           />
         </div>

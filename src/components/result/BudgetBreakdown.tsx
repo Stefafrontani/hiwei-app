@@ -278,7 +278,6 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
           recommendedSize={hasIncludedCard ? 0 : recommendedSize}
           cycleSize={product.cycleSize}
           onSelect={hasIncludedCard ? handleExpansionSelect : setSelectedCard}
-          mode={hasIncludedCard ? 'expand' : 'replace'}
           includedSize={product.includedMemoryCardSize ?? undefined}
         />
       )}
