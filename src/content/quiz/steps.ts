@@ -68,8 +68,8 @@ export const STEP4 = {
 
 export const STEP5 = {
   title: '¿Querés que la DASHCAM funcione con el auto apagado?',
-  subtitle: 'Esto se conoce como "modo estacionamiento". Se conecta la DASHCAM y permite a la dashcam seguir grabando aún cuando el auto está apagado.',
-  infoText: 'ATENCIÓN: Al usar la batería cuando el auto está apagado, puede reducir la vida útil de la misma.',
+  subtitle: 'Permite que la dashcam continúe grabando mientras el vehículo está apagado, conectándose directamente a la batería del auto. Esto se conoce como "modo estacionamiento.',
+  infoText: 'ATENCIÓN: El uso continuo de la batería con el auto apagado puede reducir su vida útil.',
   options: [
     { value: 'si' as ParkingMode, title: 'Sí, quiero el modo estacionamiento', description: 'Se incluirá un kit especial para instalar la DASHCAM a la fusilera del auto.' },
     { value: 'no' as ParkingMode, title: 'No, no lo quiero', description: 'La DASHCAM grabará únicamente al arrancar el auto.' },
