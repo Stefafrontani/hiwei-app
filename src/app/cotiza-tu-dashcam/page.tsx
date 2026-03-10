@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import { AppHeader } from '@/components/quiz/AppHeader'
 import { SubtitleBar } from '@/components/quiz/SubtitleBar'
 import { ProgressBar } from '@/components/quiz/ProgressBar'
@@ -39,6 +41,17 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<QuizAnswers>(createEmptyAnswers)
   const [showYearError, setShowYearError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [previousProductName] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null
+    try {
+      const cached = localStorage.getItem('hiwei-recommendation')
+      if (!cached) return null
+      const parsed = JSON.parse(cached)
+      return parsed.result?.main?.product?.name ?? null
+    } catch {
+      return null
+    }
+  })
 
   const update = useCallback(<K extends keyof QuizAnswers>(key: K, value: QuizAnswers[K]) => {
     setAnswers((prev) => ({ ...prev, [key]: value }))
@@ -88,6 +101,23 @@ export default function QuizPage() {
             title={subtitle.title}
             subtitle={subtitle.subtitle}
           />
+
+          {/* Previous recommendation banner */}
+          {currentStep === 1 && previousProductName && (
+            <Link
+              href="/resultado"
+              className="mx-5 mt-3 flex items-center justify-between rounded-xl border border-brand/20 bg-brand/5 px-4 py-3 transition-colors hover:bg-brand/10 md:mx-12"
+            >
+              <div className="flex flex-col">
+                <span className="text-[12px] text-muted-foreground">Tu última recomendación</span>
+                <span className="text-[14px] font-semibold text-foreground">{previousProductName}</span>
+              </div>
+              <div className="flex items-center gap-1 text-[13px] font-semibold text-brand">
+                Ver resultado
+                <ArrowRight className="h-3.5 w-3.5" />
+              </div>
+            </Link>
+          )}
 
           {/* Progress */}
           <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
