@@ -8,7 +8,6 @@ const MEMORY_CARDS: MemoryCard[] = [
     name: '32 GB',
     priceDisplay: '$ 1.000 ARS',
     priceFinalDisplay: '$ 1.000 ARS',
-    discount: null,
     priceAllCashDisplay: '$ 900 ARS',
   },
   {
@@ -17,7 +16,6 @@ const MEMORY_CARDS: MemoryCard[] = [
     name: '64 GB',
     priceDisplay: '$ 64.000 ARS',
     priceFinalDisplay: '$ 64.000 ARS',
-    discount: null,
     priceAllCashDisplay: '$ 58.000 ARS',
   },
   {
@@ -26,7 +24,6 @@ const MEMORY_CARDS: MemoryCard[] = [
     name: '128 GB',
     priceDisplay: '$ 128.000 ARS',
     priceFinalDisplay: '$ 128.000 ARS',
-    discount: null,
     priceAllCashDisplay: '$ 115.000 ARS',
   },
   {
@@ -35,7 +32,6 @@ const MEMORY_CARDS: MemoryCard[] = [
     name: '256 GB',
     priceDisplay: '$ 256.000 ARS',
     priceFinalDisplay: '$ 256.000 ARS',
-    discount: null,
     priceAllCashDisplay: '$ 230.000 ARS',
   },
   {
@@ -44,7 +40,6 @@ const MEMORY_CARDS: MemoryCard[] = [
     name: '512 GB',
     priceDisplay: '$ 512.000 ARS',
     priceFinalDisplay: '$ 512.000 ARS',
-    discount: null,
     priceAllCashDisplay: '$ 470.000 ARS',
   },
 ]
