@@ -95,7 +95,7 @@ function PickerContent({
                   )}
                 </div>
                 <span className="text-[11px] text-muted-foreground">
-                  {calculateRecordingHours(card.size, cycleSize)}+ hs de grabacion
+                  {calculateRecordingHours(card.size, cycleSize)}+ hs de grabación
                 </span>
               </div>
               <span className="shrink-0 text-[13px] font-semibold text-foreground">
@@ -112,7 +112,7 @@ function PickerContent({
         className="flex h-[50px] w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
       >
         <MemoryStick className="h-4 w-4" />
-        {isExpand ? 'Agregar expansión' : 'Confirmar seleccion'}
+        {isExpand ? 'Agregar expansión' : 'Confirmar selección'}
       </Button>
     </div>
   )

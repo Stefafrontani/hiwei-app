@@ -125,7 +125,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
               <span className="text-[13px] font-semibold text-foreground">
                 {product.name.length > 20 ? `${product.name.slice(0, 20)}…` : product.name}
               </span>
-              <span className="text-[11px] text-muted-foreground">Camara seleccionada</span>
+              <span className="text-[11px] text-muted-foreground">Cámara seleccionada</span>
             </div>
           </div>
           <PriceWithDiscount original={product.basePrice} discounted={dashcamPrice} />
@@ -144,7 +144,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
                 </span>
                 <div className="flex items-center gap-1">
                   <span className="text-[11px] text-muted-foreground">
-                    {selectedCard ? `${calculateRecordingHours(selectedCard.size, product.cycleSize)}+ hs de grabacion` : 'Sin tarjetas disponibles'}
+                    {selectedCard ? `${calculateRecordingHours(selectedCard.size, product.cycleSize)}+ hs de grabación` : 'Sin tarjetas disponibles'}
                   </span>
                   {memoryCards.length > 0 && (
                     <button
@@ -180,7 +180,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
                 </span>
                 <div className="flex items-center gap-1">
                   <span className="text-[11px] text-muted-foreground">
-                    {calculateRecordingHours(product.includedMemoryCardSize!, product.cycleSize)}+ hs de grabacion
+                    {calculateRecordingHours(product.includedMemoryCardSize!, product.cycleSize)}+ hs de grabación
                   </span>
                   {memoryCards.length > 0 && (
                     <button
@@ -241,7 +241,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
             </div>
             <div className="flex flex-col">
               <span className="text-[13px] font-semibold text-foreground">Hardwire Kit (HWK)</span>
-              <span className="text-[11px] text-muted-foreground">Modo estacionamiento — conexion a fusilera</span>
+              <span className="text-[11px] text-muted-foreground">Modo estacionamiento — conexión a fusilera</span>
             </div>
           </div>
           <PriceWithDiscount original={HWK_PRICE} discounted={applyDiscount(HWK_PRICE)} active={includeHWK} />
@@ -254,8 +254,8 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
               <MiniCheckbox checked={includeInstallation} onChange={() => setIncludeInstallation((v) => !v)} />
             </div>
             <div className="flex flex-col">
-              <span className="text-[13px] font-semibold text-foreground">Instalacion profesional</span>
-              <span className="text-[11px] text-muted-foreground">Tecnico certificado — en taller</span>
+              <span className="text-[13px] font-semibold text-foreground">Instalación profesional</span>
+              <span className="text-[11px] text-muted-foreground">Técnico certificado — en taller</span>
             </div>
           </div>
           <PriceWithDiscount original={INSTALLATION_PRICE} discounted={applyDiscount(INSTALLATION_PRICE)} active={includeInstallation} />

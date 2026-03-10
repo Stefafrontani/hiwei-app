@@ -41,7 +41,7 @@ export function buildDefaultBudget(
 
   if (answers.installation === 'si') {
     const installPrice = applyDiscount(INSTALLATION_PRICE)
-    items.push({ label: 'Instalacion profesional', price: installPrice })
+    items.push({ label: 'Instalación profesional', price: installPrice })
     console.log(installPrice)
     total += installPrice
   }
