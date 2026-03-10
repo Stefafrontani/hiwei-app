@@ -106,7 +106,7 @@ export default function QuizPage() {
           {currentStep === 1 && previousProductName && (
             <Link
               href="/resultado"
-              className="mx-5 mt-3 flex items-center justify-between rounded-xl border border-border bg-muted/50 px-4 py-3 transition-colors hover:bg-muted md:mx-12"
+              className="mx-5 mt-3 flex items-center justify-between rounded-xl border border-border bg-muted/50 px-4 py-3 transition-colors hover:bg-muted md:mx-4 md:my-6 md:mb-2"
             >
               <div className="flex flex-col">
                 <span className="text-[12px] text-muted-foreground">Tu última recomendación</span>
