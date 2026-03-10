@@ -37,6 +37,23 @@ function MiniCheckbox({ checked, onChange }: { checked: boolean; onChange: () =>
   )
 }
 
+function PriceWithDiscount({ original, discounted, active = true }: { original: number; discounted: number; active?: boolean }) {
+  const hasDiscount = discounted < original
+  if (!hasDiscount) {
+    return (
+      <span className={`shrink-0 text-[13px] font-semibold transition-colors ${active ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
+        {formatARS(original)}
+      </span>
+    )
+  }
+  return (
+    <span className={`flex shrink-0 flex-col items-end transition-opacity ${active ? '' : 'opacity-50'}`}>
+      <span className="text-[11px] text-muted-foreground line-through">{formatARS(original)}</span>
+      <span className={`text-[13px] font-semibold ${active ? 'text-foreground' : 'text-muted-foreground line-through'}`}>{formatARS(discounted)}</span>
+    </span>
+  )
+}
+
 interface BudgetBreakdownProps {
   product: DashcamProduct
   answers: QuizAnswers
@@ -49,6 +66,9 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
   const recommendedSize = getRecommendedMemoryCardSize(answers.vehicleUsage)
   const defaultCard = memoryCards.find((c) => c.size === recommendedSize) ?? memoryCards[0]
 
+  const discount = product.discount
+  const applyDiscount = (price: number) => Math.round(price * (1 - discount))
+
   // Scenario 1: selected card (replaceable)
   const [selectedCard, setSelectedCard] = useState<MemoryCard | null>(hasIncludedCard ? null : (defaultCard ?? null))
   // Scenario 2: expansion card (additional)
@@ -59,15 +79,17 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
   const [includeHWK, setIncludeHWK] = useState(answers.parkingMode === 'si')
   const [includeInstallation, setIncludeInstallation] = useState(answers.installation === 'si')
 
-  const memoryCardPrice = hasIncludedCard ? 0 : (selectedCard ? parsePrice(selectedCard.priceFinalDisplay) : 0)
-  const expansionPrice = hasIncludedCard && includeExpansion && expansionCard ? parsePrice(expansionCard.priceFinalDisplay) : 0
+  const memoryCardRaw = hasIncludedCard ? 0 : (selectedCard ? parsePrice(selectedCard.priceFinalDisplay) : 0)
+  const memoryCardPrice = applyDiscount(memoryCardRaw)
+  const expansionRaw = hasIncludedCard && includeExpansion && expansionCard ? parsePrice(expansionCard.priceFinalDisplay) : 0
+  const expansionPrice = applyDiscount(expansionRaw)
 
   const total =
     dashcamPrice +
     memoryCardPrice +
     expansionPrice +
-    (includeHWK ? HWK_PRICE : 0) +
-    (includeInstallation ? INSTALLATION_PRICE : 0)
+    (includeHWK ? applyDiscount(HWK_PRICE) : 0) +
+    (includeInstallation ? applyDiscount(INSTALLATION_PRICE) : 0)
 
   const handleExpansionSelect = (card: MemoryCard) => {
     setExpansionCard(card)
@@ -136,9 +158,11 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
                 </div>
               </div>
             </div>
-            <span className="shrink-0 text-[13px] font-semibold text-foreground">
-              {selectedCard ? selectedCard.priceFinalDisplay : '—'}
-            </span>
+            {selectedCard ? (
+              <PriceWithDiscount original={memoryCardRaw} discounted={memoryCardPrice} />
+            ) : (
+              <span className="shrink-0 text-[13px] font-semibold text-foreground">—</span>
+            )}
           </div>
         )}
 
@@ -204,9 +228,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
                 </span>
               </div>
             </div>
-            <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeExpansion ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
-              {expansionCard.priceFinalDisplay}
-            </span>
+            <PriceWithDiscount original={expansionRaw} discounted={expansionPrice} active={includeExpansion} />
           </div>
         )}
 
@@ -221,9 +243,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
               <span className="text-[11px] text-muted-foreground">Modo estacionamiento — conexion a fusilera</span>
             </div>
           </div>
-          <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeHWK ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
-            {formatARS(HWK_PRICE)}
-          </span>
+          <PriceWithDiscount original={HWK_PRICE} discounted={applyDiscount(HWK_PRICE)} active={includeHWK} />
         </div>
 
         {/* Installation */}
@@ -237,9 +257,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
               <span className="text-[11px] text-muted-foreground">Tecnico certificado — en taller</span>
             </div>
           </div>
-          <span className={`shrink-0 text-[13px] font-semibold transition-colors ${includeInstallation ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
-            {formatARS(INSTALLATION_PRICE)}
-          </span>
+          <PriceWithDiscount original={INSTALLATION_PRICE} discounted={applyDiscount(INSTALLATION_PRICE)} active={includeInstallation} />
         </div>
       </div>
 
