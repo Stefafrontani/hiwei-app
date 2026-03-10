@@ -23,17 +23,9 @@ import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 import type { VehicleUsage } from '@/domain/value-objects/VehicleUsage'
 import type { ParkingMode } from '@/domain/value-objects/ParkingMode'
 import type { Installation } from '@/domain/value-objects/Installation'
+import { SUBTITLE_CONFIG, PREVIOUS_RECOMMENDATION } from '@/content/quiz/subtitles'
 
 const TOTAL_STEPS = 6
-
-const SUBTITLE_CONFIG: Record<number, { variant: 'blue' | 'green'; title: string; subtitle: string }> = {
-  1: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
-  2: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
-  3: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
-  4: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
-  5: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
-  6: { variant: 'green', title: '¡Encontrá tu DASHCAM!', subtitle: '¡Último paso! Ya casi estamos' },
-}
 
 export default function QuizPage() {
   const router = useRouter()
@@ -109,11 +101,11 @@ export default function QuizPage() {
               className="mx-5 mt-3 flex items-center justify-between rounded-xl border border-border bg-muted/50 px-4 py-3 transition-colors hover:bg-muted md:mx-4 md:my-6 md:mb-2"
             >
               <div className="flex flex-col">
-                <span className="text-[12px] text-muted-foreground">Tu última recomendación</span>
+                <span className="text-[12px] text-muted-foreground">{PREVIOUS_RECOMMENDATION.label}</span>
                 <span className="text-[14px] font-semibold text-foreground">{previousProductName}</span>
               </div>
               <div className="flex items-center gap-1 text-[13px] font-semibold text-brand">
-                Ver recomendación
+                {PREVIOUS_RECOMMENDATION.cta}
                 <ArrowRight className="h-3.5 w-3.5" />
               </div>
             </Link>

@@ -1,6 +1,7 @@
 import { Camera } from 'lucide-react'
 import { OptionRow } from '@/components/quiz/OptionRow'
 import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
+import { STEP3 } from '@/content/quiz/steps'
 
 interface Step3Props {
   cameraPositions?: CameraPosition[]
@@ -22,10 +23,10 @@ export function Step3({ cameraPositions, onChange }: Step3Props) {
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
-            ¿Cuántas cámaras necesitás?
+            {STEP3.title}
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
-            Podés grabar distintos ángulos.
+            {STEP3.subtitle}
           </p>
         </div>
       </div>
@@ -33,32 +34,19 @@ export function Step3({ cameraPositions, onChange }: Step3Props) {
       {/* Options */}
       <div className="flex flex-col gap-2.5">
         <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
-          UBICACIÓN DE CÁMARAS *
+          {STEP3.sectionLabel}
         </p>
 
-        <OptionRow
-          icon={Camera}
-          title="Frontal"
-          description="Una cámara apuntando hacia el frente"
-          isActive={arraysEqual(cameraPositions, ['frontal'])}
-          onClick={() => onChange(['frontal'])}
-        />
-
-        <OptionRow
-          icon={Camera}
-          title="Frontal + Trasera"
-          description="Cubre adelante y atrás del vehículo"
-          isActive={arraysEqual(cameraPositions, ['frontal', 'trasera'])}
-          onClick={() => onChange(['frontal', 'trasera'])}
-        />
-
-        <OptionRow
-          icon={Camera}
-          title="Frontal + Trasera + Interior"
-          description="Cubre adelante atras y tambien el interior de tu vehiculo"
-          isActive={arraysEqual(cameraPositions, ['frontal', 'trasera', 'interior'])}
-          onClick={() => onChange(['frontal', 'trasera', 'interior'])}
-        />
+        {STEP3.options.map((opt) => (
+          <OptionRow
+            key={opt.title}
+            icon={Camera}
+            title={opt.title}
+            description={opt.description}
+            isActive={arraysEqual(cameraPositions, opt.positions as unknown as CameraPosition[])}
+            onClick={() => onChange(opt.positions as unknown as CameraPosition[])}
+          />
+        ))}
       </div>
     </div>
   )

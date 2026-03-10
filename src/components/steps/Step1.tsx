@@ -11,13 +11,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import type { VehicleType } from '@/domain/value-objects/VehicleType'
+import { STEP1 } from '@/content/quiz/steps'
 
-const VEHICLE_OPTIONS: { type: VehicleType; label: string; icon: typeof Car }[] = [
-  { type: 'auto', label: 'Auto', icon: Car },
-  { type: 'pickup', label: 'Pickup', icon: Truck },
-  { type: 'suv', label: 'SUV', icon: Truck },
-  { type: 'otro', label: 'Otro', icon: CircleHelp },
-]
+const VEHICLE_ICONS: Record<string, typeof Car> = {
+  auto: Car,
+  pickup: Truck,
+  suv: Truck,
+  otro: CircleHelp,
+}
 
 const YEARS = Array.from({ length: 30 }, (_, i) => String(new Date().getFullYear() - i))
 
@@ -45,10 +46,10 @@ export function Step1({
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
-            ¿Qué tipo de vehículo tenés?
+            {STEP1.title}
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
-            Elegí la opción que mejor describa tu vehículo
+            {STEP1.subtitle}
           </p>
         </div>
       </div>
@@ -56,13 +57,13 @@ export function Step1({
       {/* Vehicle type */}
       <div className="flex flex-col gap-2.5">
         <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
-          TIPO DE VEHÍCULO *
+          {STEP1.vehicleTypeLabel}
         </p>
         <div className="flex flex-wrap gap-2.5">
-          {VEHICLE_OPTIONS.map(({ type, label, icon }) => (
+          {STEP1.options.map(({ type, label }) => (
             <OptionCard
               key={type}
-              icon={icon}
+              icon={VEHICLE_ICONS[type]}
               subLabel={label}
               isActive={vehicleType === type}
               onClick={() => onVehicleTypeChange(type)}
@@ -74,7 +75,7 @@ export function Step1({
       {/* Vehicle year */}
       <div className="flex flex-col gap-2.5">
         <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
-          AÑO DEL VEHÍCULO *
+          {STEP1.vehicleYearLabel}
         </p>
         <Select
           value={vehicleYear?.toString()}
@@ -84,7 +85,7 @@ export function Step1({
             className={`h-12 w-full rounded-[10px] border px-3.5 text-[14px] md:w-80
               ${showYearError ? 'border-destructive/30' : 'border-border'}`}
           >
-            <SelectValue placeholder="Ej: 2020" />
+            <SelectValue placeholder={STEP1.yearPlaceholder} />
           </SelectTrigger>
           <SelectContent>
             {YEARS.map((y) => (
@@ -98,7 +99,7 @@ export function Step1({
         {showYearError && (
           <InfoBox
             icon={Info}
-            text="Seleccioná el año del vehículo"
+            text={STEP1.yearError}
             variant="red"
           />
         )}

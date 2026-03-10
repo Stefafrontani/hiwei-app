@@ -2,13 +2,7 @@ import { Timer, Info } from 'lucide-react'
 import { OptionCard } from '@/components/quiz/OptionCard'
 import { InfoBox } from '@/components/quiz/InfoBox'
 import type { VehicleUsage } from '@/domain/value-objects/VehicleUsage'
-
-const USAGE_OPTIONS: { value: VehicleUsage; label: string; subLabel: string }[] = [
-  { value: 'work_tool', label: 'Trabajo', subLabel: 'Taxi, delivery, remis' },
-  { value: 'commute', label: 'Viaje ocasional', subLabel: 'Uso diario' },
-  { value: 'recreational', label: 'Recreativo', subLabel: 'Uso ocasional' },
-  { value: 'other', label: 'Otro', subLabel: 'Sin preferencia' },
-]
+import { STEP4 } from '@/content/quiz/steps'
 
 interface Step4Props {
   vehicleUsage?: VehicleUsage
@@ -25,21 +19,27 @@ export function Step4({ vehicleUsage, onChange }: Step4Props) {
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
-            ¿Qué uso le das al vehículo?
+            {STEP4.title}
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
-            Esto nos ayuda a saber cuanto tiempo pasas por día arriba del auto y así poder calcular que duración de grabación continua necesitás
+            {STEP4.subtitle}
           </p>
         </div>
       </div>
 
+      <InfoBox
+        icon={Info}
+        text={STEP4.infoText}
+        variant="orange"
+      />
+
       {/* Usage options */}
       <div className="flex flex-col gap-2.5">
         <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
-          USO PRINCIPAL DEL VEHÍCULO *
+          {STEP4.sectionLabel}
         </p>
         <div className="flex flex-wrap gap-2.5">
-          {USAGE_OPTIONS.map(({ value, label, subLabel }) => (
+          {STEP4.options.map(({ value, label, subLabel }) => (
             <OptionCard
               key={value}
               label={label}
@@ -50,12 +50,6 @@ export function Step4({ vehicleUsage, onChange }: Step4Props) {
           ))}
         </div>
       </div>
-
-      <InfoBox
-        icon={Info}
-        text="A mayor uso del vehículo, recomendamos una tarjeta de memoria con más capacidad para mayor tiempo de grabación."
-        variant="orange"
-      />
     </div>
   )
 }
