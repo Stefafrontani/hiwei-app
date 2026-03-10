@@ -37,7 +37,7 @@ export default function ResultadoPage() {
   useEffect(() => {
     const raw = localStorage.getItem('hiwei-quiz')
     if (!raw) {
-      router.replace('/quiz')
+      router.replace('/cotiza-tu-dashcam')
       return
     }
 
@@ -87,7 +87,7 @@ export default function ResultadoPage() {
   const handleRestart = () => {
     localStorage.removeItem('hiwei-quiz')
     localStorage.removeItem('hiwei-recommendation')
-    router.push('/quiz')
+    router.push('/cotiza-tu-dashcam')
   }
 
   const productName = result?.main.product.name
@@ -119,7 +119,7 @@ export default function ResultadoPage() {
             <div className="m-4 flex flex-col items-center gap-3 rounded-xl bg-destructive/10 p-6 text-center">
               <p className="text-[16px] font-semibold text-destructive">Algo salió mal</p>
               <p className="text-[13px] text-muted-foreground">{error}</p>
-              <button onClick={() => router.push('/quiz')} className="text-[13px] font-semibold text-brand underline">
+              <button onClick={() => router.push('/cotiza-tu-dashcam')} className="text-[13px] font-semibold text-brand underline">
                 Intentar de nuevo
               </button>
             </div>

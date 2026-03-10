@@ -32,7 +32,7 @@ export default function Home() {
         <p className="mb-8 text-[16px] leading-relaxed text-muted-foreground md:text-[18px]">
           Respondé 6 preguntas y nuestro asesor inteligente te recomienda la dashcam ideal según tu auto, preferencias y presupuesto.
         </p>
-        <Link href="/quiz">
+        <Link href="/cotiza-tu-dashcam">
           <Button variant="brand" className="flex h-14 items-center gap-2 rounded-xl px-8 text-[16px] font-semibold">
             Empezar el asesoramiento
             <ArrowRight className="h-5 w-5" />
