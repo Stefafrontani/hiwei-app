@@ -127,7 +127,7 @@ export default function ResultadoPage() {
 
           {/* Content */}
           {result && !loading && (
-            <div className="flex flex-col gap-4 px-4 py-4 pb-20 md:px-12 md:py-8 md:pb-8">
+            <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-4 py-4 pb-20 md:px-12 md:py-8 md:pb-8">
               {/* Main Recommendation */}
               <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} onSendRecommendation={() => setShowSend(true)} />
 

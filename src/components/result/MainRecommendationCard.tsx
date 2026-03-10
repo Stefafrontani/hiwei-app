@@ -71,7 +71,7 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
             className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-brand bg-card px-4 py-2.5 text-[14px] font-semibold text-brand transition-colors hover:bg-brand/10 md:text-[15px]"
           >
             <Send className="h-4 w-4" />
-            Enviar x mail
+            Enviar por mail
           </button>
         )}
         <a
