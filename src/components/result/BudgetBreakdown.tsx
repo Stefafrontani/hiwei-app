@@ -1,19 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { Receipt, HardDrive, MemoryStick, CreditCard, Banknote, Pencil, Plus } from 'lucide-react'
+import { Receipt, HardDrive, MemoryStick, CreditCard, Banknote, Pencil, Plus, Flame } from 'lucide-react'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 import type { MemoryCard } from '@/domain/entities/MemoryCard'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import { getRecommendedMemoryCardSize } from '@/domain/services/getRecommendedMemoryCardSize'
 import { calculateRecordingHours } from '@/domain/services/calculateRecordingHours'
 import { MemoryCardPicker } from './MemoryCardPicker'
-import { HWK_PRICE, INSTALLATION_PRICE } from '@/lib/constants'
-
-function parsePrice(display: string): number {
-  const cleaned = display.replace(/[^0-9.,]/g, '').replace(/\./g, '').replace(',', '.')
-  return parseFloat(cleaned) || 0
-}
+import { HWK_PRICE, INSTALLATION_PRICE, CASH_DISCOUNT } from '@/lib/constants'
 
 function formatARS(amount: number): string {
   return `$${amount.toLocaleString('es-AR')} ARS`
@@ -48,8 +43,8 @@ function PriceWithDiscount({ original, discounted, active = true }: { original: 
   }
   return (
     <span className={`flex shrink-0 flex-col items-end transition-opacity ${active ? '' : 'opacity-50'}`}>
-      <span className="text-[11px] text-muted-foreground line-through">{formatARS(original)}</span>
       <span className={`text-[13px] font-semibold ${active ? 'text-foreground' : 'text-muted-foreground line-through'}`}>{formatARS(discounted)}</span>
+      <span className="text-[11px] text-muted-foreground line-through">{formatARS(original)}</span>
     </span>
   )
 }
@@ -61,7 +56,7 @@ interface BudgetBreakdownProps {
 }
 
 export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdownProps) {
-  const dashcamPrice = parsePrice(product.priceFinalDisplay)
+  const dashcamPrice = Math.round(product.basePrice * (1 - product.discount))
   const hasIncludedCard = product.includedMemoryCardSize != null
   const recommendedSize = getRecommendedMemoryCardSize(answers.vehicleUsage)
   const defaultCard = memoryCards.find((c) => c.size === recommendedSize) ?? memoryCards[0]
@@ -79,9 +74,9 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
   const [includeHWK, setIncludeHWK] = useState(answers.parkingMode === 'si')
   const [includeInstallation, setIncludeInstallation] = useState(answers.installation === 'si')
 
-  const memoryCardRaw = hasIncludedCard ? 0 : (selectedCard ? parsePrice(selectedCard.priceFinalDisplay) : 0)
+  const memoryCardRaw = hasIncludedCard ? 0 : (selectedCard?.basePrice ?? 0)
   const memoryCardPrice = applyDiscount(memoryCardRaw)
-  const expansionRaw = hasIncludedCard && includeExpansion && expansionCard ? parsePrice(expansionCard.priceFinalDisplay) : 0
+  const expansionRaw = hasIncludedCard && includeExpansion && expansionCard ? expansionCard.basePrice : 0
   const expansionPrice = applyDiscount(expansionRaw)
 
   const total =
@@ -104,6 +99,12 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
           <Receipt className="h-3.5 w-3.5 text-brand" />
         </div>
         <span className="text-[13px] font-bold text-foreground md:text-[14px]">Presupuesto</span>
+        {product.discount > 0 && (
+          <span className="ml-auto inline-flex items-center flex-end gap-1 rounded-md bg-warning/20 px-2.5 py-1 text-[11px] font-bold text-warning">
+            <Flame className="h-3.5 w-3.5" />
+            {Math.round(product.discount * 100)} % OFF
+          </span>
+        )}
       </div>
 
       <div className="h-px bg-border" />
@@ -127,7 +128,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
               <span className="text-[11px] text-muted-foreground">Camara seleccionada</span>
             </div>
           </div>
-          <span className="shrink-0 text-[13px] font-semibold text-foreground">{product.priceFinalDisplay}</span>
+          <PriceWithDiscount original={product.basePrice} discounted={dashcamPrice} />
         </div>
 
         {/* Memory card — Scenario 1: separate card */}
@@ -281,7 +282,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
         <div className="flex items-center gap-1.5">
           <Banknote className="h-3.5 w-3.5 text-muted-foreground" />
           <span className="text-[11px] font-medium text-muted-foreground md:text-[12px]">
-            <span className="font-bold text-foreground">10% off</span> en <span className="font-bold text-foreground">efectivo o transferencia</span>
+            <span className="font-bold text-foreground">{Math.round(CASH_DISCOUNT * 100)}% off</span> en <span className="font-bold text-foreground">efectivo o transferencia</span>
           </span>
         </div>
       </div>

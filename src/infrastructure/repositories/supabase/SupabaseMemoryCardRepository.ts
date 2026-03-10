@@ -8,9 +8,7 @@ function rowToMemoryCard(row: Record<string, any>): MemoryCard {
     id: row.id as number,
     size: row.size as number,
     name: row.name as string,
-    priceDisplay: row.price_display as string,
-    priceFinalDisplay: row.price_final_display as string,
-    priceAllCashDisplay: row.price_all_cash_display as string,
+    basePrice: row.base_price as number,
   }
 }
 

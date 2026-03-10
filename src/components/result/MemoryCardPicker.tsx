@@ -99,7 +99,7 @@ function PickerContent({
                 </span>
               </div>
               <span className="shrink-0 text-[13px] font-semibold text-foreground">
-                {card.priceFinalDisplay}
+                {`$${card.basePrice.toLocaleString('es-AR')} ARS`}
               </span>
             </button>
           )

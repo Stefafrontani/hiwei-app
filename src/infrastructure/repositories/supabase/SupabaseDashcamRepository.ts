@@ -11,9 +11,7 @@ function rowToProduct(row: Record<string, any>): DashcamProduct {
     name: row.name as string,
     description: row.description as string,
     basePrice: row.base_price as number,
-    priceFinalDisplay: row.price_final_display as string,
     discount: row.discount as number,
-    priceAllCashDisplay: row.price_all_cash_display as string,
     specs: row.specs as string[],
     tags: row.tags as string[],
     cameraPositions: row.camera_positions as CameraPosition[],
@@ -30,7 +28,7 @@ export class SupabaseDashcamRepository implements IDashcamRepository {
     const { data, error } = await client
       .from('dashcam')
       .select('*')
-      .order('price_final_display', { ascending: true })
+      .order('base_price', { ascending: true })
 
     if (error) throw new Error(`Failed to fetch products: ${error.message}`)
     return (data ?? []).map(rowToProduct)

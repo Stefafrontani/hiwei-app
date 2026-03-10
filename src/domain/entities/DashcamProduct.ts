@@ -6,9 +6,7 @@ export interface DashcamProduct {
   name: string
   description: string
   basePrice: number
-  priceFinalDisplay: string
   discount: number
-  priceAllCashDisplay: string
   specs: string[]
   tags: string[]
   cameraPositions: CameraPosition[]
