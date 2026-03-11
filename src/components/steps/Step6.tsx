@@ -1,6 +1,9 @@
 import { Wrench, Package } from 'lucide-react'
 import { OptionRow } from '@/components/quiz/OptionRow'
 import type { Installation } from '@/domain/value-objects/Installation'
+import { STEP6 } from '@/content/quiz/steps'
+
+const INSTALL_ICONS = { si: Wrench, no: Package } as const
 
 interface Step6Props {
   installation?: Installation
@@ -17,33 +20,27 @@ export function Step6({ installation, onChange }: Step6Props) {
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
-            ¿Te gustaría que instalemos tu dashcam?
+            {STEP6.title}
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
-            Instalación profesional en nuestro taller
+            {STEP6.subtitle}
           </p>
         </div>
       </div>
 
       {/* Options */}
       <div className="flex flex-col gap-3">
-        <OptionRow
-          icon={Wrench}
-          title="Sí, quiero instalación profesional"
-          description="Nuestro equipo instala tu dashcam de forma segura y prolija."
-          isActive={installation === 'si'}
-          onClick={() => onChange('si')}
-          accentColor="green"
-        />
-
-        <OptionRow
-          icon={Package}
-          title="No, prefiero instalarlo por mi cuenta"
-          description="Te enviamos con todo lo necesario para instalar."
-          isActive={installation === 'no'}
-          onClick={() => onChange('no')}
-          accentColor="green"
-        />
+        {STEP6.options.map((opt) => (
+          <OptionRow
+            key={opt.value}
+            icon={INSTALL_ICONS[opt.value]}
+            title={opt.title}
+            description={opt.description}
+            isActive={installation === opt.value}
+            onClick={() => onChange(opt.value)}
+            accentColor="green"
+          />
+        ))}
       </div>
     </div>
   )

@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import { AppHeader } from '@/components/quiz/AppHeader'
 import { SubtitleBar } from '@/components/quiz/SubtitleBar'
 import { ProgressBar } from '@/components/quiz/ProgressBar'
@@ -21,17 +23,9 @@ import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 import type { VehicleUsage } from '@/domain/value-objects/VehicleUsage'
 import type { ParkingMode } from '@/domain/value-objects/ParkingMode'
 import type { Installation } from '@/domain/value-objects/Installation'
+import { SUBTITLE_CONFIG, PREVIOUS_RECOMMENDATION } from '@/content/quiz/subtitles'
 
 const TOTAL_STEPS = 6
-
-const SUBTITLE_CONFIG: Record<number, { variant: 'blue' | 'green'; title: string; subtitle: string }> = {
-  1: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
-  2: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
-  3: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
-  4: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
-  5: { variant: 'blue', title: '¡Encontrá tu DASHCAM!', subtitle: 'Respondiendo solo 6 preguntas te mostramos lo mejor para vos.' },
-  6: { variant: 'green', title: '¡Encontrá tu DASHCAM!', subtitle: '¡Último paso! Ya casi estamos' },
-}
 
 export default function QuizPage() {
   const router = useRouter()
@@ -39,6 +33,17 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<QuizAnswers>(createEmptyAnswers)
   const [showYearError, setShowYearError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [previousProductName] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null
+    try {
+      const cached = localStorage.getItem('hiwei-recommendation')
+      if (!cached) return null
+      const parsed = JSON.parse(cached)
+      return parsed.result?.main?.product?.name ?? null
+    } catch {
+      return null
+    }
+  })
 
   const update = useCallback(<K extends keyof QuizAnswers>(key: K, value: QuizAnswers[K]) => {
     setAnswers((prev) => ({ ...prev, [key]: value }))
@@ -88,6 +93,23 @@ export default function QuizPage() {
             title={subtitle.title}
             subtitle={subtitle.subtitle}
           />
+
+          {/* Previous recommendation banner */}
+          {currentStep === 1 && previousProductName && (
+            <Link
+              href="/resultado"
+              className="mx-5 mt-3 flex items-center justify-between rounded-xl border border-border bg-muted/50 px-4 py-3 transition-colors hover:bg-muted md:mx-4 md:my-6 md:mb-2"
+            >
+              <div className="flex flex-col">
+                <span className="text-[12px] text-muted-foreground">{PREVIOUS_RECOMMENDATION.label}</span>
+                <span className="text-[14px] font-semibold text-foreground">{previousProductName}</span>
+              </div>
+              <div className="flex items-center gap-1 text-[13px] font-semibold text-brand">
+                {PREVIOUS_RECOMMENDATION.cta}
+                <ArrowRight className="h-3.5 w-3.5" />
+              </div>
+            </Link>
+          )}
 
           {/* Progress */}
           <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />

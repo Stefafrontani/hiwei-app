@@ -2,6 +2,7 @@ import { Video, Info } from 'lucide-react'
 import { OptionRow } from '@/components/quiz/OptionRow'
 import { InfoBox } from '@/components/quiz/InfoBox'
 import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
+import { STEP2 } from '@/content/quiz/steps'
 
 interface Step2Props {
   videoQuality?: VideoQuality
@@ -18,50 +19,36 @@ export function Step2({ videoQuality, onChange }: Step2Props) {
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
-            ¿Qué calidad de imagen preferís?
+            {STEP2.title}
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
-            Elegí según tus preferencias.
+            {STEP2.subtitle}
           </p>
         </div>
       </div>
 
+      <InfoBox
+        icon={Info}
+        text={STEP2.infoText}
+        variant="orange"
+      />
       {/* Options */}
       <div className="flex flex-col gap-2.5">
         <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
-          CALIDAD DE GRABACIÓN *
+          {STEP2.sectionLabel}
         </p>
 
-        <OptionRow
-          icon={Video}
-          title="Buena"
-          description="La calidad es suficiente para grabar lo que importa: patentes."
-          isActive={videoQuality === 'buena'}
-          onClick={() => onChange('buena')}
-        />
-
-        <OptionRow
-          icon={Video}
-          title="Muy buena"
-          description="Además de registrar lo importante, tambien captura otros detalles."
-          isActive={videoQuality === 'muy-buena'}
-          onClick={() => onChange('muy-buena')}
-        />
-
-        <OptionRow
-          icon={Video}
-          title="Calidad superior"
-          description="Mejor lectura de detalles y nitidez, ideal si querés lo mejor."
-          isActive={videoQuality === 'superior'}
-          onClick={() => onChange('superior')}
-        />
+        {STEP2.options.map((opt) => (
+          <OptionRow
+            key={opt.value}
+            icon={Video}
+            title={opt.title}
+            description={opt.description}
+            isActive={videoQuality === opt.value}
+            onClick={() => onChange(opt.value)}
+          />
+        ))}
       </div>
-
-      <InfoBox
-        icon={Info}
-        text="A mayor calidad, mayor consumo de memoria y mayor precio"
-        variant="orange"
-      />
     </div>
   )
 }

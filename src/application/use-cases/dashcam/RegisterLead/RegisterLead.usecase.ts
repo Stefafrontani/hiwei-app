@@ -4,6 +4,7 @@ import type { LeadSource } from '@/domain/entities/Lead'
 import { MissingRequiredFieldsError } from '@/domain/errors/MissingRequiredFieldsError'
 import { validateEmail } from '@/domain/errors/validators'
 import { buildWelcomeLeadEmail } from '@/infrastructure/email/buildWelcomeLeadEmail'
+import { DISCOUNT_CODE } from '@/lib/constants'
 
 export class RegisterLeadUseCase {
   constructor(
@@ -27,7 +28,7 @@ export class RegisterLeadUseCase {
       source,
     })
 
-    const html = buildWelcomeLeadEmail({ recipientName: input.name.trim() })
+    const html = buildWelcomeLeadEmail({ recipientName: input.name.trim(), discountCode: DISCOUNT_CODE })
     await this.emailService.send({
       to: input.email.trim(),
       subject: '¡Bienvenido a Hiwei! Acá tenés tu descuento',

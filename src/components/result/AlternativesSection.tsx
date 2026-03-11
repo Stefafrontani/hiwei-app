@@ -22,9 +22,12 @@ export function AlternativesSection({ alternatives }: AlternativesSectionProps) 
         {alternatives.slice(0, 3).map((alt, i) => {
           const badge = ALT_BADGES[i] ?? ALT_BADGES[0]
           return (
-            <div
+            <a
+              href={alt.product.ecommerceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               key={alt.product.id}
-              className="flex flex-1 items-center gap-2.5 rounded-xl border border-border bg-card p-3"
+              className="flex flex-1 items-center gap-2.5 rounded-xl border border-border bg-card p-3 transition-colors hover:border-brand/40 hover:bg-brand/5"
             >
               <span className={`shrink-0 rounded-md px-2 py-1 text-[10px] font-semibold ${badge.bg} ${badge.text}`}>
                 {badge.label}
@@ -33,12 +36,15 @@ export function AlternativesSection({ alternatives }: AlternativesSectionProps) 
                 <span className="truncate text-[13px] font-semibold text-foreground">
                   {alt.product.name}
                 </span>
-                <span className="text-[12px] text-muted-foreground">{alt.product.priceDisplay}</span>
+                <span className="text-[12px] text-muted-foreground">{`$${alt.product.basePrice.toLocaleString('es-AR')} ARS`}</span>
               </div>
               <span className="shrink-0 rounded-full bg-muted px-2 py-1 text-[11px] font-bold text-muted-foreground">
                 {alt.matchScore}%
               </span>
-            </div>
+              <span className="shrink-0 rounded-md bg-brand px-3 py-1.5 text-[11px] font-bold text-white transition-colors hover:bg-brand/90">
+                Comprar
+              </span>
+            </a>
           )
         })}
       </div>

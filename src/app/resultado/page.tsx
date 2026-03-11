@@ -37,7 +37,7 @@ export default function ResultadoPage() {
   useEffect(() => {
     const raw = localStorage.getItem('hiwei-quiz')
     if (!raw) {
-      router.replace('/quiz')
+      router.replace('/cotiza-tu-dashcam')
       return
     }
 
@@ -87,7 +87,7 @@ export default function ResultadoPage() {
   const handleRestart = () => {
     localStorage.removeItem('hiwei-quiz')
     localStorage.removeItem('hiwei-recommendation')
-    router.push('/quiz')
+    router.push('/cotiza-tu-dashcam')
   }
 
   const productName = result?.main.product.name
@@ -119,7 +119,7 @@ export default function ResultadoPage() {
             <div className="m-4 flex flex-col items-center gap-3 rounded-xl bg-destructive/10 p-6 text-center">
               <p className="text-[16px] font-semibold text-destructive">Algo salió mal</p>
               <p className="text-[13px] text-muted-foreground">{error}</p>
-              <button onClick={() => router.push('/quiz')} className="text-[13px] font-semibold text-brand underline">
+              <button onClick={() => router.push('/cotiza-tu-dashcam')} className="text-[13px] font-semibold text-brand underline">
                 Intentar de nuevo
               </button>
             </div>
@@ -127,35 +127,23 @@ export default function ResultadoPage() {
 
           {/* Content */}
           {result && !loading && (
-            <div className="flex flex-col gap-4 px-4 py-4 md:px-12 md:py-8">
+            <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-4 py-4 pb-20 md:px-12 md:py-8 md:pb-8">
               {/* Main Recommendation */}
-              <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} />
+              <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} onSendRecommendation={() => setShowSend(true)} />
 
               {/* Budget Breakdown */}
               <BudgetBreakdown product={result.main.product} answers={answers} memoryCards={memoryCards} />
 
-              {/* Alternatives */}
-              <AlternativesSection alternatives={result.alternatives} />
+              {/* Alternatives — hidden temporarily, will be redesigned with more detail */}
+              {/* <AlternativesSection alternatives={result.alternatives} /> */}
 
-              {/* Mobile CTAs (hidden on desktop — shown in sidebar) */}
-              <div className="flex flex-col gap-3 md:hidden">
-                <button
-                  onClick={() => setShowContact(true)}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-brand bg-card text-[14px] font-semibold text-brand transition-colors hover:bg-brand/10"
-                >
-                  <Headphones className="h-4 w-4" />
-                  Consultanos
-                </button>
-                <button
-                  onClick={() => setShowSend(true)}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card text-[14px] font-medium text-muted-foreground transition-colors hover:bg-muted"
-                >
-                  <Send className="h-4 w-4" />
-                  Enviarme la recomendación
-                </button>
+              {/* Restart prompt (mobile) */}
+              <div className="flex flex-col items-center gap-2 rounded-xl border border-border bg-muted/40 px-4 py-5 pb-20 text-center md:hidden">
+                <p className="text-[14px] font-semibold text-foreground">¿No es lo que buscabas?</p>
+                <p className="text-[12px] leading-relaxed text-muted-foreground">Podés ajustar tus respuestas y encontrar la dashcam ideal.</p>
                 <button
                   onClick={handleRestart}
-                  className="flex items-center justify-center gap-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  className="mt-1 inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border bg-card px-4 py-2 text-[13px] font-semibold text-foreground transition-colors hover:bg-muted"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
                   Empezar de nuevo
@@ -195,6 +183,19 @@ export default function ResultadoPage() {
         whatsAppProps={{ answers, productName }}
       />
       <SendRecommendationOverlay open={showSend} onClose={() => setShowSend(false)} recommendationId={recommendationId} />
+
+      {/* Fixed bottom CTA — mobile only */}
+      {result && !loading && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card px-4 py-3 md:hidden">
+          <button
+            onClick={() => setShowContact(true)}
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand text-[14px] font-semibold text-white transition-colors hover:bg-brand/90"
+          >
+            <Headphones className="h-4 w-4" />
+            Consultanos
+          </button>
+        </div>
+      )}
     </div>
   )
 }

@@ -39,35 +39,35 @@ function formatAnswers(answers: QuizAnswers): string {
 
   if (answers.vehicleType) {
     const vehicle = VEHICLE_LABELS[answers.vehicleType] ?? answers.vehicleType
-    const year = answers.vehicleYear ? ` - Ano ${answers.vehicleYear}` : ''
-    lines.push(`1. Vehiculo: ${vehicle}${year}`)
+    const year = answers.vehicleYear ? ` - Año ${answers.vehicleYear}` : ''
+    lines.push(`1. Vehículo: ${vehicle}${year}`)
   }
 
   if (answers.videoQuality) {
     const quality = QUALITY_LABELS[answers.videoQuality] ?? answers.videoQuality
-    const detail = answers.videoQuality === 'superior' ? ' (prioriza calidad)' : answers.videoQuality === 'buena' ? ' (basica, suficiente)' : ''
+    const detail = answers.videoQuality === 'superior' ? ' (prioriza calidad)' : answers.videoQuality === 'buena' ? ' (básica, suficiente)' : ''
     lines.push(`2. Calidad de imagen: ${quality}${detail}`)
   }
 
   if (answers.cameraPositions?.length) {
     const count = answers.cameraPositions.length
-    const label = CAMERA_LABELS[count] ?? `${count} camaras`
+    const label = CAMERA_LABELS[count] ?? `${count} cámaras`
     const detail = count >= 3 ? ' (busca cobertura completa)' : count === 1 ? ' (solo frente)' : ''
     lines.push(`3. Camaras: ${label}${detail}`)
   }
 
   if (answers.vehicleUsage) {
-    lines.push(`4. Uso del vehiculo: ${USAGE_LABELS[answers.vehicleUsage] ?? answers.vehicleUsage}`)
+    lines.push(`4. Uso del vehículo: ${USAGE_LABELS[answers.vehicleUsage] ?? answers.vehicleUsage}`)
   }
 
   if (answers.parkingMode) {
     const quiereKit = answers.parkingMode === 'si'
-    lines.push(`5. Modo estacionamiento: ${quiereKit ? 'Si, quiere HWK' : 'No, sin kit'}`)
+    lines.push(`5. Modo estacionamiento: ${quiereKit ? 'Sí, quiere HWK' : 'No, sin kit'}`)
   }
 
   if (answers.installation) {
     const profesional = answers.installation === 'si'
-    lines.push(`6. Instalacion: ${profesional ? 'Profesional (la hacemos nosotros)' : 'Por su cuenta'}`)
+    lines.push(`6. Instalación: ${profesional ? 'Profesional (la hacemos nosotros)' : 'Por su cuenta'}`)
   }
 
   return lines.join('\n')
@@ -83,8 +83,8 @@ function buildMessage({ answers, currentStep, productName }: WhatsAppMessageData
   const hasAnswers = hasAnyAnswer(answers)
 
   if (productName && hasAnswers) {
-    // Caso 3: Quiz completo con recomendacion
-    parts.push('Hola! Complete el quiz de Hiwei.')
+    // Caso 3: Quiz completo con recomendación
+    parts.push('Hola! Completé el quiz de Hiwei.')
     parts.push(`Me recomendaron la *${productName}*.`)
     parts.push(`\nMis respuestas:\n${formatAnswers(answers!)}`)
     parts.push('\nMi consulta es:')
@@ -95,7 +95,7 @@ function buildMessage({ answers, currentStep, productName }: WhatsAppMessageData
     parts.push(`\nMis respuestas hasta ahora:\n${formatAnswers(answers!)}`)
     parts.push('\nMi consulta es:')
   } else {
-    // Caso 1: No arranco el quiz
+    // Caso 1: No arrancó el quiz
     parts.push('Hola! Estoy interesado en dashcams.')
     parts.push('\nMi consulta es:')
   }

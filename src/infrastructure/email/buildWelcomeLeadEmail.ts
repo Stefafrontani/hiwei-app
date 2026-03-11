@@ -1,5 +1,6 @@
 interface WelcomeLeadEmailData {
   recipientName: string
+  discountCode: string
 }
 
 export function buildWelcomeLeadEmail(data: WelcomeLeadEmailData): string {
@@ -42,7 +43,7 @@ export function buildWelcomeLeadEmail(data: WelcomeLeadEmailData): string {
                   <td style="padding: 32px 24px; text-align: center;">
                     <p style="margin: 0 0 8px; color: #DBD6D1; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px;">Tu código de descuento</p>
                     <div style="display: inline-block; background-color: #FFFFFF; border-radius: 8px; padding: 16px 32px; margin: 8px 0;">
-                      <span style="color: #394493; font-size: 28px; font-weight: 800; letter-spacing: 3px;">{nombre_descuento}</span>
+                      <span style="color: #394493; font-size: 28px; font-weight: 800; letter-spacing: 3px;">${data.discountCode}</span>
                     </div>
                     <p style="margin: 12px 0 0; color: #E5C761; font-size: 14px; font-weight: 600;">Usalo en tu próxima compra</p>
                   </td>
