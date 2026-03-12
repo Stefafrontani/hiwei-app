@@ -37,6 +37,8 @@ export class GetRecommendationUseCase {
       budgetItems: budget.items,
       budgetTotal: budget.total,
       expiresAt,
+      specs: product.specs,
+      ecommerceUrl: product.ecommerceUrl,
     })
 
     return {

@@ -5,6 +5,8 @@ interface RecommendationEmailData {
   budgetItems: { label: string; price: number }[]
   budgetTotal: number
   expiresAt: string
+  specs: string[]
+  ecommerceUrl: string
 }
 
 export function buildRecommendationEmail(data: RecommendationEmailData): string {
@@ -16,6 +18,10 @@ export function buildRecommendationEmail(data: RecommendationEmailData): string 
           <td style="padding: 8px 12px; border-bottom: 1px solid #DBD6D1; color: #24211B; text-align: right;">$${item.price.toLocaleString('es-AR')}</td>
         </tr>`
     )
+    .join('')
+
+  const specsList = data.specs
+    .map((spec) => `<li style="padding: 4px 0; color: #24211B; font-size: 14px;">✓ ${spec}</li>`)
     .join('')
 
   return `<!DOCTYPE html>
@@ -43,7 +49,7 @@ export function buildRecommendationEmail(data: RecommendationEmailData): string 
           <tr>
             <td style="padding: 32px 24px 16px;">
               <p style="margin: 0; color: #24211B; font-size: 16px;">¡Hola <strong>${data.recipientName}</strong>!</p>
-              <p style="margin: 12px 0 0; color: #24211B; font-size: 15px;">Basándonos en tus respuestas, esta es la dashcam que mejor se adapta a tus necesidades:</p>
+              <p style="margin: 12px 0 0; color: #24211B; font-size: 15px;">Como te prometimos, acá va un resumen de la DASHCAM que mejor se adapta a vos:</p>
             </td>
           </tr>
 
@@ -58,6 +64,23 @@ export function buildRecommendationEmail(data: RecommendationEmailData): string 
                       <span style="color: #E5C761; font-size: 24px; font-weight: 700;">${data.matchScore}%</span>
                     </div>
                     <p style="margin: 0; color: #24211B; font-size: 14px;">Coincidencia con tu perfil</p>
+                    ${specsList ? `
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top: 16px;">
+                      <tr>
+                        <td style="text-align: left;">
+                          <h3 style="margin: 0 0 8px; color: #24211B; font-size: 14px; font-weight: 600;">Características principales</h3>
+                          <ul style="margin: 0; padding: 0 0 0 8px; list-style: none;">${specsList}</ul>
+                        </td>
+                      </tr>
+                    </table>` : ''}
+                    ${data.ecommerceUrl ? `
+                    <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 20px auto 0;">
+                      <tr>
+                        <td style="border-radius: 8px; background-color: #394493;">
+                          <a href="${data.ecommerceUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 12px 32px; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none;">Ver producto</a>
+                        </td>
+                      </tr>
+                    </table>` : ''}
                   </td>
                 </tr>
               </table>
