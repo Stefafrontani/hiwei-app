@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Camera, Headphones, Send, RotateCcw } from 'lucide-react'
+import { Camera, Headphones, Send, RotateCcw, Clock } from 'lucide-react'
 import { AppHeader } from '@/components/quiz/AppHeader'
 import { ResultSummaryBanner } from '@/components/result/ResultSummaryBanner'
 import { MainRecommendationCard } from '@/components/result/MainRecommendationCard'
@@ -30,6 +30,7 @@ export default function ResultadoPage() {
   const [error, setError] = useState<string | null>(null)
   const [memoryCards, setMemoryCards] = useState<MemoryCard[]>([])
   const [recommendationId, setRecommendationId] = useState<string | null>(null)
+  const [expiresAt, setExpiresAt] = useState('')
   const [showContact, setShowContact] = useState(false)
   const [showEmailForm, setShowEmailForm] = useState(false)
   const [showSend, setShowSend] = useState(false)
@@ -49,6 +50,7 @@ export default function ResultadoPage() {
         if (parsed.answers === raw) {
           setResult(parsed.result)
           setRecommendationId(parsed.recommendationId)
+          setExpiresAt(parsed.expiresAt)
           setMemoryCards(parsed.memoryCards ?? [])
           setLoading(false)
           return
@@ -70,6 +72,7 @@ export default function ResultadoPage() {
         if (recData.error) throw new Error(recData.error)
         setResult(recData.data)
         if (recData.data?.recommendationId) setRecommendationId(recData.data.recommendationId)
+        setExpiresAt(recData.data.expiresAt)
         if (cardsData.data) setMemoryCards(cardsData.data)
 
         // Cache in localStorage for this session
@@ -77,6 +80,7 @@ export default function ResultadoPage() {
           answers: raw,
           result: recData.data,
           recommendationId: recData.data?.recommendationId ?? null,
+          expiresAt: recData.data.expiresAt,
           memoryCards: cardsData.data ?? [],
         }))
       })
@@ -133,6 +137,16 @@ export default function ResultadoPage() {
 
               {/* Budget Breakdown */}
               <BudgetBreakdown product={result.main.product} answers={answers} memoryCards={memoryCards} />
+
+              {/* Expiration banner */}
+              {expiresAt && (
+                <div className="flex items-center gap-1.5 rounded-lg bg-warning/15 px-3 py-2">
+                  <Clock className="h-3.5 w-3.5 shrink-0 text-warning" />
+                  <p className="text-[12px] font-semibold text-warning">
+                    Oferta válida hasta el {new Date(expiresAt).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                  </p>
+                </div>
+              )}
 
               {/* Alternatives — hidden temporarily, will be redesigned with more detail */}
               {/* <AlternativesSection alternatives={result.alternatives} /> */}

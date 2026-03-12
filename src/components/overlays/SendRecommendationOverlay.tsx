@@ -58,7 +58,7 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
         iconBg="bg-success/10"
         iconColor="text-success"
         title="¡Recomendación enviada!"
-        message="Revisá tu email. Te enviamos un resumen completo con tu recomendación personalizada."
+        message="Revisá tu email. Te enviamos un resumen completo con tu recomendación personalizada. Si no lo encontrás, revisá la sección de Promociones o Spam."
         onClose={onClose}
       />
     )

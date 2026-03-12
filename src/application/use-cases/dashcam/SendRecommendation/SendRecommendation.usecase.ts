@@ -40,11 +40,14 @@ export class SendRecommendationUseCase {
       matchScore: recommendation.matchScore,
       budgetItems: recommendation.budgetItems,
       budgetTotal: recommendation.budgetTotal,
+      expiresAt: recommendation.expiresAt,
+      specs: recommendation.specs,
+      ecommerceUrl: recommendation.ecommerceUrl,
     })
 
     await this.emailService.send({
       to: input.email.trim(),
-      subject: `Tu recomendación personalizada de dashcam – ${recommendation.recommendedProductName}`,
+      subject: `¡Lo pedís, lo tenés! Tu DASHCAM recomendada – ${recommendation.recommendedProductName}`,
       html,
     })
 
