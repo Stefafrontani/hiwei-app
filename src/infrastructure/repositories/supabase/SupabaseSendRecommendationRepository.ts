@@ -14,6 +14,7 @@ export class SupabaseSendRecommendationRepository implements ISendRecommendation
         match_score: form.matchScore,
         budget_items: form.budgetItems,
         budget_total: form.budgetTotal,
+        expires_at: form.expiresAt,
       })
       .select('id')
       .single()
@@ -26,7 +27,7 @@ export class SupabaseSendRecommendationRepository implements ISendRecommendation
     const client = createServerClient()
     const { data, error } = await client
       .from('recommendation_sent')
-      .select('quiz_answers, recommended_product_id, recommended_product_name, match_score, budget_items, budget_total')
+      .select('quiz_answers, recommended_product_id, recommended_product_name, match_score, budget_items, budget_total, expires_at')
       .eq('id', id)
       .single()
 
@@ -39,6 +40,7 @@ export class SupabaseSendRecommendationRepository implements ISendRecommendation
       matchScore: data.match_score,
       budgetItems: data.budget_items,
       budgetTotal: data.budget_total,
+      expiresAt: data.expires_at,
     }
   }
 

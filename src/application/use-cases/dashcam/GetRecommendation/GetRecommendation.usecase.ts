@@ -27,6 +27,8 @@ export class GetRecommendationUseCase {
     const { product } = main
     const budget = buildDefaultBudget(product, answers, memoryCards)
 
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+
     const recommendationId = await this.sendRecommendationRepository.save({
       quizAnswers: answers,
       recommendedProductId: product.id,
@@ -34,12 +36,14 @@ export class GetRecommendationUseCase {
       matchScore: main.matchScore,
       budgetItems: budget.items,
       budgetTotal: budget.total,
+      expiresAt,
     })
 
     return {
       recommendationId,
       main,
       alternatives: all.slice(1, 4),
+      expiresAt,
     }
   }
 }

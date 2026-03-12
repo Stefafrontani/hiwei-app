@@ -4,6 +4,7 @@ interface RecommendationEmailData {
   matchScore: number
   budgetItems: { label: string; price: number }[]
   budgetTotal: number
+  expiresAt: string
 }
 
 export function buildRecommendationEmail(data: RecommendationEmailData): string {
@@ -72,6 +73,19 @@ export function buildRecommendationEmail(data: RecommendationEmailData): string 
                 <tr>
                   <td style="padding: 12px; color: #394493; font-weight: 700; font-size: 16px;">Total</td>
                   <td style="padding: 12px; color: #394493; font-weight: 700; font-size: 16px; text-align: right;">$${data.budgetTotal.toLocaleString('es-AR')}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Expiration Notice -->
+          <tr>
+            <td style="padding: 16px 24px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #FEF9E7; border-radius: 8px; border: 1px solid #E5C761;">
+                <tr>
+                  <td style="padding: 16px; text-align: center;">
+                    <p style="margin: 0; color: #92400E; font-size: 13px; font-weight: 600;">⏳ Esta oferta es válida hasta el ${new Date(data.expiresAt).toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                  </td>
                 </tr>
               </table>
             </td>

@@ -4,4 +4,5 @@ export interface RecommendationResult {
   recommendationId: string
   main: ScoredProduct
   alternatives: ScoredProduct[]
+  expiresAt: string
 }

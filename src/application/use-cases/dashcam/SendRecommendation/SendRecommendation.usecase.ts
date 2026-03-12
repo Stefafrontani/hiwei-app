@@ -40,6 +40,7 @@ export class SendRecommendationUseCase {
       matchScore: recommendation.matchScore,
       budgetItems: recommendation.budgetItems,
       budgetTotal: recommendation.budgetTotal,
+      expiresAt: recommendation.expiresAt,
     })
 
     await this.emailService.send({

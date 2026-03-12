@@ -12,4 +12,5 @@ export interface SendRecommendationForm {
   matchScore: number
   budgetItems: BudgetItem[]
   budgetTotal: number
+  expiresAt: string
 }
