@@ -9,10 +9,15 @@ import { presentSendRecommendation, presentError } from '@/infrastructure/presen
 export async function POST(request: NextRequest) {
   try {
     const input = await request.json()
+    const emailService = new ResendEmailService()
+    const registerLeadUseCase = new RegisterLeadUseCase(
+      new SupabaseLeadRepository(),
+      emailService,
+    )
     const useCase = new SendRecommendationUseCase(
       new SupabaseSendRecommendationRepository(),
-      new RegisterLeadUseCase(new SupabaseLeadRepository(), new ResendEmailService()),
-      new ResendEmailService(),
+      registerLeadUseCase,
+      emailService,
     )
     const result = await useCase.execute(input)
     return NextResponse.json(presentSendRecommendation(result))
