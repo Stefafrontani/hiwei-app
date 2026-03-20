@@ -79,7 +79,7 @@ export default function QuizPage() {
   const subtitle = SUBTITLE_CONFIG[currentStep]
 
   return (
-    <div className="flex h-dvh flex-col bg-white">
+    <div className="flex h-dvh flex-col bg-background">
       {/* Header */}
       <AppHeader currentStep={currentStep} showStepPills answers={answers} />
 
