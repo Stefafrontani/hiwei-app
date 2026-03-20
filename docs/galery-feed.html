@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hiwei TV - Dashcam Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed": "#1c1c1b",
+              "surface-container": "#201f22",
+              "inverse-surface": "#e5e1e4",
+              "on-error": "#690005",
+              "on-error-container": "#ffdad6",
+              "on-tertiary-container": "#555452",
+              "inverse-on-surface": "#313032",
+              "surface-tint": "#e6c449",
+              "on-background": "#e5e1e4",
+              "on-surface-variant": "#cfc6af",
+              "on-secondary-fixed": "#001b3c",
+              "on-secondary-fixed-variant": "#004788",
+              "secondary": "#a7c8ff",
+              "tertiary-fixed-dim": "#c9c6c4",
+              "inverse-primary": "#715c00",
+              "secondary-fixed": "#d5e3ff",
+              "surface-container-lowest": "#0e0e10",
+              "primary-container": "#e8c64b",
+              "surface-variant": "#353437",
+              "outline-variant": "#4c4635",
+              "on-tertiary-fixed-variant": "#474745",
+              "on-secondary": "#003061",
+              "secondary-container": "#03529c",
+              "on-primary-container": "#655200",
+              "outline": "#98907c",
+              "on-primary-fixed": "#231b00",
+              "surface-bright": "#39393b",
+              "primary-fixed": "#ffe17b",
+              "on-tertiary": "#31302f",
+              "tertiary-fixed": "#e5e2e0",
+              "surface-dim": "#131315",
+              "primary": "#ffe388",
+              "background": "#131315",
+              "on-secondary-container": "#a6c7ff",
+              "surface": "#131315",
+              "error": "#ffb4ab",
+              "tertiary": "#e7e4e2",
+              "on-surface": "#e5e1e4",
+              "tertiary-container": "#cbc8c6",
+              "surface-container-highest": "#353437",
+              "error-container": "#93000a",
+              "on-primary-fixed-variant": "#564500",
+              "surface-container-high": "#2a2a2c",
+              "primary-fixed-dim": "#e6c449",
+              "on-primary": "#3b2f00",
+              "secondary-fixed-dim": "#a7c8ff",
+              "surface-container-low": "#1c1b1d"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0e0e10;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-zinc-950/80 backdrop-blur-xl docked full-width top-0 sticky z-50 bg-zinc-900 shadow-none">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-7xl mx-auto font-inter antialiased">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#e8c64b]" style="font-variation-settings: 'FILL' 1;">movie</span>
+<h1 class="text-xl font-bold tracking-tighter text-[#e8c64b]">Hiwei</h1>
+</div>
+<nav class="hidden md:flex gap-8">
+<a class="text-[#e8c64b] font-semibold border-b-2 border-[#e8c64b] pb-1" href="#">Feed</a>
+<a class="text-zinc-400 font-medium hover:text-zinc-100 transition-colors" href="#">Catalog</a>
+<a class="text-zinc-400 font-medium hover:text-zinc-100 transition-colors" href="#">Comparator</a>
+<a class="text-zinc-400 font-medium hover:text-zinc-100 transition-colors" href="#">Profile</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-zinc-400 hover:bg-zinc-800/50 rounded-md transition-all p-2 active:scale-95 duration-100">search</button>
+<button class="material-symbols-outlined text-zinc-400 hover:bg-zinc-800/50 rounded-md transition-all p-2 active:scale-95 duration-100">notifications</button>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-4 md:px-6 pt-8 pb-32">
+<!-- Featured Section Header -->
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight text-on-surface">Experience the Road</h2>
+<p class="text-on-surface-variant max-w-xl">Curated dashcam footage showcasing performance across lighting conditions and weather scenarios.</p>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-xs font-semibold text-[#e8c64b]">Live Feed</span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full text-xs font-semibold text-on-surface-variant">24 Active Channels</span>
+</div>
+</div>
+<!-- Video Grid: Bento Inspired -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Model 1: Flagship 3-Cam -->
+<section class="lg:col-span-8 flex flex-col gap-4 bg-surface-container-low p-6 rounded-xl">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h3 class="text-xl font-bold text-on-surface">Hiwei Guardian X9</h3>
+<p class="text-sm text-on-surface-variant">Flagship triple-channel protection with AI processing.</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="bg-secondary-container text-on-secondary-container text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">4K Ultra HD</span>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-2 py-0.5 rounded font-medium">3-Cam System</span>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-2 py-0.5 rounded font-medium">ADAS 2.0</span>
+<span class="bg-primary-container/20 text-[#e8c64b] text-[10px] px-2 py-0.5 rounded font-bold">24G Radar</span>
+</div>
+</div>
+<div class="relative aspect-video w-full overflow-hidden rounded-lg bg-black shadow-2xl group">
+<div class="absolute inset-0 flex items-center justify-center bg-zinc-900">
+<img class="w-full h-full object-cover opacity-60" data-alt="POV of car driving through neon lit city at night" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBS95DN6HP7Klq9Azxq8EasKUXSKAj6zch5P5x8880OdaE_72-YEGbxR7kIAa0Im230zPFGlidd66gkOdbTYENUlxa9YnnKAZ-2lfWhpdbHt-nGy7rswtauJu3-XmZMECyqFXs0UBYr2u4KQVsaaeorDg6cwSoMWGK-K3_L5piSX7XahQZi0VdgEtzEHGNtFojm6tvjjwFY7OHL4WaeDRY8MSdDsv4nWlCO2rp21ztqmDG4EfPPzecvqizj4r-lr_GtCPyQo51rbIc"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-16 h-16 bg-[#e8c64b] rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-black text-3xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-4 right-4 bg-black/60 backdrop-blur px-2 py-1 rounded text-[10px] text-white">4:20</div>
+</div>
+</div>
+<!-- Tabs (shadcn style) -->
+<div class="w-full bg-surface-container-lowest p-1 rounded-lg flex gap-1">
+<button class="flex-1 py-2 text-xs font-bold rounded-md bg-[#e8c64b] text-black transition-all">Frontal</button>
+<button class="flex-1 py-2 text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all">Trasera</button>
+<button class="flex-1 py-2 text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all">Interior</button>
+</div>
+</section>
+<!-- Sidebar Info/Small Cards -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Model 2: Compact 2-Cam -->
+<section class="bg-surface-container-low p-5 rounded-xl flex flex-col gap-4">
+<div class="space-y-1">
+<h3 class="text-lg font-bold text-on-surface">Hiwei Slim S2</h3>
+<p class="text-[12px] text-on-surface-variant">Stealth dual-channel setup for sleek interiors.</p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-2 py-0.5 rounded font-medium">2K QHD</span>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-2 py-0.5 rounded font-medium">2-Cam</span>
+</div>
+</div>
+<div class="relative aspect-[16/10] overflow-hidden rounded-lg bg-zinc-900">
+<img class="w-full h-full object-cover opacity-50" data-alt="Rainy highway drive through dashcam lens" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMDV8DkdpCNHYDmQTm-puFJsfGVTino9n7_h5gCezC0lSxVx1hwOdeNAu8Yu_UT3N9y8MJHZ4LERV8ElcmFDDjueRo0LL-50eTP2tdvJVxcYy92p5zfAAyfMG55AdQ1HubLZSdg2xhHf5QOjK2BZ9mSXhda3HAcfRnsKQrT-Av-EKY1-bWgdM9T13XdqsicVmyErkEaz99qIGYMOq99D_GO0lJYbZ0VOPGGzUUOVG6yD6GDhRvjrERuMmb88AeVSZY_lsSwHP3qec"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#e8c64b] text-2xl">play_circle</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-lowest p-1 rounded-lg flex gap-1">
+<button class="flex-1 py-1.5 text-[10px] font-bold rounded-md bg-[#e8c64b] text-black">Frontal</button>
+<button class="flex-1 py-1.5 text-[10px] font-medium text-on-surface-variant">Trasera</button>
+</div>
+</section>
+<!-- Featured Highlight -->
+<div class="bg-[#e8c64b] rounded-xl p-6 text-black flex flex-col justify-between aspect-square">
+<div class="space-y-2">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">stars</span>
+<h4 class="text-xl font-black uppercase leading-tight">Compare<br/>Models</h4>
+<p class="text-sm font-medium opacity-80">Find the perfect lens for your driving habits.</p>
+</div>
+<button class="w-full bg-black text-[#e8c64b] py-3 rounded-lg font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition-transform">
+                        GO TO COMPARATOR
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Model 3: Entry Level -->
+<section class="lg:col-span-12 bg-surface-container-low p-6 rounded-xl">
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-[#e8c64b]">power</span>
+</div>
+<div>
+<h3 class="text-xl font-bold text-on-surface">Hiwei Lite Dash</h3>
+<p class="text-sm text-on-surface-variant">Essential security for every driver.</p>
+</div>
+</div>
+<div class="flex gap-2">
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-2 py-0.5 rounded font-medium">1080p FHD</span>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-2 py-0.5 rounded font-medium">Single Channel</span>
+<span class="bg-surface-container-highest text-on-surface-variant text-[10px] px-2 py-0.5 rounded font-medium">Night Vision</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="relative aspect-video rounded-lg overflow-hidden bg-black">
+<img class="w-full h-full object-cover opacity-70" data-alt="Scenic mountain road during sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZpnghLJf0cGRq_8Kcznh-CIFOzGfibTqDZ0uNFL7tugWsp4YbwhWUwTfWXOMGhuxNB7YVMa3cg4y6SZfklop6N2up9DNHvFVqO_nxuOcpSXSoU1AHvZlizWWNGkbQr-p7PBQchQVXk5wx0IZQKq-fBt6dzFz3IAFbq0m8iWr9vMnXgX9-9g352tEZxGNkxJ5mPZrJj3JJnbq4IH_BRapiApy3BQU79fNOstEOGcaznW9sEqUoKsKz21ejcie64KWzij6jqbIybvk"/>
+<div class="absolute top-2 left-2 bg-black/40 text-[10px] px-2 py-0.5 rounded backdrop-blur">Daytime Performance</div>
+</div>
+<div class="relative aspect-video rounded-lg overflow-hidden bg-black">
+<img class="w-full h-full object-cover opacity-70" data-alt="Forest road in fog captured on dashcam" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGQBBoF5IcAOSgz8byIAR5pnKcxsLkVjRrNG-7UVFE_B08JbOkR3uy73kjfsi44zwW9--ezL_4jY08oUn2js6hdUFqQ8BVCTdhr47jxM8LF8DVR-cV-pnoSfaDZYqvgkc18gF-obxMJ6jqFH4-MQ0aj92IxnBtH5x8M9QRyKM8MLS45G-cxcbHZOXB2JY1gbQ_BHd_pOn-JxBoRoXSsAjMc_uyRi8E9MDMTtaVGth2DXvEC81XeBI_HtkEeDV7vChWgXJeq9in9js"/>
+<div class="absolute top-2 left-2 bg-black/40 text-[10px] px-2 py-0.5 rounded backdrop-blur">Low Light Sensitivity</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-zinc-950/95 backdrop-blur-md border-t border-zinc-800 shadow-2xl rounded-t-xl md:hidden">
+<a class="flex flex-col items-center justify-center text-[#e8c64b] bg-[#e8c64b]/10 rounded-xl px-3 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">subscriptions</span>
+<span class="text-[10px] font-medium font-inter">Feed</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-500 hover:text-zinc-300 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">shopping_bag</span>
+<span class="text-[10px] font-medium font-inter">Catalog</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-500 hover:text-zinc-300 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">view_column</span>
+<span class="text-[10px] font-medium font-inter">Comparator</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-500 hover:text-zinc-300 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="text-[10px] font-medium font-inter">Profile</span>
+</a>
+</nav>
+<!-- Desktop Floating Action -->
+<button class="fixed bottom-8 right-8 hidden md:flex items-center gap-2 bg-[#e8c64b] text-black px-6 py-4 rounded-full font-bold shadow-2xl hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">shopping_cart</span>
+        Shop Hiwei
+    </button>
+</body></html>

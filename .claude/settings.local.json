@@ -4,5 +4,9 @@
       "Bash(cd /c/Users/usuario/desktop/hiwei-app && npm run build 2>&1)",
       "Bash(npx tsc:*)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "shadcn"
+  ],
+  "enableAllProjectMcpServers": true
 }
