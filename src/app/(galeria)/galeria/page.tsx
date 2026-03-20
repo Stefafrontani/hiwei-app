@@ -1,11 +1,10 @@
-import { InMemoryGalleryRepository } from '@/infrastructure/repositories/mock/InMemoryGalleryRepository'
-import { GetGalleryFeedUseCase } from '@/application/use-cases/gallery/GetGalleryFeed/GetGalleryFeed.usecase'
+import { InMemoryDashcamRepository } from '@/infrastructure/repositories/mock/InMemoryDashcamRepository'
 import { GalleryFeed } from '@/components/gallery/GalleryFeed'
 import { Badge } from '@/components/ui/badge'
 
 export default async function GaleriaPage() {
-  const useCase = new GetGalleryFeedUseCase(new InMemoryGalleryRepository())
-  const { items } = await useCase.execute()
+  const repo = new InMemoryDashcamRepository()
+  const products = await repo.getAll()
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-32 pt-8 md:px-6">
@@ -26,7 +25,7 @@ export default async function GaleriaPage() {
       </div>
 
       {/* Video Grid */}
-      <GalleryFeed items={items} />
+      <GalleryFeed products={products} />
     </div>
   )
 }

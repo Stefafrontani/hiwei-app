@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { Play } from 'lucide-react'
-import type { GalleryVideo } from '@/domain/entities/GalleryItem'
+import type { DashcamVideo } from '@/domain/value-objects/DashcamVideo'
 
 function formatDuration(seconds: number): string {
   const m = Math.floor(seconds / 60)
@@ -9,7 +9,7 @@ function formatDuration(seconds: number): string {
 }
 
 interface VideoThumbnailProps {
-  video: GalleryVideo
+  video: DashcamVideo
   size?: 'lg' | 'md' | 'sm'
   showLabel?: boolean
 }
@@ -18,6 +18,7 @@ export function VideoThumbnail({ video, size = 'lg', showLabel = false }: VideoT
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
   const playSize = size === 'sm' ? 'h-8 w-8' : size === 'md' ? 'h-10 w-10' : 'h-16 w-16'
   const playIconSize = size === 'sm' ? 'h-4 w-4' : size === 'md' ? 'h-5 w-5' : 'h-7 w-7'
+  const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
   return (
     <a
@@ -27,7 +28,7 @@ export function VideoThumbnail({ video, size = 'lg', showLabel = false }: VideoT
       className={`relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black group block`}
     >
       <Image
-        src={video.thumbnailUrl}
+        src={thumbnailUrl}
         alt={video.label}
         fill
         className="object-cover opacity-60 transition-opacity group-hover:opacity-80"

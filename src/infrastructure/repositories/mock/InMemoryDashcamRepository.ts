@@ -15,6 +15,10 @@ const PRODUCTS: DashcamProduct[] = [
     cycleSize: 0.8,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/anti-radares-full-hd-preventa-exclusiva/',
     includedMemoryCardSize: null,
+    videos: [
+      { youtubeId: 'ByGNEnVMjWA', label: 'Ruta de día', cameraPosition: 'frontal', durationSeconds: 240 },
+      { youtubeId: 'ByGNEnVMjWA', label: 'Vista trasera urbana', cameraPosition: 'trasera', durationSeconds: 185 },
+    ],
   },
   {
     id: 'f7np',
@@ -29,6 +33,10 @@ const PRODUCTS: DashcamProduct[] = [
     cycleSize: 1.1,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/f7np/',
     includedMemoryCardSize: 128,
+    videos: [
+      { youtubeId: 'lyVFGBMwXjo', label: 'Autopista nocturna 4K', cameraPosition: 'frontal', durationSeconds: 215 },
+      { youtubeId: 'lyVFGBMwXjo', label: 'Estacionamiento trasero', cameraPosition: 'trasera', durationSeconds: 150 },
+    ],
   },
   {
     id: 'vs1',
@@ -43,6 +51,10 @@ const PRODUCTS: DashcamProduct[] = [
     cycleSize: 0.7,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/discreto1/',
     includedMemoryCardSize: 32,
+    videos: [
+      { youtubeId: '4uSRmMnIHZQ', label: 'Manejo urbano 2K', cameraPosition: 'frontal', durationSeconds: 195 },
+      { youtubeId: '4uSRmMnIHZQ', label: 'Visión nocturna', cameraPosition: 'frontal', durationSeconds: 180 },
+    ],
   },
   {
     id: 'radares-4k',
@@ -57,6 +69,10 @@ const PRODUCTS: DashcamProduct[] = [
     cycleSize: 2.3,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/anti-radares-4k/',
     includedMemoryCardSize: null,
+    videos: [
+      { youtubeId: 'Wy4KPXUH7dE', label: 'Detalle patentes 4K', cameraPosition: 'frontal', durationSeconds: 260 },
+      { youtubeId: 'Wy4KPXUH7dE', label: 'Seguimiento trasero 4K', cameraPosition: 'trasera', durationSeconds: 200 },
+    ],
   },
   {
     id: 'f17-elite',
@@ -71,6 +87,11 @@ const PRODUCTS: DashcamProduct[] = [
     cycleSize: 2.2,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/triple-cobertura/',
     includedMemoryCardSize: 128,
+    videos: [
+      { youtubeId: 'kJkRf_4TXJA', label: 'Ciudad nocturna 4K', cameraPosition: 'frontal', durationSeconds: 260 },
+      { youtubeId: 'kJkRf_4TXJA', label: 'Autopista trasera 2.5K', cameraPosition: 'trasera', durationSeconds: 195 },
+      { youtubeId: 'kJkRf_4TXJA', label: 'Monitoreo interior', cameraPosition: 'interior', durationSeconds: 180 },
+    ],
   }
 ]
 
