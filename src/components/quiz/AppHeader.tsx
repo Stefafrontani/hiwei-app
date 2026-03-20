@@ -59,11 +59,15 @@ export function AppHeader({ currentStep, showStepPills = false, answers }: AppHe
             alt="Hiwei"
             width={32}
             height={32}
-            className="h-8 w-8 md:h-9 md:w-9"
+            className="h-8 w-8 md:hidden"
           />
-          <div className="hidden md:block">
-            <p className="text-[18px] font-bold leading-none text-foreground">Hiwei</p>
-          </div>
+          <Image
+            src="/hiwei-logo.png"
+            alt="Hiwei"
+            width={80}
+            height={24}
+            className="hidden h-7 w-auto md:block"
+          />
         </Link>
 
         {/* Desktop: step pills */}

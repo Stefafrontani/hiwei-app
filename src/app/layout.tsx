@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hiwei App",
+  title: "Hiwei",
   description: "Next.js + shadcn/ui + Tailwind CSS",
 };
 
