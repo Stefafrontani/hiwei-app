@@ -19,7 +19,7 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
       {/* Name + Score row */}
       <div className="flex items-start justify-between gap-3 pt-1">
         <p className="text-[18px] font-bold text-foreground md:text-[22px]">{product.name}</p>
-        <span className="shrink-0 rounded-lg bg-brand px-3 py-1.5 text-[13px] font-bold text-white md:text-[14px]">
+        <span className="shrink-0 rounded-lg bg-brand px-3 py-1.5 text-[13px] font-bold text-brand-foreground md:text-[14px]">
           {matchScore}%
         </span>
       </div>
@@ -66,7 +66,7 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
           href={product.ecommerceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex flex-1 items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-[14px] font-bold text-white transition-colors hover:bg-brand/90 md:text-[15px]"
+          className="inline-flex flex-1 items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-[14px] font-bold text-brand-foreground transition-colors hover:bg-brand/90 md:text-[15px]"
         >
           Comprar
         </a>

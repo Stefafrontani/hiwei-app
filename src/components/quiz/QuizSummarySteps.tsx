@@ -59,7 +59,7 @@ export function QuizSummarySteps({ answers, currentStep }: QuizSummaryStepsProps
                   )}
                   {isCompleted && !isPending && (
                     <div className="flex h-4 w-4 items-center justify-center rounded-full bg-brand">
-                      <Check className="h-2.5 w-2.5 text-white" />
+                      <Check className="h-2.5 w-2.5 text-brand-foreground" />
                     </div>
                   )}
                 </div>

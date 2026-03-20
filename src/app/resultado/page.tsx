@@ -203,7 +203,7 @@ export default function ResultadoPage() {
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card px-4 py-3 md:hidden">
           <button
             onClick={() => setShowContact(true)}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand text-[14px] font-semibold text-white transition-colors hover:bg-brand/90"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand text-[14px] font-semibold text-brand-foreground transition-colors hover:bg-brand/90"
           >
             <Headphones className="h-4 w-4" />
             Consultanos

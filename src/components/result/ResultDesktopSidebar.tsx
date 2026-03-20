@@ -55,7 +55,7 @@ export function ResultDesktopSidebar({
           {/* Primary */}
           <button
             onClick={onContactOpen}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand text-[14px] font-bold text-white transition-colors hover:bg-brand/90"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand text-[14px] font-bold text-brand-foreground transition-colors hover:bg-brand/90"
           >
             <Headphones className="h-4 w-4" />
             ¿Tenés dudas? Escribinos

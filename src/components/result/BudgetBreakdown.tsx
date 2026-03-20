@@ -21,7 +21,7 @@ function MiniCheckbox({ checked, onChange }: { checked: boolean; onChange: () =>
       role="checkbox"
       aria-checked={checked}
       onClick={onChange}
-      className={`flex h-4.5 w-4.5 shrink-0 cursor-pointer items-center justify-center rounded border-2 transition-colors ${checked ? 'border-brand bg-brand text-white' : 'border-muted-foreground/40 bg-transparent'}`}
+      className={`flex h-4.5 w-4.5 shrink-0 cursor-pointer items-center justify-center rounded border-2 transition-colors ${checked ? 'border-brand bg-brand text-brand-foreground' : 'border-muted-foreground/40 bg-transparent'}`}
     >
       {checked && (
         <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none">

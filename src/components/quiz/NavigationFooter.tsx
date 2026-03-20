@@ -29,8 +29,8 @@ export function NavigationFooter({
 
   const nextClass =
     variant === 'mobile'
-      ? 'flex h-11 flex-1 items-center justify-center gap-1.5 rounded-[10px] text-[14px] font-semibold text-white transition-opacity'
-      : 'flex h-11 w-auto items-center justify-center gap-1.5 rounded-[10px] px-8 text-[14px] font-semibold text-white transition-opacity'
+      ? 'flex h-11 flex-1 items-center justify-center gap-1.5 rounded-[10px] text-[14px] font-semibold transition-opacity'
+      : 'flex h-11 w-auto items-center justify-center gap-1.5 rounded-[10px] px-8 text-[14px] font-semibold transition-opacity'
 
   return (
     <footer className={footerClass}>
@@ -51,7 +51,7 @@ export function NavigationFooter({
         disabled={!canGoNext || isLoading}
         className={`${nextClass}
           ${!canGoNext || isLoading ? 'cursor-not-allowed opacity-50' : 'hover:opacity-90'}
-          ${isLast ? 'bg-success' : 'bg-brand'}`}
+          ${isLast ? 'bg-success text-success-foreground' : 'bg-brand text-brand-foreground'}`}
       >
         {isLoading ? (
           <span>Cargando...</span>

@@ -128,9 +128,8 @@ export default function BeneficiosPage() {
       {/* Desktop: logo left */}
       <div className="hidden items-center gap-3 md:flex">
         <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-brand">
-          <Camera className="h-[18px] w-[18px] text-white" />
+          <Camera className="h-[18px] w-[18px] text-brand-foreground" />
         </div>
-        <span className="text-[18px] font-bold text-foreground">Hiwei</span>
         <span className="text-[13px] text-muted-foreground">Asesor de Dashcams</span>
       </div>
 
@@ -238,7 +237,7 @@ export default function BeneficiosPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-brand to-brand/90 text-[15px] font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-60 md:h-[50px]"
+                className="flex h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-brand to-brand/90 text-[15px] font-bold text-brand-foreground transition-opacity hover:opacity-90 disabled:opacity-60 md:h-[50px]"
               >
                 <Sparkles className="h-[18px] w-[18px]" />
                 {submitting ? 'Registrando...' : 'Quiero mis beneficios'}
@@ -290,7 +289,7 @@ export default function BeneficiosPage() {
             {/* Back button */}
             <button
               onClick={handleBack}
-              className="flex h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-brand text-[14px] font-semibold text-white transition-opacity hover:opacity-90"
+              className="flex h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-brand text-[14px] font-semibold text-brand-foreground transition-opacity hover:opacity-90"
             >
               <ArrowLeft className="h-4 w-4" />
               Volver a mi recomendación

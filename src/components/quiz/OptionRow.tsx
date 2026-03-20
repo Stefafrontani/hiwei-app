@@ -67,7 +67,7 @@ export function OptionRow({
             {title}
           </span>
           {badge && isActive && (
-            <Badge className="bg-brand text-white text-[10px] px-2 py-0.5 h-auto">
+            <Badge className="bg-brand text-brand-foreground text-[10px] px-2 py-0.5 h-auto">
               {badge}
             </Badge>
           )}

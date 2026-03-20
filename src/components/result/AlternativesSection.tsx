@@ -41,7 +41,7 @@ export function AlternativesSection({ alternatives }: AlternativesSectionProps) 
               <span className="shrink-0 rounded-full bg-muted px-2 py-1 text-[11px] font-bold text-muted-foreground">
                 {alt.matchScore}%
               </span>
-              <span className="shrink-0 rounded-md bg-brand px-3 py-1.5 text-[11px] font-bold text-white transition-colors hover:bg-brand/90">
+              <span className="shrink-0 rounded-md bg-brand px-3 py-1.5 text-[11px] font-bold text-brand-foreground transition-colors hover:bg-brand/90">
                 Comprar
               </span>
             </a>
