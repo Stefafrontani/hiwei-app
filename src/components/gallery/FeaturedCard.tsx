@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { VideoThumbnail } from './VideoThumbnail'
 import { AngleTabs } from './AngleTabs'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
@@ -14,13 +15,9 @@ export function FeaturedCard({ product, activeAngle, onAngleChange }: FeaturedCa
   const activeVideo = product.videos.find((v) => v.cameraPosition === activeAngle) ?? product.videos[0]
 
   return (
-    <section className="lg:col-span-8 flex flex-col gap-4 rounded-xl bg-card p-6">
-      {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h3 className="text-xl font-bold text-foreground">{product.name}</h3>
-          <p className="text-sm text-muted-foreground">{product.description}</p>
-        </div>
+    <Card className="lg:col-span-8 border-0 shadow-none grid-rows-1">
+      <CardHeader>
+        <CardTitle className="text-xl font-bold">{product.name}</CardTitle>
         <div className="flex flex-wrap gap-2">
           {product.tags.slice(0, 4).map((tag) => (
             <Badge key={tag} variant="secondary" className="text-[10px] uppercase tracking-wider">
@@ -28,17 +25,16 @@ export function FeaturedCard({ product, activeAngle, onAngleChange }: FeaturedCa
             </Badge>
           ))}
         </div>
-      </div>
-
-      {/* Video */}
-      <VideoThumbnail video={activeVideo} size="lg" />
-
-      {/* Angle Tabs */}
-      <AngleTabs
-        angles={product.cameraPositions}
-        activeAngle={activeAngle}
-        onAngleChange={onAngleChange}
-      />
-    </section>
+        <CardDescription>{product.description}</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <VideoThumbnail video={activeVideo} size="lg" />
+        <AngleTabs
+          angles={product.cameraPositions}
+          activeAngle={activeAngle}
+          onAngleChange={onAngleChange}
+        />
+      </CardContent>
+    </Card>
   )
 }

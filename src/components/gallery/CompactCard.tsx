@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { VideoThumbnail } from './VideoThumbnail'
 import { AngleTabs } from './AngleTabs'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
@@ -14,30 +15,27 @@ export function CompactCard({ product, activeAngle, onAngleChange }: CompactCard
   const activeVideo = product.videos.find((v) => v.cameraPosition === activeAngle) ?? product.videos[0]
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl bg-card p-5">
-      {/* Header */}
-      <div className="space-y-1">
-        <h3 className="text-lg font-bold text-foreground">{product.name}</h3>
-        <p className="text-[12px] text-muted-foreground">{product.description}</p>
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {product.tags.slice(0, 3).map((tag) => (
+    <Card className="border-0 shadow-none">
+      <CardHeader>
+        <CardTitle className="text-lg font-bold">{product.name}</CardTitle>
+        <div className="flex flex-wrap gap-1.5">
+          {product.tags.slice(0, 4).map((tag) => (
             <Badge key={tag} variant="secondary" className="text-[10px]">
               {tag}
             </Badge>
           ))}
         </div>
-      </div>
-
-      {/* Video */}
-      <VideoThumbnail video={activeVideo} size="md" />
-
-      {/* Angle Tabs */}
-      <AngleTabs
-        angles={product.cameraPositions}
-        activeAngle={activeAngle}
-        onAngleChange={onAngleChange}
-        size="sm"
-      />
-    </section>
+        <CardDescription className="text-[12px]">{product.description}</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <VideoThumbnail video={activeVideo} size="md" />
+        <AngleTabs
+          angles={product.cameraPositions}
+          activeAngle={activeAngle}
+          onAngleChange={onAngleChange}
+          size="sm"
+        />
+      </CardContent>
+    </Card>
   )
 }

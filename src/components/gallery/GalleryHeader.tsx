@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Search, Bell } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import type { NavItem } from './types'
 
 const NAV_LINKS: { key: NavItem; label: string; href: string }[] = [
@@ -55,12 +56,12 @@ export function GalleryHeader({ activeNav = 'feed' }: GalleryHeaderProps) {
 
         {/* Icon buttons */}
         <div className="flex items-center gap-2">
-          <button aria-label="Buscar" className="rounded-md p-2 text-muted-foreground transition-all hover:bg-secondary active:scale-95">
+          <Button variant="ghost" size="icon" aria-label="Buscar">
             <Search className="h-5 w-5" />
-          </button>
-          <button aria-label="Notificaciones" className="rounded-md p-2 text-muted-foreground transition-all hover:bg-secondary active:scale-95">
+          </Button>
+          <Button variant="ghost" size="icon" aria-label="Notificaciones">
             <Bell className="h-5 w-5" />
-          </button>
+          </Button>
         </div>
       </div>
     </header>
