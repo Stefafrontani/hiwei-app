@@ -1,13 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Image from 'next/image'
 import { Play } from 'lucide-react'
 import type { DashcamVideo } from '@/domain/value-objects/DashcamVideo'
+import { useYouTubePlayer } from '@/hooks/useYouTubePlayer'
+import { PlayerControls } from './PlayerControls'
 
 function formatDuration(seconds: number): string {
   const m = Math.floor(seconds / 60)
-  const s = seconds % 60
+  const s = Math.floor(seconds % 60)
   return `${m}:${s.toString().padStart(2, '0')}`
 }
 
@@ -15,6 +17,40 @@ interface VideoThumbnailProps {
   video: DashcamVideo
   size?: 'lg' | 'md' | 'sm'
   showLabel?: boolean
+}
+
+function ActivePlayer({ video, size }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm' }) {
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
+
+  const player = useYouTubePlayer({ videoId: video.youtubeId, autoplay: true })
+
+  return (
+    <div ref={wrapperRef} className={`relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}>
+      {/* YouTube player target — pointer-events disabled to block all YT UI interaction */}
+      <div
+        ref={player.containerRef}
+        className="absolute inset-0 h-full w-full pointer-events-none [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:h-full [&>iframe]:w-full"
+      />
+
+      {/* Custom controls overlay */}
+      <PlayerControls
+        size={size}
+        isPlaying={player.isPlaying}
+        isBuffering={player.isBuffering}
+        isReady={player.isReady}
+        currentTime={player.currentTime}
+        duration={player.duration}
+        volume={player.volume}
+        isMuted={player.isMuted}
+        onTogglePlay={player.togglePlay}
+        onSeek={player.seekTo}
+        onVolumeChange={player.setVolume}
+        onToggleMute={player.toggleMute}
+        containerRef={wrapperRef}
+      />
+    </div>
+  )
 }
 
 export function VideoThumbnail({ video, size = 'lg', showLabel = true }: VideoThumbnailProps) {
@@ -25,17 +61,7 @@ export function VideoThumbnail({ video, size = 'lg', showLabel = true }: VideoTh
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
   if (playing) {
-    return (
-      <div className={`relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}>
-        <iframe
-          src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&rel=0`}
-          title={video.label}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="absolute inset-0 h-full w-full"
-        />
-      </div>
-    )
+    return <ActivePlayer video={video} size={size} />
   }
 
   return (
