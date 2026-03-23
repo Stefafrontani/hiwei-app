@@ -146,7 +146,7 @@ export function PlayerControls({
     [handleVolumeInteraction],
   )
 
-  const progress = duration > 0 ? (currentTime / duration) * 100 : 0
+  const progress = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0
 
   // Loading state
   if (!isReady) {

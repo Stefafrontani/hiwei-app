@@ -60,6 +60,7 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
   const playerRef = useRef<YT.Player | null>(null)
   const rafRef = useRef<number>(0)
   const innerDivRef = useRef<HTMLDivElement | null>(null)
+  const durationRef = useRef(0)
 
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -115,7 +116,9 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
           onReady: (event) => {
             if (destroyed) return
             setIsReady(true)
-            setDuration(Math.floor(event.target.getDuration()))
+            const d = Math.floor(event.target.getDuration())
+            if (d > 0 && durationRef.current === 0) durationRef.current = d
+            setDuration(durationRef.current || d)
             setVolumeState(event.target.getVolume())
             setIsMuted(event.target.isMuted())
           },
@@ -127,26 +130,23 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
             setIsBuffering(state === YT.PlayerState.BUFFERING)
 
             if (state === YT.PlayerState.PLAYING) {
-              setDuration(Math.floor(event.target.getDuration()))
+              if (durationRef.current === 0) {
+                durationRef.current = Math.floor(event.target.getDuration())
+              }
+              setDuration(durationRef.current)
               rafRef.current = requestAnimationFrame(updateTime)
             } else {
               cancelAnimationFrame(rafRef.current)
               if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.ENDED) {
                 try {
                   const time = event.target.getCurrentTime()
-                  const dur = Math.floor(event.target.getDuration())
-                  setCurrentTime(state === YT.PlayerState.ENDED ? dur : time)
+                  setCurrentTime(state === YT.PlayerState.ENDED ? durationRef.current : time)
                 } catch {
                   // ignore
                 }
               }
             }
 
-            // Loop: restart when ended (only if autoplay mode)
-            if (state === YT.PlayerState.ENDED && autoplay) {
-              event.target.seekTo(0, true)
-              event.target.playVideo()
-            }
           },
         },
       })
@@ -161,6 +161,7 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
         // ignore
       }
       playerRef.current = null
+      durationRef.current = 0
       innerDivRef.current?.remove()
       innerDivRef.current = null
     }
