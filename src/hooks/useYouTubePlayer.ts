@@ -115,7 +115,7 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
           onReady: (event) => {
             if (destroyed) return
             setIsReady(true)
-            setDuration(event.target.getDuration())
+            setDuration(Math.floor(event.target.getDuration()))
             setVolumeState(event.target.getVolume())
             setIsMuted(event.target.isMuted())
           },
@@ -127,13 +127,15 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
             setIsBuffering(state === YT.PlayerState.BUFFERING)
 
             if (state === YT.PlayerState.PLAYING) {
-              setDuration(event.target.getDuration())
+              setDuration(Math.floor(event.target.getDuration()))
               rafRef.current = requestAnimationFrame(updateTime)
             } else {
               cancelAnimationFrame(rafRef.current)
               if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.ENDED) {
                 try {
-                  setCurrentTime(event.target.getCurrentTime())
+                  const time = event.target.getCurrentTime()
+                  const dur = Math.floor(event.target.getDuration())
+                  setCurrentTime(state === YT.PlayerState.ENDED ? dur : time)
                 } catch {
                   // ignore
                 }
