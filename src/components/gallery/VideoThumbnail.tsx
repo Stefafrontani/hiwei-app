@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import Image from 'next/image'
 import { Play } from 'lucide-react'
 import type { DashcamVideo } from '@/domain/value-objects/DashcamVideo'
@@ -14,18 +17,32 @@ interface VideoThumbnailProps {
   showLabel?: boolean
 }
 
-export function VideoThumbnail({ video, size = 'lg', showLabel = false }: VideoThumbnailProps) {
+export function VideoThumbnail({ video, size = 'lg', showLabel = true }: VideoThumbnailProps) {
+  const [playing, setPlaying] = useState(false)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
   const playSize = size === 'sm' ? 'h-8 w-8' : size === 'md' ? 'h-10 w-10' : 'h-16 w-16'
   const playIconSize = size === 'sm' ? 'h-4 w-4' : size === 'md' ? 'h-5 w-5' : 'h-7 w-7'
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
+  if (playing) {
+    return (
+      <div className={`relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}>
+        <iframe
+          src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&rel=0`}
+          title={video.label}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="absolute inset-0 h-full w-full"
+        />
+      </div>
+    )
+  }
+
   return (
-    <a
-      href={`https://www.youtube.com/watch?v=${video.youtubeId}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black group block`}
+    <button
+      type="button"
+      onClick={() => setPlaying(true)}
+      className={`relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black group block cursor-pointer`}
     >
       <Image
         src={thumbnailUrl}
@@ -53,6 +70,6 @@ export function VideoThumbnail({ video, size = 'lg', showLabel = false }: VideoT
           {video.label}
         </div>
       )}
-    </a>
+    </button>
   )
 }
