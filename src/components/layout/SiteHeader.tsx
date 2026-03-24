@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Headphones, Gift } from 'lucide-react'
 import { ContactMethodOverlay } from '@/components/overlays/ContactMethodOverlay'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import type { NavItem } from '@/components/gallery/types'
@@ -52,7 +51,7 @@ export function SiteHeader({ activeNav, answers, currentStep }: SiteHeaderProps)
               <Link
                 key={link.key}
                 href={link.href}
-                className="text-sm font-semibold text-muted-foreground transition-colors hover:text-brand"
+                className="text-sm font-semibold transition-colors hover:text-brand"
               >
                 {link.label}
               </Link>
@@ -67,8 +66,7 @@ export function SiteHeader({ activeNav, answers, currentStep }: SiteHeaderProps)
               href="/beneficios"
               className="flex items-center gap-1.5 rounded-lg px-3 py-2 transition-colors hover:bg-muted md:gap-2 md:px-3 md:py-2"
             >
-              <Gift className="h-3.5 w-3.5 text-brand md:h-4 md:w-4" />
-              <span className="text-[11px] font-semibold text-brand md:text-sm">
+              <span className="text-sm font-semibold">
                 <span className="md:hidden">Beneficios</span>
                 <span className="hidden md:inline">Beneficios exclusivos</span>
               </span>
@@ -77,8 +75,7 @@ export function SiteHeader({ activeNav, answers, currentStep }: SiteHeaderProps)
               onClick={() => setShowContact(true)}
               className="flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 transition-colors hover:bg-brand/90 md:gap-2 md:px-[18px] md:py-2"
             >
-              <Headphones className="h-3.5 w-3.5 text-brand-foreground md:h-4 md:w-4" />
-              <span className="text-[11px] font-bold text-brand-foreground md:text-sm">Contactanos</span>
+              <span className="text-sm font-bold text-brand-foreground">Contactanos</span>
             </button>
           </div>
         </div>
