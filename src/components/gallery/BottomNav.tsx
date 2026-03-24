@@ -8,13 +8,14 @@ import type { NavItem } from './types'
 
 const NAV_ITEMS: { key: NavItem; label: string; href: string; icon: ComponentType<{ className?: string }> }[] = [
   { key: 'galeria', label: 'Galería', href: '/galeria', icon: MonitorPlay },
-  { key: 'comparador', label: 'Comparador', href: '#', icon: Columns3 },
+  { key: 'comparador', label: 'Comparador', href: '/compara-las-dashcams', icon: Columns3 },
   { key: 'cotizador', label: 'Cotizador', href: '/cotiza-tu-dashcam', icon: Calculator },
 ]
 
 function useActiveNav(): NavItem | undefined {
   const pathname = usePathname()
   if (pathname.startsWith('/galeria')) return 'galeria'
+  if (pathname.startsWith('/compara-las-dashcams')) return 'comparador'
   if (pathname.startsWith('/cotiza-tu-dashcam') || pathname.startsWith('/resultado')) return 'cotizador'
   return undefined
 }

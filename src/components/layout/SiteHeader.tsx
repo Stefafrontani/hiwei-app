@@ -9,7 +9,7 @@ import type { NavItem } from '@/components/gallery/types'
 
 const NAV_LINKS: { key: NavItem; label: string; href: string }[] = [
   { key: 'galeria', label: 'Galería', href: '/galeria' },
-  { key: 'comparador', label: 'Comparador', href: '#' },
+  { key: 'comparador', label: 'Comparador', href: '/compara-las-dashcams' },
   { key: 'cotizador', label: 'Cotizador', href: '/cotiza-tu-dashcam' },
 ]
 

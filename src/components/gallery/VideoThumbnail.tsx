@@ -17,6 +17,7 @@ interface VideoThumbnailProps {
   video: DashcamVideo
   size?: 'lg' | 'md' | 'sm'
   showLabel?: boolean
+  autoplay?: boolean
 }
 
 function ActivePlayer({ video, size }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm' }) {
@@ -65,8 +66,8 @@ function ActivePlayer({ video, size }: { video: DashcamVideo; size: 'lg' | 'md' 
   )
 }
 
-export function VideoThumbnail({ video, size = 'lg', showLabel = true }: VideoThumbnailProps) {
-  const [playing, setPlaying] = useState(false)
+export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay = false }: VideoThumbnailProps) {
+  const [playing, setPlaying] = useState(autoplay)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
   const playSize = size === 'sm' ? 'h-8 w-8' : size === 'md' ? 'h-10 w-10' : 'h-16 w-16'
   const playIconSize = size === 'sm' ? 'h-4 w-4' : size === 'md' ? 'h-5 w-5' : 'h-7 w-7'
