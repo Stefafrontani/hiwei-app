@@ -2,11 +2,11 @@
 
 import { useMemo, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { AngleTabs } from '@/components/gallery/AngleTabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ComparatorPlayerCard } from './ComparatorPlayerCard'
 import { SpecsTable } from './SpecsTable'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
-import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
+import { type CameraPosition, CAMERA_POSITION_LABELS } from '@/domain/value-objects/CameraPosition'
 
 interface ComparatorViewProps {
   products: DashcamProduct[]
@@ -72,11 +72,19 @@ export function ComparatorView({ products }: ComparatorViewProps) {
       </section>
 
       {/* Shared Camera Angle Tabs */}
-      <AngleTabs
-        angles={availableAngles}
-        activeAngle={activeAngle}
-        onAngleChange={setActiveAngle}
-      />
+      <Tabs value={activeAngle} onValueChange={(v) => setActiveAngle(v as CameraPosition)}>
+        <TabsList className="w-full bg-background p-1 rounded-lg gap-1">
+          {availableAngles.map((angle) => (
+            <TabsTrigger
+              key={angle}
+              value={angle}
+              className="flex-1 py-2 text-xs font-medium data-[state=active]:bg-brand data-[state=active]:text-brand-foreground data-[state=active]:font-bold data-[state=active]:shadow-none"
+            >
+              {CAMERA_POSITION_LABELS[angle]}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
 
       {/* Video Comparison Cards */}
       <section className="grid grid-cols-1 gap-6 md:grid-cols-2">

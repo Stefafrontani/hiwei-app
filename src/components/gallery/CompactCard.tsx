@@ -1,9 +1,9 @@
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { VideoThumbnail } from './VideoThumbnail'
-import { AngleTabs } from './AngleTabs'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
-import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
+import { type CameraPosition, CAMERA_POSITION_LABELS } from '@/domain/value-objects/CameraPosition'
 
 interface CompactCardProps {
   product: DashcamProduct
@@ -29,12 +29,19 @@ export function CompactCard({ product, activeAngle, onAngleChange }: CompactCard
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <VideoThumbnail video={activeVideo} size="md" />
-        <AngleTabs
-          angles={product.cameraPositions}
-          activeAngle={activeAngle}
-          onAngleChange={onAngleChange}
-          size="sm"
-        />
+        <Tabs value={activeAngle} onValueChange={(v) => onAngleChange(v as CameraPosition)}>
+          <TabsList className="w-full bg-background p-1 rounded-lg gap-1">
+            {product.cameraPositions.map((angle) => (
+              <TabsTrigger
+                key={angle}
+                value={angle}
+                className="flex-1 py-1.5 text-[10px] font-medium data-[state=active]:bg-brand data-[state=active]:text-brand-foreground data-[state=active]:font-bold data-[state=active]:shadow-none"
+              >
+                {CAMERA_POSITION_LABELS[angle]}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
       </CardContent>
     </Card>
   )
