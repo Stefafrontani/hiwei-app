@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { AppHeader } from '@/components/quiz/AppHeader'
+import { SiteHeader } from '@/components/layout/SiteHeader'
 import { SubtitleBar } from '@/components/quiz/SubtitleBar'
 import { ProgressBar } from '@/components/quiz/ProgressBar'
 import { NavigationFooter } from '@/components/quiz/NavigationFooter'
@@ -81,7 +81,7 @@ export default function QuizPage() {
   return (
     <div className="flex h-dvh flex-col bg-background">
       {/* Header */}
-      <AppHeader currentStep={currentStep} showStepPills answers={answers} />
+      <SiteHeader activeNav="cotizador" answers={answers} currentStep={currentStep} />
 
       {/* Desktop layout */}
       <div className="flex flex-1 overflow-hidden">

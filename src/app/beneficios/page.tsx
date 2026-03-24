@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  Camera,
   ArrowLeft,
   Gift,
   Percent,
@@ -16,6 +15,7 @@ import {
   RefreshCw,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { SiteHeader } from '@/components/layout/SiteHeader'
 
 type ViewState = 'form' | 'success' | 'error'
 
@@ -111,40 +111,7 @@ export default function BeneficiosPage() {
 
   const handleBack = () => router.back()
 
-  /* ── Header ──────────────────────────────────────────────────────────── */
-  const header = (
-    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-card px-5 md:h-16 md:justify-between md:px-12">
-      {/* Mobile: back arrow + title */}
-      <div className="flex items-center gap-3 md:hidden">
-        <button
-          onClick={handleBack}
-          className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-muted"
-        >
-          <ArrowLeft className="h-[18px] w-[18px] text-foreground" />
-        </button>
-        <span className="text-[15px] font-semibold text-foreground">Beneficios exclusivos</span>
-      </div>
-
-      {/* Desktop: logo left */}
-      <div className="hidden items-center gap-3 md:flex">
-        <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-brand">
-          <Camera className="h-[18px] w-[18px] text-brand-foreground" />
-        </div>
-        <span className="text-[13px] text-muted-foreground">Asesor de Dashcams</span>
-      </div>
-
-      {/* Desktop: back button (only on form view) */}
-      {view === 'form' && (
-        <button
-          onClick={handleBack}
-          className="hidden items-center gap-1.5 rounded-[8px] bg-muted px-3.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-muted md:flex"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Volver a recomendación
-        </button>
-      )}
-    </header>
-  )
+  const header = <SiteHeader />
 
   /* ── BenefitsList (shared) ───────────────────────────────────────────── */
   const benefitsList = (

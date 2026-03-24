@@ -1,1 +1,1 @@
-export type NavItem = 'feed' | 'catalog' | 'comparator' | 'profile'
+export type NavItem = 'galeria' | 'comparador' | 'cotizador'

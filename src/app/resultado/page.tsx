@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Camera, Headphones, Send, RotateCcw, Clock } from 'lucide-react'
-import { AppHeader } from '@/components/quiz/AppHeader'
+import { SiteHeader } from '@/components/layout/SiteHeader'
 import { ResultSummaryBanner } from '@/components/result/ResultSummaryBanner'
 import { MainRecommendationCard } from '@/components/result/MainRecommendationCard'
 import { BudgetBreakdown } from '@/components/result/BudgetBreakdown'
@@ -98,7 +98,7 @@ export default function ResultadoPage() {
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-background">
-      <AppHeader />
+      <SiteHeader activeNav="cotizador" />
 
       {/* Desktop layout: main column + CTA sidebar */}
       <div className="flex flex-1 overflow-hidden">
