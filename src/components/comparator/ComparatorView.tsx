@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { AngleTabs } from '@/components/gallery/AngleTabs'
 import { ComparatorPlayerCard } from './ComparatorPlayerCard'
 import { SpecsTable } from './SpecsTable'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
@@ -20,6 +21,19 @@ export function ComparatorView({ products }: ComparatorViewProps) {
   const productB = products.find((p) => p.id === modelBId) ?? null
 
   const bothSelected = !!productA && !!productB
+
+  // Union of camera positions from both selected models
+  const availableAngles = useMemo(() => {
+    const angles = new Set<CameraPosition>()
+    if (productA) productA.cameraPositions.forEach((a) => angles.add(a))
+    if (productB) productB.cameraPositions.forEach((a) => angles.add(a))
+    if (angles.size === 0) {
+      angles.add('frontal')
+      angles.add('trasera')
+      angles.add('interior')
+    }
+    return Array.from(angles)
+  }, [productA, productB])
 
   return (
     <div className="space-y-8">
@@ -57,20 +71,17 @@ export function ComparatorView({ products }: ComparatorViewProps) {
         </div>
       </section>
 
+      {/* Shared Camera Angle Tabs */}
+      <AngleTabs
+        angles={availableAngles}
+        activeAngle={activeAngle}
+        onAngleChange={setActiveAngle}
+      />
+
       {/* Video Comparison Cards */}
       <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <ComparatorPlayerCard
-          product={productA}
-          activeAngle={activeAngle}
-          onAngleChange={setActiveAngle}
-          autoplay={bothSelected}
-        />
-        <ComparatorPlayerCard
-          product={productB}
-          activeAngle={activeAngle}
-          onAngleChange={setActiveAngle}
-          autoplay={bothSelected}
-        />
+        <ComparatorPlayerCard product={productA} activeAngle={activeAngle} autoplay={bothSelected} />
+        <ComparatorPlayerCard product={productB} activeAngle={activeAngle} autoplay={bothSelected} />
       </section>
 
       {/* Specs Comparison Table */}

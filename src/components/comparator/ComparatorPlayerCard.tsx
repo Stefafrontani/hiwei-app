@@ -1,8 +1,6 @@
 import { VideoOff } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { VideoThumbnail } from '@/components/gallery/VideoThumbnail'
-import { AngleTabs } from '@/components/gallery/AngleTabs'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 
@@ -15,11 +13,10 @@ const ANGLE_LABELS: Record<CameraPosition, string> = {
 interface ComparatorPlayerCardProps {
   product: DashcamProduct | null
   activeAngle: CameraPosition
-  onAngleChange: (angle: CameraPosition) => void
   autoplay: boolean
 }
 
-export function ComparatorPlayerCard({ product, activeAngle, onAngleChange, autoplay }: ComparatorPlayerCardProps) {
+export function ComparatorPlayerCard({ product, activeAngle, autoplay }: ComparatorPlayerCardProps) {
   if (!product) {
     return (
       <Card className="border-0 shadow-none">
@@ -36,16 +33,8 @@ export function ComparatorPlayerCard({ product, activeAngle, onAngleChange, auto
     <Card className="border-0 shadow-none">
       <CardHeader>
         <CardTitle className="text-lg font-bold">{product.name}</CardTitle>
-        <div className="flex flex-wrap gap-1.5">
-          {product.tags.slice(0, 4).map((tag) => (
-            <Badge key={tag} variant="secondary" className="text-[10px]">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-        <CardDescription className="text-[12px]">{product.description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent>
         {video ? (
           <VideoThumbnail video={video} size="md" showLabel autoplay={autoplay} />
         ) : (
@@ -59,12 +48,6 @@ export function ComparatorPlayerCard({ product, activeAngle, onAngleChange, auto
             </p>
           </div>
         )}
-        <AngleTabs
-          angles={product.cameraPositions}
-          activeAngle={activeAngle}
-          onAngleChange={onAngleChange}
-          size="sm"
-        />
       </CardContent>
     </Card>
   )
