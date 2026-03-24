@@ -19,7 +19,6 @@ interface PlayerControlsProps {
   volume: number
   isMuted: boolean
   onTogglePlay: () => void
-  onSeek: (seconds: number) => void
   onVolumeChange: (volume: number) => void
   onToggleMute: () => void
   containerRef: React.RefObject<HTMLElement | null>
@@ -35,7 +34,6 @@ export function PlayerControls({
   volume,
   isMuted,
   onTogglePlay,
-  onSeek,
   onVolumeChange,
   onToggleMute,
   containerRef,
@@ -43,9 +41,7 @@ export function PlayerControls({
   const [visible, setVisible] = useState(true)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showVolume, setShowVolume] = useState(false)
-  const [isSeeking, setIsSeeking] = useState(false)
   const hideTimer = useRef<ReturnType<typeof setTimeout>>(null)
-  const progressRef = useRef<HTMLDivElement>(null)
   const volumeRef = useRef<HTMLDivElement>(null)
 
   const isCompact = size === 'sm'
@@ -87,36 +83,6 @@ export function PlayerControls({
       el.requestFullscreen()
     }
   }, [containerRef])
-
-  // Progress bar click/drag
-  const handleProgressInteraction = useCallback(
-    (clientX: number) => {
-      const bar = progressRef.current
-      if (!bar || !duration) return
-      const rect = bar.getBoundingClientRect()
-      const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
-      onSeek(ratio * duration)
-    },
-    [duration, onSeek],
-  )
-
-  const handleProgressMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault()
-      setIsSeeking(true)
-      handleProgressInteraction(e.clientX)
-
-      const onMove = (ev: MouseEvent) => handleProgressInteraction(ev.clientX)
-      const onUp = () => {
-        setIsSeeking(false)
-        window.removeEventListener('mousemove', onMove)
-        window.removeEventListener('mouseup', onUp)
-      }
-      window.addEventListener('mousemove', onMove)
-      window.addEventListener('mouseup', onUp)
-    },
-    [handleProgressInteraction],
-  )
 
   // Volume slider
   const handleVolumeInteraction = useCallback(
@@ -193,22 +159,14 @@ export function PlayerControls({
 
       {/* Bottom controls bar */}
       <div
-        className={`flex flex-col transition-opacity duration-300 ${visible || isSeeking ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`flex flex-col transition-opacity duration-300 ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       >
-        {/* Progress bar */}
-        <div
-          ref={progressRef}
-          className="group/progress relative h-1 w-full cursor-pointer hover:h-1.5 transition-all"
-          onMouseDown={handleProgressMouseDown}
-        >
+        {/* Progress bar (read-only) */}
+        <div className="relative h-1 w-full">
           <div className="absolute inset-0 bg-white/20" />
           <div
             className="absolute inset-y-0 left-0 bg-brand"
             style={{ width: `${progress}%` }}
-          />
-          <div
-            className="absolute top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-brand shadow opacity-0 group-hover/progress:opacity-100 transition-opacity"
-            style={{ left: `${progress}%`, transform: `translateX(-50%) translateY(-50%)` }}
           />
         </div>
 

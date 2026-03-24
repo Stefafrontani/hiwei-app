@@ -57,7 +57,6 @@ function ActivePlayer({ video, size }: { video: DashcamVideo; size: 'lg' | 'md' 
         volume={player.volume}
         isMuted={player.isMuted}
         onTogglePlay={player.togglePlay}
-        onSeek={player.seekTo}
         onVolumeChange={player.setVolume}
         onToggleMute={player.toggleMute}
         containerRef={wrapperRef}
