@@ -43,6 +43,7 @@ interface UseYouTubePlayerReturn {
   isReady: boolean
   isPlaying: boolean
   isBuffering: boolean
+  isEnded: boolean
   currentTime: number
   duration: number
   volume: number
@@ -65,6 +66,7 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isBuffering, setIsBuffering] = useState(false)
+  const [isEnded, setIsEnded] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [volume, setVolumeState] = useState(100)
@@ -130,6 +132,7 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
             setIsBuffering(state === YT.PlayerState.BUFFERING)
 
             if (state === YT.PlayerState.PLAYING) {
+              setIsEnded(false)
               if (durationRef.current === 0) {
                 durationRef.current = Math.floor(event.target.getDuration())
               }
@@ -139,8 +142,12 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
               cancelAnimationFrame(rafRef.current)
               if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.ENDED) {
                 try {
-                  const time = event.target.getCurrentTime()
-                  setCurrentTime(state === YT.PlayerState.ENDED ? durationRef.current : time)
+                  if (state === YT.PlayerState.ENDED) {
+                    setIsEnded(true)
+                    setCurrentTime(durationRef.current)
+                  } else {
+                    setCurrentTime(event.target.getCurrentTime())
+                  }
                 } catch {
                   // ignore
                 }
@@ -217,6 +224,7 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
     isReady,
     isPlaying,
     isBuffering,
+    isEnded,
     currentTime,
     duration,
     volume,

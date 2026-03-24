@@ -172,7 +172,7 @@ export function PlayerControls({
     >
       {/* Center play/pause indicator */}
       {(!isPlaying || isBuffering) && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none" data-overlay>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none bg-black/60" data-overlay>
           <button
             type="button"
             onClick={(e) => {

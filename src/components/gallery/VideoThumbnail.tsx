@@ -25,6 +25,8 @@ function ActivePlayer({ video, size }: { video: DashcamVideo; size: 'lg' | 'md' 
 
   const player = useYouTubePlayer({ videoId: video.youtubeId, autoplay: true })
 
+  const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
+
   return (
     <div ref={wrapperRef} className={`relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}>
       {/* YouTube player target — pointer-events disabled to block all YT UI interaction */}
@@ -32,6 +34,17 @@ function ActivePlayer({ video, size }: { video: DashcamVideo; size: 'lg' | 'md' 
         ref={player.containerRef}
         className="absolute inset-0 h-full w-full pointer-events-none [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:h-full [&>iframe]:w-full"
       />
+
+      {/* Thumbnail overlay when ended — covers YouTube end screen */}
+      {player.isEnded && (
+        <Image
+          src={thumbnailUrl}
+          alt={video.label}
+          fill
+          className="absolute inset-0 object-cover"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+      )}
 
       {/* Custom controls overlay */}
       <PlayerControls
