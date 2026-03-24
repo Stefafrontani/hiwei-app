@@ -1,5 +1,8 @@
+'use client'
+
 import type { ComponentType } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { MonitorPlay, Columns3, Calculator } from 'lucide-react'
 import type { NavItem } from './types'
 
@@ -9,11 +12,16 @@ const NAV_ITEMS: { key: NavItem; label: string; href: string; icon: ComponentTyp
   { key: 'cotizador', label: 'Cotizador', href: '/cotiza-tu-dashcam', icon: Calculator },
 ]
 
-interface BottomNavProps {
-  activeNav?: NavItem
+function useActiveNav(): NavItem | undefined {
+  const pathname = usePathname()
+  if (pathname.startsWith('/galeria')) return 'galeria'
+  if (pathname.startsWith('/cotiza-tu-dashcam') || pathname.startsWith('/resultado')) return 'cotizador'
+  return undefined
 }
 
-export function BottomNav({ activeNav = 'galeria' }: BottomNavProps) {
+export function BottomNav() {
+  const activeNav = useActiveNav()
+
   return (
     <nav className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around rounded-t-xl border-t border-border bg-card/95 px-4 py-3 shadow-2xl backdrop-blur-md md:hidden">
       {NAV_ITEMS.map(({ key, label, href, icon: Icon }) => {
