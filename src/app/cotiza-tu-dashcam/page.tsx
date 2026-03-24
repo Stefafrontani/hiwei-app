@@ -172,7 +172,7 @@ export default function QuizPage() {
           </div>
 
           {/* Navigation footer — mobile: pinned at bottom */}
-          <div className="md:hidden">
+          <div className="pb-20 md:hidden">
             <NavigationFooter
               currentStep={currentStep}
               totalSteps={TOTAL_STEPS}

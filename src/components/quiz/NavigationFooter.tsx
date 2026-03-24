@@ -24,7 +24,7 @@ export function NavigationFooter({
 
   const footerClass =
     variant === 'mobile'
-      ? 'flex h-20 items-center gap-3 border-t border-border bg-card px-5'
+      ? 'flex items-center gap-3 px-5 py-4'
       : 'mt-6 flex items-center justify-between'
 
   const nextClass =
