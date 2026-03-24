@@ -15,7 +15,7 @@ export function FeaturedCard({ product, activeAngle, onAngleChange }: FeaturedCa
   const activeVideo = product.videos.find((v) => v.cameraPosition === activeAngle) ?? product.videos[0]
 
   return (
-    <Card className="lg:col-span-8 border-0 shadow-none grid-rows-1">
+    <Card className="border-0 shadow-none">
       <CardHeader>
         <CardTitle className="text-xl font-bold">{product.name}</CardTitle>
         <div className="flex flex-wrap gap-2">
