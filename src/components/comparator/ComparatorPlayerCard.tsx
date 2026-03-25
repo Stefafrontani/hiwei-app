@@ -19,10 +19,15 @@ interface ComparatorPlayerCardProps {
 export function ComparatorPlayerCard({ product, activeAngle, autoplay }: ComparatorPlayerCardProps) {
   if (!product) {
     return (
-      <Card className="border-0 shadow-none">
-        <div className="flex aspect-video items-center justify-center rounded-lg bg-muted/30">
-          <p className="text-sm text-muted-foreground">Seleccioná un modelo</p>
-        </div>
+      <Card className="border-0 shadow-none gap-2">
+        <CardHeader>
+          <CardTitle className="text-lg font-bold invisible">&lrm;</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex aspect-[16/10] items-center justify-center rounded-lg bg-muted/30">
+            <p className="text-sm text-muted-foreground">Seleccioná un modelo</p>
+          </div>
+        </CardContent>
       </Card>
     )
   }
@@ -30,7 +35,7 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay }: Compara
   const video = product.videos.find((v) => v.cameraPosition === activeAngle)
 
   return (
-    <Card className="border-0 shadow-none">
+    <Card className="animate-in fade-in duration-300 border-0 shadow-none gap-2">
       <CardHeader>
         <CardTitle className="text-lg font-bold">{product.name}</CardTitle>
       </CardHeader>
