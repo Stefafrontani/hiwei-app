@@ -100,8 +100,8 @@ export function ComparatorView({ products }: ComparatorViewProps) {
 
       {/* Video Comparison Cards */}
       <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <ComparatorPlayerCard key={`a-${playbackKey}`} product={productA} activeAngle={activeAngle} autoplay={bothSelected} />
-        <ComparatorPlayerCard key={`b-${playbackKey}`} product={productB} activeAngle={activeAngle} autoplay={bothSelected} />
+        <ComparatorPlayerCard product={productA} activeAngle={activeAngle} autoplay={bothSelected} playbackKey={playbackKey} />
+        <ComparatorPlayerCard product={productB} activeAngle={activeAngle} autoplay={bothSelected} playbackKey={playbackKey} />
       </section>
 
       {/* Specs Comparison Table */}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { VideoOff } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DotIndicator } from '@/components/ui/dot-indicator'
@@ -18,10 +18,15 @@ interface ComparatorPlayerCardProps {
   product: DashcamProduct | null
   activeAngle: CameraPosition
   autoplay: boolean
+  playbackKey: number
 }
 
-export function ComparatorPlayerCard({ product, activeAngle, autoplay }: ComparatorPlayerCardProps) {
+export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackKey }: ComparatorPlayerCardProps) {
   const [videoIndex, setVideoIndex] = useState(0)
+
+  useEffect(() => {
+    setVideoIndex(0)
+  }, [playbackKey])
 
   if (!product) {
     return (
@@ -43,13 +48,13 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay }: Compara
   const activeVideo = angleVideos[videoIndex] ?? null
 
   return (
-    <Card className="animate-in fade-in duration-300 border-0 shadow-none gap-2 py-2 md:py-4">
+    <Card className="border-0 shadow-none gap-2 py-2 md:py-4">
       <CardHeader className="px-2 md:px-4">
         <CardTitle className="text-lg font-bold">{product.name}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2 px-2 md:px-4">
         {activeVideo ? (
-          <VideoThumbnail video={activeVideo} size="md" showLabel autoplay={autoplay} />
+          <VideoThumbnail key={playbackKey} video={activeVideo} size="md" showLabel autoplay={autoplay} />
         ) : (
           <div className="flex aspect-[16/10] flex-col items-center justify-center gap-3 rounded-lg bg-muted/20 px-8 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted/30">
