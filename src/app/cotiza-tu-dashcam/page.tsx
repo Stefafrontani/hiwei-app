@@ -82,10 +82,18 @@ export default function QuizPage() {
   const subtitle = SUBTITLE_CONFIG[currentStep]
 
   return (
-    <div className="flex h-dvh flex-col bg-background">
+    <div className="relative flex h-dvh flex-col bg-background overflow-hidden">
+      {/* Gradient mesh — covers entire page behind header + content */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-[15%] -left-[10%] h-[600px] w-[600px] rounded-full bg-brand/[0.07] blur-[150px]" />
+        <div className="absolute top-[50%] -right-[10%] h-[400px] w-[400px] rounded-full bg-brand/[0.04] blur-[120px]" />
+        <div className="absolute -bottom-[10%] left-[30%] h-[350px] w-[350px] rounded-full bg-amber-500/[0.02] blur-[100px]" />
+      </div>
+
       <SiteHeader activeNav="cotizador" answers={answers} currentStep={currentStep} />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-1 overflow-hidden">
+
         {/* Main content */}
         <main className="flex flex-1 flex-col overflow-hidden">
           {/* Hero banner */}

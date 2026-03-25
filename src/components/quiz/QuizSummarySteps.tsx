@@ -28,9 +28,7 @@ export function QuizSummarySteps({ answers, currentStep }: QuizSummaryStepsProps
     <>
       {/* Header */}
       <div className="flex items-center gap-2.5 px-6 py-5">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand/15">
-          <LayoutList className="h-3.5 w-3.5 text-brand" />
-        </div>
+        <LayoutList className="h-3.5 w-3.5 text-brand" />
         <span className="text-[15px] font-bold text-foreground tracking-tight">Resumen</span>
       </div>
 

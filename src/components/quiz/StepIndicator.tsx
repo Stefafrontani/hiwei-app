@@ -75,14 +75,6 @@ export function StepIndicator({ currentStep, totalSteps = 6 }: StepIndicatorProp
           )
         })}
       </div>
-
-      {/* Progress bar */}
-      <Progress
-        value={percent === 0 ? 5 : percent}
-        className={`h-1 bg-muted/50 ${isLastStep
-          ? '[&>[data-slot=progress-indicator]]:bg-success'
-          : '[&>[data-slot=progress-indicator]]:bg-brand'}`}
-      />
     </div>
   )
 }

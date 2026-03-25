@@ -26,7 +26,7 @@ export function SiteHeader({ activeNav, answers, currentStep }: SiteHeaderProps)
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 md:bg-background/60 bg-card/80 backdrop-blur-xl">
         <div className="mx-auto flex h-14 w-full max-w-7xl items-center px-5 md:h-14 md:px-6">
           {/* Logo */}
           <Link href="/galeria" className="flex items-center gap-2">
