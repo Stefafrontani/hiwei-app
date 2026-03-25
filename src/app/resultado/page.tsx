@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Camera, Headphones, RotateCcw, Clock } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { ResultSummaryBanner } from '@/components/result/ResultSummaryBanner'
 import { MainRecommendationCard } from '@/components/result/MainRecommendationCard'
@@ -118,9 +119,9 @@ export default function ResultadoPage() {
             <div className="m-4 flex flex-col items-center gap-3 rounded-xl bg-destructive/10 p-6 text-center">
               <p className="text-[16px] font-semibold text-destructive">Algo salió mal</p>
               <p className="text-[13px] text-muted-foreground">{error}</p>
-              <button type="button" onClick={() => router.push('/cotiza-tu-dashcam')} className="text-[13px] font-semibold text-brand underline">
+              <Button variant="link" onClick={() => router.push('/cotiza-tu-dashcam')} className="text-brand">
                 Intentar de nuevo
-              </button>
+              </Button>
             </div>
           )}
 
@@ -143,14 +144,10 @@ export default function ResultadoPage() {
               <div className="flex flex-col items-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-5 text-center md:hidden">
                 <p className="text-[14px] font-semibold text-foreground">¿No es lo que buscabas?</p>
                 <p className="text-[12px] leading-relaxed text-muted-foreground">Podés ajustar tus respuestas y encontrar la dashcam ideal.</p>
-                <button
-                  type="button"
-                  onClick={handleRestart}
-                  className="mt-1 inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03] px-4 py-2 text-[13px] font-semibold text-foreground transition-colors hover:bg-white/[0.06]"
-                >
+                <Button variant="outline" onClick={handleRestart} className="mt-1">
                   <RotateCcw className="h-3.5 w-3.5" />
                   Empezar de nuevo
-                </button>
+                </Button>
               </div>
             </div>
           )}
@@ -190,14 +187,10 @@ export default function ResultadoPage() {
       {/* Fixed bottom CTA — mobile only */}
       {result && !loading && (
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.06] backdrop-blur-xl bg-background/60 px-4 py-3 md:hidden">
-          <button
-            type="button"
-            onClick={() => setShowContact(true)}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand to-brand/80 text-[14px] font-semibold text-brand-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
-          >
+          <Button variant="brand" size="xl" className="w-full" onClick={() => setShowContact(true)}>
             <Headphones className="h-4 w-4" />
             Consultanos
-          </button>
+          </Button>
         </div>
       )}
     </div>

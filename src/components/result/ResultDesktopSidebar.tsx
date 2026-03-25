@@ -1,6 +1,7 @@
 'use client'
 
 import { Headphones, Send, RotateCcw } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { DesktopSidebar } from '@/components/layout/DesktopSidebar'
 import { ContactMethodOverlay } from '@/components/overlays/ContactMethodOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
@@ -41,10 +42,8 @@ export function ResultDesktopSidebar({
   return (
     <>
       <DesktopSidebar>
-        {/* Quiz Summary */}
         {answers && <QuizSummarySteps answers={answers} />}
 
-        {/* CTAs */}
         <div className="flex flex-col gap-3 border-t border-white/[0.06] p-6">
           <div className="flex flex-col gap-1">
             <p className="text-[14px] font-bold text-foreground">¿Cómo podemos ayudarte?</p>
@@ -53,34 +52,22 @@ export function ResultDesktopSidebar({
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={onContactOpen}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand to-brand/80 text-[14px] font-bold text-brand-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
-          >
+          <Button variant="brand" size="xl" className="w-full" onClick={onContactOpen}>
             <Headphones className="h-4 w-4" />
             ¿Tenés dudas? Escribinos
-          </button>
+          </Button>
 
-          <button
-            type="button"
-            onClick={onSendOpen}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-brand/50 bg-brand/5 text-[14px] font-semibold text-brand transition-all duration-200 hover:bg-brand/10 active:scale-[0.98]"
-          >
+          <Button variant="outline" size="xl" className="w-full" onClick={onSendOpen}>
             <Send className="h-4 w-4" />
             Recibir recomendación por mail
-          </button>
+          </Button>
 
           <div className="flex flex-col items-center gap-1.5 pt-2 text-center">
             <p className="text-[12px] text-muted-foreground/60">¿No es lo que buscabas?</p>
-            <button
-              type="button"
-              onClick={onRestart}
-              className="inline-flex cursor-pointer items-center gap-1.5 text-[12px] font-medium text-muted-foreground/60 transition-colors hover:text-foreground"
-            >
+            <Button variant="ghost" size="sm" onClick={onRestart} className="text-muted-foreground/60 hover:text-foreground">
               <RotateCcw className="h-3.5 w-3.5" />
               Empezar de nuevo
-            </button>
+            </Button>
           </div>
         </div>
       </DesktopSidebar>
