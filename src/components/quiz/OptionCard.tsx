@@ -15,7 +15,7 @@ export function OptionCard({ icon: Icon, label, subLabel, isActive, onClick }: O
       aria-pressed={isActive}
       onClick={onClick}
       className={`group relative flex flex-col items-center justify-center gap-2 rounded-2xl transition-all duration-200
-        h-20 w-24 md:h-28 md:w-32
+        h-20 w-full md:h-28
         ${isActive
           ? 'glass-card border-brand/50 bg-brand/10 glow-brand animate-select-bounce'
           : 'glass-card hover:border-brand/25 hover:scale-[1.03] active:scale-[0.98]'}`}
