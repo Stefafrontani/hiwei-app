@@ -108,15 +108,15 @@ export default function QuizPage() {
             </div>
           )}
 
+          {/* Step indicator — mobile only, above hero banner */}
+          {isMobile && <StepIndicator currentStep={currentStep} totalSteps={TOTAL_STEPS} />}
+
           {/* Hero banner */}
           <SubtitleBar
             variant={subtitle.variant}
             title={subtitle.title}
             subtitle={subtitle.subtitle}
           />
-
-          {/* Step indicator — mobile only, desktop uses sidebar */}
-          {isMobile && <StepIndicator currentStep={currentStep} totalSteps={TOTAL_STEPS} />}
 
           {/* Step content */}
           <div className="flex-1 overflow-y-auto px-5 py-5 md:px-8 md:py-8">
