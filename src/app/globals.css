@@ -150,6 +150,30 @@
   --whatsapp:            oklch(0.74 0.22 145);
 }
 
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes border-rotate {
+  to { --border-angle: 360deg; }
+}
+
+.shimmer-border {
+  position: relative;
+  border-radius: var(--radius-lg);
+  padding: 1px;
+  background: conic-gradient(
+    from var(--border-angle),
+    var(--info) 0%,
+    oklch(0.65 0.15 254) 10%,
+    var(--info) 20%,
+    var(--info) 100%
+  );
+  animation: border-rotate 4s linear infinite;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
