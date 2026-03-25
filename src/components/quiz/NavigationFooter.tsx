@@ -52,11 +52,11 @@ export function NavigationFooter({
         className={`flex items-center justify-center gap-2 rounded-xl text-[14px] font-semibold transition-all duration-200
           ${isMobile ? 'h-12 flex-1' : 'h-12 px-8'}
           ${!canGoNext || isLoading
-            ? 'cursor-not-allowed opacity-40 blur-[0.3px]'
-            : 'hover:brightness-110 active:scale-[0.98]'}
+            ? 'cursor-not-allowed opacity-40 blur-[0.3px] shadow-none'
+            : `hover:brightness-110 active:scale-[0.98] ${isLast ? 'shadow-[0_0_20px_2px] shadow-success/15' : 'shadow-[0_0_20px_2px] shadow-brand/15'}`}
           ${isLast
-            ? 'bg-gradient-to-r from-success to-success/80 text-success-foreground shadow-[0_0_20px_2px] shadow-success/15'
-            : 'bg-gradient-to-r from-brand to-brand/80 text-brand-foreground shadow-[0_0_20px_2px] shadow-brand/15'}`}
+            ? 'bg-gradient-to-r from-success to-success/80 text-success-foreground'
+            : 'bg-gradient-to-r from-brand to-brand/80 text-brand-foreground'}`}
       >
         {isLoading ? (
           <span className="loading-dots flex gap-1">
