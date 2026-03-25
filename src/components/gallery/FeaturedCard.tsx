@@ -1,5 +1,9 @@
+'use client'
+
+import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { DotIndicator } from '@/components/ui/dot-indicator'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { VideoThumbnail } from './VideoThumbnail'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
@@ -12,7 +16,14 @@ interface FeaturedCardProps {
 }
 
 export function FeaturedCard({ product, activeAngle, onAngleChange }: FeaturedCardProps) {
-  const activeVideo = product.videos.find((v) => v.cameraPosition === activeAngle) ?? product.videos[0]
+  const [videoIndex, setVideoIndex] = useState(0)
+  const angleVideos = product.videos.filter((v) => v.cameraPosition === activeAngle)
+  const activeVideo = angleVideos[videoIndex] ?? product.videos[0]
+
+  const handleAngleChange = (angle: CameraPosition) => {
+    setVideoIndex(0)
+    onAngleChange(angle)
+  }
 
   return (
     <Card className="border-0 shadow-none">
@@ -29,7 +40,8 @@ export function FeaturedCard({ product, activeAngle, onAngleChange }: FeaturedCa
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <VideoThumbnail video={activeVideo} size="lg" />
-        <Tabs value={activeAngle} onValueChange={(v) => onAngleChange(v as CameraPosition)}>
+        <DotIndicator total={angleVideos.length} active={videoIndex} onDotClick={setVideoIndex} />
+        <Tabs value={activeAngle} onValueChange={(v) => handleAngleChange(v as CameraPosition)}>
           <TabsList className="w-full bg-background p-1 rounded-lg gap-1">
             {product.cameraPositions.map((angle) => (
               <TabsTrigger
