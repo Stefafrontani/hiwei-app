@@ -33,6 +33,20 @@ export default function ResultadoPage() {
   useEffect(() => {
     const raw = localStorage.getItem('hiwei-quiz')
     if (!raw) {
+      // No quiz answers — try loading from cached recommendation
+      const cached = localStorage.getItem('hiwei-recommendation')
+      if (cached) {
+        try {
+          const cachedData = JSON.parse(cached)
+          setAnswers({ ...createEmptyAnswers(), ...JSON.parse(cachedData.answers) })
+          setResult(cachedData.result)
+          setRecommendationId(cachedData.recommendationId)
+          setExpiresAt(cachedData.expiresAt)
+          setMemoryCards(cachedData.memoryCards ?? [])
+          setLoading(false)
+          return
+        } catch { /* fall through to redirect */ }
+      }
       router.replace('/cotiza-tu-dashcam')
       return
     }
@@ -87,7 +101,6 @@ export default function ResultadoPage() {
 
   const handleRestart = () => {
     localStorage.removeItem('hiwei-quiz')
-    localStorage.removeItem('hiwei-recommendation')
     router.push('/cotiza-tu-dashcam')
   }
 
