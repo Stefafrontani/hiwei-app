@@ -73,7 +73,7 @@ export function ComparatorView({ products }: ComparatorViewProps) {
 
       {/* Shared Camera Angle Tabs */}
       <Tabs value={activeAngle} onValueChange={(v) => setActiveAngle(v as CameraPosition)}>
-        <TabsList className="w-full bg-background p-1 rounded-lg gap-1">
+        <TabsList className="w-full bg-muted p-1 rounded-lg gap-1">
           {availableAngles.map((angle) => (
             <TabsTrigger
               key={angle}

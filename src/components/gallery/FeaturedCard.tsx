@@ -42,7 +42,7 @@ export function FeaturedCard({ product, activeAngle, onAngleChange }: FeaturedCa
         <VideoThumbnail video={activeVideo} size="lg" />
         <DotIndicator total={angleVideos.length} active={videoIndex} onDotClick={setVideoIndex} />
         <Tabs value={activeAngle} onValueChange={(v) => handleAngleChange(v as CameraPosition)}>
-          <TabsList className="w-full bg-background p-1 rounded-lg gap-1">
+          <TabsList className="w-full bg-muted p-1 rounded-lg gap-1">
             {product.cameraPositions.map((angle) => (
               <TabsTrigger
                 key={angle}
