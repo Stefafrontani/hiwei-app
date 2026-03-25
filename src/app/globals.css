@@ -167,11 +167,11 @@
   background: conic-gradient(
     from var(--border-angle),
     var(--info) 0%,
-    oklch(0.65 0.15 254) 10%,
-    var(--info) 20%,
+    oklch(0.75 0.15 254) 15%,
+    var(--info) 30%,
     var(--info) 100%
   );
-  animation: border-rotate 4s linear infinite;
+  animation: border-rotate 3s linear infinite;
 }
 
 @layer base {
