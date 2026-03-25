@@ -72,19 +72,21 @@ export function ComparatorView({ products }: ComparatorViewProps) {
       </section>
 
       {/* Shared Camera Angle Tabs */}
-      <Tabs value={activeAngle} onValueChange={(v) => setActiveAngle(v as CameraPosition)}>
-        <TabsList className="w-full bg-muted p-1 rounded-lg gap-1">
-          {availableAngles.map((angle) => (
-            <TabsTrigger
-              key={angle}
-              value={angle}
-              className="flex-1 py-2 text-xs font-medium data-[state=active]:bg-brand data-[state=active]:text-brand-foreground data-[state=active]:font-bold data-[state=active]:shadow-none"
-            >
-              {CAMERA_POSITION_LABELS[angle]}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+      <div className={`transition-all duration-300 ${bothSelected ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+        <Tabs value={activeAngle} onValueChange={(v) => setActiveAngle(v as CameraPosition)}>
+          <TabsList className="w-full bg-muted p-1 rounded-lg gap-1">
+            {availableAngles.map((angle) => (
+              <TabsTrigger
+                key={angle}
+                value={angle}
+                className="flex-1 py-2 text-xs font-medium data-[state=active]:bg-brand data-[state=active]:text-brand-foreground data-[state=active]:font-bold data-[state=active]:shadow-none"
+              >
+                {CAMERA_POSITION_LABELS[angle]}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      </div>
 
       {/* Video Comparison Cards */}
       <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
