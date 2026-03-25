@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+import { ExternalLink } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useIsMobile } from '@/hooks/use-mobile'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
@@ -8,6 +10,16 @@ const QUALITY_LABELS: Record<string, string> = {
   buena: 'Buena (Full HD)',
   'muy-buena': 'Muy buena (4K)',
   superior: 'Superior (4K+)',
+}
+
+const POSITION_LABELS: Record<string, string> = {
+  frontal: 'Frontal',
+  trasera: 'Trasera',
+  interior: 'Interior',
+}
+
+function formatPositions(positions: string[]): string {
+  return positions.map((p) => POSITION_LABELS[p] ?? p).join(' · ')
 }
 
 interface SpecsTableProps {
@@ -32,18 +44,13 @@ function getRows(a: DashcamProduct | null, b: DashcamProduct | null): SpecRow[] 
     },
     {
       label: 'Cámaras',
-      valueA: val(a, (p) => p.cameraPositions.join(', ')),
-      valueB: val(b, (p) => p.cameraPositions.join(', ')),
+      valueA: val(a, (p) => formatPositions(p.cameraPositions)),
+      valueB: val(b, (p) => formatPositions(p.cameraPositions)),
     },
     {
       label: 'Memoria incluida',
       valueA: val(a, (p) => (p.includedMemoryCardSize ? `${p.includedMemoryCardSize} GB` : 'No incluida')),
       valueB: val(b, (p) => (p.includedMemoryCardSize ? `${p.includedMemoryCardSize} GB` : 'No incluida')),
-    },
-    {
-      label: 'Ciclo de grabación',
-      valueA: val(a, (p) => `${p.cycleSize} GB/h`),
-      valueB: val(b, (p) => `${p.cycleSize} GB/h`),
     },
   ]
 }
@@ -56,6 +63,7 @@ export function SpecsTable({ productA, productB }: SpecsTableProps) {
   const rows = getRows(productA, productB)
 
   const wrap = 'whitespace-normal'
+  const pad = isMobile ? 'p-3' : 'p-2'
   const headSize = isMobile ? 'text-xs' : 'text-sm'
   const cellSize = isMobile ? 'text-xs' : 'text-sm'
   const labelSize = isMobile ? 'text-[10px]' : 'text-xs'
@@ -68,19 +76,49 @@ export function SpecsTable({ productA, productB }: SpecsTableProps) {
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/20 hover:bg-muted/20">
-            <TableHead className={`w-1/3 ${wrap} text-[10px] font-bold uppercase tracking-wider text-muted-foreground`}>Modelo</TableHead>
-            <TableHead className={`w-1/3 ${wrap} ${headSize} font-bold text-brand`}>{productA?.name ?? '—'}</TableHead>
-            <TableHead className={`w-1/3 ${wrap} ${headSize} font-bold text-brand`}>{productB?.name ?? '—'}</TableHead>
+            <TableHead className={`w-1/3 ${wrap} ${pad} text-[10px] font-bold uppercase tracking-wider text-muted-foreground`}>Modelo</TableHead>
+            <TableHead className={`w-1/3 ${wrap} ${pad} ${headSize} font-bold text-brand`}>{productA?.name ?? '—'}</TableHead>
+            <TableHead className={`w-1/3 ${wrap} ${pad} ${headSize} font-bold text-brand`}>{productB?.name ?? '—'}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.map((row) => (
             <TableRow key={row.label}>
-              <TableCell className={`w-1/3 ${wrap} ${labelSize} font-medium text-muted-foreground`}>{row.label}</TableCell>
-              <TableCell className={`w-1/3 ${wrap} ${cellSize} font-semibold text-foreground`}>{row.valueA}</TableCell>
-              <TableCell className={`w-1/3 ${wrap} ${cellSize} font-semibold text-foreground`}>{row.valueB}</TableCell>
+              <TableCell className={`w-1/3 ${wrap} ${pad} ${labelSize} font-medium text-muted-foreground`}>{row.label}</TableCell>
+              <TableCell className={`w-1/3 ${wrap} ${pad} ${cellSize} font-semibold text-foreground`}>{row.valueA}</TableCell>
+              <TableCell className={`w-1/3 ${wrap} ${pad} ${cellSize} font-semibold text-foreground`}>{row.valueB}</TableCell>
             </TableRow>
           ))}
+          {/* Ver más info row */}
+          <TableRow>
+            <TableCell className={`w-1/3 ${wrap} ${pad} ${labelSize} font-medium text-muted-foreground`}>Tienda</TableCell>
+            <TableCell className={`w-1/3 ${wrap} ${pad}`}>
+              {productA?.ecommerceUrl ? (
+                <Link
+                  href={productA.ecommerceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`inline-flex items-center gap-1.5 ${cellSize} font-semibold text-brand hover:underline`}
+                >
+                  Ver más info
+                  <ExternalLink className="h-3 w-3" />
+                </Link>
+              ) : '—'}
+            </TableCell>
+            <TableCell className={`w-1/3 ${wrap} ${pad}`}>
+              {productB?.ecommerceUrl ? (
+                <Link
+                  href={productB.ecommerceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`inline-flex items-center gap-1.5 ${cellSize} font-semibold text-brand hover:underline`}
+                >
+                  Ver más info
+                  <ExternalLink className="h-3 w-3" />
+                </Link>
+              ) : '—'}
+            </TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </div>

@@ -1,9 +1,9 @@
-import { InMemoryDashcamRepository } from '@/infrastructure/repositories/mock/InMemoryDashcamRepository'
+import { SupabaseDashcamRepository } from '@/infrastructure/repositories/supabase/SupabaseDashcamRepository'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { ComparatorView } from '@/components/comparator/ComparatorView'
 
 export default async function ComparatorPage() {
-  const repo = new InMemoryDashcamRepository()
+  const repo = new SupabaseDashcamRepository()
   const products = await repo.getAll()
 
   return (
