@@ -8,7 +8,8 @@ import { SiteHeader } from '@/components/layout/SiteHeader'
 import { SubtitleBar } from '@/components/quiz/SubtitleBar'
 import { StepIndicator } from '@/components/quiz/StepIndicator'
 import { NavigationFooter } from '@/components/quiz/NavigationFooter'
-import { DesktopSidebar } from '@/components/quiz/DesktopSidebar'
+import { DesktopSidebar } from '@/components/layout/DesktopSidebar'
+import { QuizSummarySteps } from '@/components/quiz/QuizSummarySteps'
 import { Step1 } from '@/components/steps/Step1'
 import { Step2 } from '@/components/steps/Step2'
 import { Step3 } from '@/components/steps/Step3'
@@ -119,7 +120,7 @@ export default function QuizPage() {
           />
 
           {/* Step content */}
-          <div className="flex-1 overflow-y-auto px-5 py-5 md:px-8 md:py-8">
+          <div className="flex-1 overflow-y-auto scrollbar-none px-5 py-5 md:px-8 md:py-8">
             <div key={currentStep}>
               {currentStep === 1 && (
                 <Step1
@@ -190,7 +191,9 @@ export default function QuizPage() {
         </main>
 
         {/* Desktop sidebar */}
-        <DesktopSidebar currentStep={currentStep} answers={answers} />
+        <DesktopSidebar>
+          <QuizSummarySteps answers={answers} currentStep={currentStep} />
+        </DesktopSidebar>
       </div>
     </div>
   )

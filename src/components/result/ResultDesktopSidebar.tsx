@@ -1,6 +1,7 @@
 'use client'
 
 import { Headphones, Send, RotateCcw } from 'lucide-react'
+import { DesktopSidebar } from '@/components/layout/DesktopSidebar'
 import { ContactMethodOverlay } from '@/components/overlays/ContactMethodOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
 import { QuizSummarySteps } from '@/components/quiz/QuizSummarySteps'
@@ -39,7 +40,7 @@ export function ResultDesktopSidebar({
 }: ResultDesktopSidebarProps) {
   return (
     <>
-      <aside className="hidden w-[340px] shrink-0 flex-col md:flex backdrop-blur-2xl bg-white/[0.03] border-l border-white/[0.06] relative overflow-hidden overflow-y-auto">
+      <DesktopSidebar>
         {/* Quiz Summary */}
         {answers && <QuizSummarySteps answers={answers} />}
 
@@ -52,7 +53,6 @@ export function ResultDesktopSidebar({
             </p>
           </div>
 
-          {/* Primary */}
           <button
             type="button"
             onClick={onContactOpen}
@@ -62,7 +62,6 @@ export function ResultDesktopSidebar({
             ¿Tenés dudas? Escribinos
           </button>
 
-          {/* Secondary */}
           <button
             type="button"
             onClick={onSendOpen}
@@ -72,7 +71,6 @@ export function ResultDesktopSidebar({
             Recibir recomendación por mail
           </button>
 
-          {/* Tertiary */}
           <div className="flex flex-col items-center gap-1.5 pt-2 text-center">
             <p className="text-[12px] text-muted-foreground/60">¿No es lo que buscabas?</p>
             <button
@@ -85,7 +83,7 @@ export function ResultDesktopSidebar({
             </button>
           </div>
         </div>
-      </aside>
+      </DesktopSidebar>
 
       <ContactMethodOverlay
         open={showContact}
