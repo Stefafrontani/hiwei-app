@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ComparatorPlayerCard } from './ComparatorPlayerCard'
@@ -16,11 +16,21 @@ export function ComparatorView({ products }: ComparatorViewProps) {
   const [modelAId, setModelAId] = useState<string | null>(null)
   const [modelBId, setModelBId] = useState<string | null>(null)
   const [activeAngle, setActiveAngle] = useState<CameraPosition>('frontal')
+  const [playbackKey, setPlaybackKey] = useState(0)
 
   const productA = products.find((p) => p.id === modelAId) ?? null
   const productB = products.find((p) => p.id === modelBId) ?? null
 
   const bothSelected = !!productA && !!productB
+
+  useEffect(() => {
+    if (bothSelected) setPlaybackKey((k) => k + 1)
+  }, [bothSelected])
+
+  const handleAngleChange = (angle: CameraPosition) => {
+    setActiveAngle(angle)
+    setPlaybackKey((k) => k + 1)
+  }
 
   // Union of camera positions from both selected models
   const availableAngles = useMemo(() => {
@@ -73,7 +83,7 @@ export function ComparatorView({ products }: ComparatorViewProps) {
 
       {/* Shared Camera Angle Tabs */}
       <div className={`transition-all duration-300 ${bothSelected ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0 overflow-hidden'}`}>
-        <Tabs value={activeAngle} onValueChange={(v) => setActiveAngle(v as CameraPosition)}>
+        <Tabs value={activeAngle} onValueChange={(v) => handleAngleChange(v as CameraPosition)}>
           <TabsList className="w-full bg-muted p-1 rounded-lg gap-1">
             {availableAngles.map((angle) => (
               <TabsTrigger
@@ -90,8 +100,8 @@ export function ComparatorView({ products }: ComparatorViewProps) {
 
       {/* Video Comparison Cards */}
       <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <ComparatorPlayerCard product={productA} activeAngle={activeAngle} autoplay={bothSelected} />
-        <ComparatorPlayerCard product={productB} activeAngle={activeAngle} autoplay={bothSelected} />
+        <ComparatorPlayerCard key={`a-${playbackKey}`} product={productA} activeAngle={activeAngle} autoplay={bothSelected} />
+        <ComparatorPlayerCard key={`b-${playbackKey}`} product={productB} activeAngle={activeAngle} autoplay={bothSelected} />
       </section>
 
       {/* Specs Comparison Table */}
