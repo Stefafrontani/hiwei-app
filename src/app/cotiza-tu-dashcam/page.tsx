@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { SiteHeader } from '@/components/layout/SiteHeader'
-import { SubtitleBar } from '@/components/quiz/SubtitleBar'
+
 import { StepIndicator } from '@/components/quiz/StepIndicator'
 import { NavigationFooter } from '@/components/quiz/NavigationFooter'
 import { DesktopSidebar } from '@/components/layout/DesktopSidebar'
@@ -24,7 +24,7 @@ import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 import type { VehicleUsage } from '@/domain/value-objects/VehicleUsage'
 import type { ParkingMode } from '@/domain/value-objects/ParkingMode'
 import type { Installation } from '@/domain/value-objects/Installation'
-import { SUBTITLE_CONFIG, PREVIOUS_RECOMMENDATION } from '@/content/quiz/subtitles'
+import { PREVIOUS_RECOMMENDATION } from '@/content/quiz/subtitles'
 import { useIsMobile } from '@/hooks/use-mobile'
 
 const TOTAL_STEPS = 6
@@ -79,8 +79,6 @@ export default function QuizPage() {
     }
   }
 
-  const subtitle = SUBTITLE_CONFIG[currentStep]
-
   return (
     <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">
       <SiteHeader activeNav="cotizador" answers={answers} currentStep={currentStep} />
@@ -109,15 +107,8 @@ export default function QuizPage() {
             </div>
           )}
 
-          {/* Step indicator — mobile only, above hero banner */}
+          {/* Step indicator — mobile only */}
           {isMobile && <StepIndicator currentStep={currentStep} totalSteps={TOTAL_STEPS} />}
-
-          {/* Hero banner */}
-          <SubtitleBar
-            variant={subtitle.variant}
-            title={subtitle.title}
-            subtitle={subtitle.subtitle}
-          />
 
           {/* Step content */}
           <div className="flex-1 overflow-y-auto no-scrollbar px-5 py-5 md:px-8 md:py-8">
