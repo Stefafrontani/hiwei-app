@@ -120,7 +120,7 @@ export default function QuizPage() {
           />
 
           {/* Step content */}
-          <div className="flex-1 overflow-y-auto scrollbar-none px-5 py-5 md:px-8 md:py-8">
+          <div className="flex-1 overflow-y-auto no-scrollbar px-5 py-5 md:px-8 md:py-8">
             <div key={currentStep}>
               {currentStep === 1 && (
                 <Step1

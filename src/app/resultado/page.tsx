@@ -98,7 +98,7 @@ export default function ResultadoPage() {
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 overflow-hidden">
         {/* Main scrollable column */}
-        <main className="flex flex-1 flex-col overflow-y-auto scrollbar-none">
+        <main className="flex flex-1 flex-col overflow-y-auto no-scrollbar">
           {/* Summary Banner */}
           {result && !loading && <ResultSummaryBanner answers={answers} />}
 
