@@ -26,8 +26,8 @@ export function CompactCard({ product, activeAngle, onAngleChange }: CompactCard
   }
 
   return (
-    <Card className="border-0 shadow-none">
-      <CardHeader>
+    <Card className="border-0 shadow-none py-2 md:py-4">
+      <CardHeader className="px-2 md:px-4">
         <CardTitle className="text-lg font-bold">{product.name}</CardTitle>
         <div className="flex flex-wrap gap-1.5">
           {product.tags.slice(0, 4).map((tag) => (
@@ -38,7 +38,7 @@ export function CompactCard({ product, activeAngle, onAngleChange }: CompactCard
         </div>
         <CardDescription className="text-[12px]">{product.description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-col gap-4 px-2 md:px-4">
         <VideoThumbnail video={activeVideo} size="md" />
         <DotIndicator total={angleVideos.length} active={videoIndex} onDotClick={setVideoIndex} />
         <Tabs value={activeAngle} onValueChange={(v) => handleAngleChange(v as CameraPosition)}>

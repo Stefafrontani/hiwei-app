@@ -25,11 +25,11 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay }: Compara
 
   if (!product) {
     return (
-      <Card className="border-0 shadow-none gap-2">
-        <CardHeader>
+      <Card className="border-0 shadow-none gap-2 py-2 md:py-4">
+        <CardHeader className="px-2 md:px-4">
           <CardTitle className="text-lg font-bold invisible">&lrm;</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-2">
+        <CardContent className="flex flex-col gap-2 px-2 md:px-4">
           <div className="flex aspect-[16/10] items-center justify-center rounded-lg bg-muted/30">
             <p className="text-sm text-muted-foreground">Seleccioná un modelo</p>
           </div>
@@ -43,11 +43,11 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay }: Compara
   const activeVideo = angleVideos[videoIndex] ?? null
 
   return (
-    <Card className="animate-in fade-in duration-300 border-0 shadow-none gap-2">
-      <CardHeader>
+    <Card className="animate-in fade-in duration-300 border-0 shadow-none gap-2 py-2 md:py-4">
+      <CardHeader className="px-2 md:px-4">
         <CardTitle className="text-lg font-bold">{product.name}</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2">
+      <CardContent className="flex flex-col gap-2 px-2 md:px-4">
         {activeVideo ? (
           <VideoThumbnail video={activeVideo} size="md" showLabel autoplay={autoplay} />
         ) : (

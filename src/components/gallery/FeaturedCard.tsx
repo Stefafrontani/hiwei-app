@@ -26,8 +26,8 @@ export function FeaturedCard({ product, activeAngle, onAngleChange }: FeaturedCa
   }
 
   return (
-    <Card className="border-0 shadow-none">
-      <CardHeader>
+    <Card className="border-0 shadow-none py-2 md:py-4">
+      <CardHeader className="px-2 md:px-4">
         <CardTitle className="text-xl font-bold">{product.name}</CardTitle>
         <div className="flex flex-wrap gap-2">
           {product.tags.slice(0, 4).map((tag) => (
@@ -38,7 +38,7 @@ export function FeaturedCard({ product, activeAngle, onAngleChange }: FeaturedCa
         </div>
         <CardDescription>{product.description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-col gap-4 px-2 md:px-4">
         <VideoThumbnail video={activeVideo} size="lg" />
         <DotIndicator total={angleVideos.length} active={videoIndex} onDotClick={setVideoIndex} />
         <Tabs value={activeAngle} onValueChange={(v) => handleAngleChange(v as CameraPosition)}>
