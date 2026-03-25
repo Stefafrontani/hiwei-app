@@ -152,7 +152,7 @@ export default function ResultadoPage() {
               {/* <AlternativesSection alternatives={result.alternatives} /> */}
 
               {/* Restart prompt (mobile) */}
-              <div className="flex flex-col items-center gap-2 rounded-xl border border-border bg-muted/40 px-4 py-5 pb-20 text-center md:hidden">
+              <div className="flex flex-col items-center gap-2 rounded-xl border border-border bg-muted/40 px-4 py-5 text-center md:hidden">
                 <p className="text-[14px] font-semibold text-foreground">¿No es lo que buscabas?</p>
                 <p className="text-[12px] leading-relaxed text-muted-foreground">Podés ajustar tus respuestas y encontrar la dashcam ideal.</p>
                 <button

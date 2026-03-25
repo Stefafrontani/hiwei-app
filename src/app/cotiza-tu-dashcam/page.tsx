@@ -24,11 +24,13 @@ import type { VehicleUsage } from '@/domain/value-objects/VehicleUsage'
 import type { ParkingMode } from '@/domain/value-objects/ParkingMode'
 import type { Installation } from '@/domain/value-objects/Installation'
 import { SUBTITLE_CONFIG, PREVIOUS_RECOMMENDATION } from '@/content/quiz/subtitles'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 const TOTAL_STEPS = 6
 
 export default function QuizPage() {
   const router = useRouter()
+  const isMobile = useIsMobile()
   const [currentStep, setCurrentStep] = useState(1)
   const [answers, setAnswers] = useState<QuizAnswers>(createEmptyAnswers)
   const [showYearError, setShowYearError] = useState(false)
@@ -113,8 +115,8 @@ export default function QuizPage() {
             </div>
           )}
 
-          {/* Step indicator */}
-          <StepIndicator currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+          {/* Step indicator — mobile only, desktop uses sidebar */}
+          {isMobile && <StepIndicator currentStep={currentStep} totalSteps={TOTAL_STEPS} />}
 
           {/* Step content */}
           <div className="flex-1 overflow-y-auto px-5 py-5 md:px-12 md:py-8">
