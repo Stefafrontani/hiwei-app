@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -35,17 +35,16 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<QuizAnswers>(createEmptyAnswers)
   const [showYearError, setShowYearError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [previousProductName] = useState<string | null>(() => {
-    if (typeof window === 'undefined') return null
+  const [previousProductName, setPreviousProductName] = useState<string | null>(null)
+
+  useEffect(() => {
     try {
       const cached = localStorage.getItem('hiwei-recommendation')
-      if (!cached) return null
+      if (!cached) return
       const parsed = JSON.parse(cached)
-      return parsed.result?.main?.product?.name ?? null
-    } catch {
-      return null
-    }
-  })
+      setPreviousProductName(parsed.result?.main?.product?.name ?? null)
+    } catch { /* ignore */ }
+  }, [])
 
   const update = useCallback(<K extends keyof QuizAnswers>(key: K, value: QuizAnswers[K]) => {
     setAnswers((prev) => ({ ...prev, [key]: value }))
