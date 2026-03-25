@@ -11,24 +11,40 @@ interface OptionCardProps {
 export function OptionCard({ icon: Icon, label, subLabel, isActive, onClick }: OptionCardProps) {
   return (
     <button
+      type="button"
+      aria-pressed={isActive}
       onClick={onClick}
-      className={`flex flex-col items-center justify-center gap-1.5 rounded-xl transition-all
-        h-[72px] w-[82px]
-        md:h-24 md:w-[120px] md:rounded-2xl
+      className={`group relative flex flex-col items-center justify-center gap-2 rounded-2xl transition-all duration-200
+        h-20 w-24 md:h-28 md:w-32
         ${isActive
-          ? 'border-2 border-brand bg-brand/10'
-          : 'border border-border bg-card hover:border-brand/40'}`}
+          ? 'glass-card border-brand/50 bg-brand/10 glow-brand animate-select-bounce'
+          : 'glass-card hover:border-brand/25 hover:scale-[1.03] active:scale-[0.98]'}`}
     >
-      {Icon && <Icon
-        className={`h-[22px] w-[22px] md:h-7 md:w-7 ${isActive ? 'text-brand' : 'text-muted-foreground'}`}
-      />}
-      {label && <span
-        className={`text-[12px] font-semibold md:text-[13px] ${isActive ? 'text-brand' : 'text-muted-foreground'}`}
-      >
-        {label}
-      </span>}
+      {/* Glow ring behind icon when active */}
+      {Icon && (
+        <div className="relative">
+          {isActive && (
+            <div className="absolute inset-0 rounded-full bg-brand/20 blur-md scale-150" />
+          )}
+          <Icon
+            className={`relative h-6 w-6 md:h-7 md:w-7 transition-colors duration-200
+              ${isActive ? 'text-brand' : 'text-muted-foreground group-hover:text-foreground'}`}
+          />
+        </div>
+      )}
+      {label && (
+        <span
+          className={`text-[12px] font-semibold md:text-[13px] transition-colors duration-200
+            ${isActive ? 'text-brand' : 'text-muted-foreground group-hover:text-foreground'}`}
+        >
+          {label}
+        </span>
+      )}
       {subLabel && (
-        <span className={`text-[10px] font-medium ${isActive ? 'text-brand/80' : 'text-muted-foreground'}`}>
+        <span
+          className={`text-[11px] font-medium transition-colors duration-200
+            ${isActive ? 'text-brand/80' : 'text-muted-foreground/70 group-hover:text-muted-foreground'}`}
+        >
           {subLabel}
         </span>
       )}

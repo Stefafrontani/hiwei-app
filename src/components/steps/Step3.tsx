@@ -15,14 +15,14 @@ function arraysEqual(a?: CameraPosition[], b?: CameraPosition[]) {
 
 export function Step3({ cameraPositions, onChange }: Step3Props) {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       {/* Step title */}
-      <div className="flex items-start gap-2.5">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-brand/10">
-          <Camera className="h-[18px] w-[18px] text-brand" />
+      <div className="animate-fade-in-up flex items-start gap-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand/10">
+          <Camera className="h-5 w-5 text-brand" />
         </div>
-        <div className="flex flex-col gap-0.5">
-          <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
+        <div className="flex flex-col gap-1">
+          <p className="text-[18px] font-bold text-foreground md:text-[26px] md:tracking-tight">
             {STEP3.title}
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
@@ -32,20 +32,23 @@ export function Step3({ cameraPositions, onChange }: Step3Props) {
       </div>
 
       {/* Options */}
-      <div className="flex flex-col gap-2.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
+      <div className="flex flex-col gap-3">
+        <p className="animate-fade-in-up text-[11px] font-semibold uppercase tracking-[1.5px] text-muted-foreground/70 md:text-[12px]"
+          style={{ '--delay': '80ms' } as React.CSSProperties}
+        >
           {STEP3.sectionLabel}
         </p>
 
-        {STEP3.options.map((opt) => (
-          <OptionRow
-            key={opt.title}
-            icon={Camera}
-            title={opt.title}
-            description={opt.description}
-            isActive={arraysEqual(cameraPositions, opt.positions as unknown as CameraPosition[])}
-            onClick={() => onChange(opt.positions as unknown as CameraPosition[])}
-          />
+        {STEP3.options.map((opt, i) => (
+          <div key={opt.title} className="animate-fade-in-up" style={{ '--delay': `${120 + i * 50}ms` } as React.CSSProperties}>
+            <OptionRow
+              icon={Camera}
+              title={opt.title}
+              description={opt.description}
+              isActive={arraysEqual(cameraPositions, opt.positions as unknown as CameraPosition[])}
+              onClick={() => onChange(opt.positions as unknown as CameraPosition[])}
+            />
+          </div>
         ))}
       </div>
     </div>

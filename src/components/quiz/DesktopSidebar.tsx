@@ -8,8 +8,12 @@ interface DesktopSidebarProps {
 
 export function DesktopSidebar({ currentStep, answers }: DesktopSidebarProps) {
   return (
-    <aside className="hidden w-80 shrink-0 flex-col border-l border-border bg-muted/30 md:flex">
-      <QuizSummarySteps answers={answers} currentStep={currentStep} />
+    <aside className="hidden w-[340px] shrink-0 flex-col md:flex glass-card border-l border-white/5 relative overflow-hidden">
+      {/* Subtle gradient overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-brand/5 via-transparent to-transparent" />
+      <div className="relative flex flex-1 flex-col">
+        <QuizSummarySteps answers={answers} currentStep={currentStep} />
+      </div>
     </aside>
   )
 }

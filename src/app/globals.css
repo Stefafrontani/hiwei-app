@@ -185,6 +185,59 @@
 .slide-in-right { animation: slide-in-from-right 0.3s ease-out; }
 .slide-in-left { animation: slide-in-from-left 0.3s ease-out; }
 
+/* ──────────────────────────────────────────────────────────────
+   QUIZ — Premium animations & utilities
+   ────────────────────────────────────────────────────────────── */
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.45s ease-out both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 12px 2px oklch(0.8339 0.1432 93.43 / 0.15); }
+  50%      { box-shadow: 0 0 20px 4px oklch(0.8339 0.1432 93.43 / 0.3); }
+}
+.animate-glow-pulse {
+  animation: glow-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes subtle-bounce {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.animate-select-bounce {
+  animation: subtle-bounce 0.25s ease-out;
+}
+
+@keyframes dots-pulse {
+  0%, 80%, 100% { opacity: 0.3; }
+  40% { opacity: 1; }
+}
+.loading-dots span {
+  animation: dots-pulse 1.4s ease-in-out infinite;
+}
+.loading-dots span:nth-child(2) { animation-delay: 0.16s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.32s; }
+
+/* Glass morphism card */
+.glass-card {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: oklch(0.205 0 0 / 0.55);
+  border: 1px solid oklch(1 0 0 / 0.07);
+}
+
+/* Brand glow */
+.glow-brand {
+  box-shadow: 0 0 20px 2px oklch(0.8339 0.1432 93.43 / 0.12);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

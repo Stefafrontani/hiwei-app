@@ -22,39 +22,48 @@ export function NavigationFooter({
   const isFirst = currentStep === 1
   const isLast = currentStep === totalSteps
 
-  const footerClass =
-    variant === 'mobile'
-      ? 'flex items-center gap-3 px-5 py-4'
-      : 'mt-6 flex items-center justify-between'
-
-  const nextClass =
-    variant === 'mobile'
-      ? 'flex h-11 flex-1 items-center justify-center gap-1.5 rounded-[10px] text-[14px] font-semibold transition-opacity'
-      : 'flex h-11 w-auto items-center justify-center gap-1.5 rounded-[10px] px-8 text-[14px] font-semibold transition-opacity'
+  const isMobile = variant === 'mobile'
 
   return (
-    <footer className={footerClass}>
+    <footer className={isMobile
+      ? 'flex items-center gap-3 px-5 py-4'
+      : 'mt-8 flex items-center justify-between'}
+    >
       {/* Back button */}
       <button
+        type="button"
         onClick={onBack}
         disabled={isFirst}
-        className={`flex h-11 w-20 items-center justify-center gap-1.5 rounded-[10px] text-[14px] font-medium transition-opacity
-          ${isFirst ? 'cursor-not-allowed bg-muted text-muted-foreground' : 'bg-muted text-muted-foreground hover:opacity-80'}`}
+        className={`flex items-center justify-center gap-1.5 rounded-xl font-medium transition-all duration-200
+          ${isMobile ? 'h-12 w-12' : 'h-12 w-auto px-5'}
+          ${isFirst
+            ? 'cursor-not-allowed border border-border/50 text-muted-foreground/40'
+            : 'border border-border/80 text-muted-foreground hover:border-brand/30 hover:text-foreground hover:bg-card/50 active:scale-[0.97]'}`}
       >
         <ChevronLeft className="h-4 w-4" />
-        Atrás
+        {!isMobile && <span className="text-[14px]">Atrás</span>}
       </button>
 
       {/* Next / Finish button */}
       <button
+        type="button"
         onClick={onNext}
         disabled={!canGoNext || isLoading}
-        className={`${nextClass}
-          ${!canGoNext || isLoading ? 'cursor-not-allowed opacity-50' : 'hover:opacity-90'}
-          ${isLast ? 'bg-success text-success-foreground' : 'bg-brand text-brand-foreground'}`}
+        className={`flex items-center justify-center gap-2 rounded-xl text-[14px] font-semibold transition-all duration-200
+          ${isMobile ? 'h-12 flex-1' : 'h-12 px-8'}
+          ${!canGoNext || isLoading
+            ? 'cursor-not-allowed opacity-40 blur-[0.3px]'
+            : 'hover:brightness-110 active:scale-[0.98]'}
+          ${isLast
+            ? 'bg-gradient-to-r from-success to-success/80 text-success-foreground shadow-[0_0_20px_2px] shadow-success/15'
+            : 'bg-gradient-to-r from-brand to-brand/80 text-brand-foreground shadow-[0_0_20px_2px] shadow-brand/15'}`}
       >
         {isLoading ? (
-          <span>Cargando...</span>
+          <span className="loading-dots flex gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-current" />
+            <span className="h-1.5 w-1.5 rounded-full bg-current" />
+            <span className="h-1.5 w-1.5 rounded-full bg-current" />
+          </span>
         ) : isLast ? (
           <>
             <CircleCheck className="h-4 w-4" />

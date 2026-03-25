@@ -11,14 +11,14 @@ interface Step2Props {
 
 export function Step2({ videoQuality, onChange }: Step2Props) {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       {/* Step title */}
-      <div className="flex items-start gap-2.5">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-brand/10">
-          <Video className="h-[18px] w-[18px] text-brand" />
+      <div className="animate-fade-in-up flex items-start gap-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand/10">
+          <Video className="h-5 w-5 text-brand" />
         </div>
-        <div className="flex flex-col gap-0.5">
-          <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
+        <div className="flex flex-col gap-1">
+          <p className="text-[18px] font-bold text-foreground md:text-[26px] md:tracking-tight">
             {STEP2.title}
           </p>
           <p className="text-[12px] text-muted-foreground md:text-[14px]">
@@ -27,26 +27,32 @@ export function Step2({ videoQuality, onChange }: Step2Props) {
         </div>
       </div>
 
-      <InfoBox
-        icon={Info}
-        text={STEP2.infoText}
-        variant="orange"
-      />
+      <div className="animate-fade-in-up" style={{ '--delay': '80ms' } as React.CSSProperties}>
+        <InfoBox
+          icon={Info}
+          text={STEP2.infoText}
+          variant="orange"
+        />
+      </div>
+
       {/* Options */}
-      <div className="flex flex-col gap-2.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
+      <div className="flex flex-col gap-3">
+        <p className="animate-fade-in-up text-[11px] font-semibold uppercase tracking-[1.5px] text-muted-foreground/70 md:text-[12px]"
+          style={{ '--delay': '120ms' } as React.CSSProperties}
+        >
           {STEP2.sectionLabel}
         </p>
 
-        {STEP2.options.map((opt) => (
-          <OptionRow
-            key={opt.value}
-            icon={Video}
-            title={opt.title}
-            description={opt.description}
-            isActive={videoQuality === opt.value}
-            onClick={() => onChange(opt.value)}
-          />
+        {STEP2.options.map((opt, i) => (
+          <div key={opt.value} className="animate-fade-in-up" style={{ '--delay': `${160 + i * 50}ms` } as React.CSSProperties}>
+            <OptionRow
+              icon={Video}
+              title={opt.title}
+              description={opt.description}
+              isActive={videoQuality === opt.value}
+              onClick={() => onChange(opt.value)}
+            />
+          </div>
         ))}
       </div>
     </div>

@@ -5,15 +5,25 @@ interface SubtitleBarProps {
 }
 
 export function SubtitleBar({ variant = 'blue', title, subtitle }: SubtitleBarProps) {
-  const isBlue = variant === 'blue'
+  const isGreen = variant === 'green'
   return (
     <div
-      className={`flex flex-col gap-1 px-5 py-3 ${isBlue ? 'bg-brand/10' : 'bg-success/10'}`}
+      className={`relative overflow-hidden px-6 py-4 md:px-8 md:py-5
+        ${isGreen ? 'bg-success/5' : 'bg-brand/5'}`}
     >
-      <p className={`text-[14px] font-semibold ${isBlue ? 'text-brand' : 'text-success'}`}>
-        {title}
-      </p>
-      <p className="text-[12px] text-muted-foreground">{subtitle}</p>
+      {/* Atmospheric radial glow */}
+      <div
+        className={`pointer-events-none absolute -top-12 -left-12 h-40 w-40 rounded-full blur-3xl opacity-30
+          ${isGreen ? 'bg-success/30' : 'bg-brand/30'}`}
+      />
+      <div className="relative">
+        <p className={`text-[16px] font-bold tracking-tight md:text-[18px]
+          ${isGreen ? 'text-success' : 'text-brand'}`}
+        >
+          {title}
+        </p>
+        <p className="text-[12px] text-muted-foreground md:text-[13px]">{subtitle}</p>
+      </div>
     </div>
   )
 }

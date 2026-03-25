@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { SubtitleBar } from '@/components/quiz/SubtitleBar'
-import { ProgressBar } from '@/components/quiz/ProgressBar'
+import { StepIndicator } from '@/components/quiz/StepIndicator'
 import { NavigationFooter } from '@/components/quiz/NavigationFooter'
 import { DesktopSidebar } from '@/components/quiz/DesktopSidebar'
 import { Step1 } from '@/components/steps/Step1'
@@ -73,6 +73,7 @@ export default function QuizPage() {
     if (currentStep > 1) {
       setCurrentStep((s) => s - 1)
       setShowYearError(false)
+      setIsLoading(false)
     }
   }
 
@@ -80,43 +81,44 @@ export default function QuizPage() {
 
   return (
     <div className="flex h-dvh flex-col bg-background">
-      {/* Header */}
       <SiteHeader activeNav="cotizador" answers={answers} currentStep={currentStep} />
 
-      {/* Desktop layout */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Main */}
+        {/* Main content */}
         <main className="flex flex-1 flex-col overflow-hidden">
-          {/* Subtitle bar */}
+          {/* Hero banner */}
           <SubtitleBar
             variant={subtitle.variant}
             title={subtitle.title}
             subtitle={subtitle.subtitle}
           />
 
-          {/* Previous recommendation banner */}
+          {/* Previous recommendation */}
           {currentStep === 1 && previousProductName && (
-            <Link
-              href="/resultado"
-              className="mx-5 mt-3 flex items-center justify-between rounded-xl border border-border bg-muted/50 px-4 py-3 transition-colors hover:bg-muted md:mx-4 md:my-6 md:mb-2"
-            >
-              <div className="flex flex-col">
-                <span className="text-[12px] text-muted-foreground">{PREVIOUS_RECOMMENDATION.label}</span>
-                <span className="text-[14px] font-semibold text-foreground">{previousProductName}</span>
-              </div>
-              <div className="flex items-center gap-1 text-[13px] font-semibold text-brand">
-                {PREVIOUS_RECOMMENDATION.cta}
-                <ArrowRight className="h-3.5 w-3.5" />
-              </div>
-            </Link>
+            <div className="px-5 pt-3 md:px-8 md:pt-5">
+              <Link
+                href="/resultado"
+                className="flex items-center justify-between rounded-xl px-4 py-3.5 transition-all duration-200
+                  glass-card border-brand/20 hover:border-brand/40 hover:shadow-[0_0_20px_2px_oklch(0.8339_0.1432_93.43/0.12)]"
+              >
+                <div className="flex flex-col">
+                  <span className="text-[11px] text-muted-foreground">{PREVIOUS_RECOMMENDATION.label}</span>
+                  <span className="text-[14px] font-semibold text-foreground">{previousProductName}</span>
+                </div>
+                <div className="flex items-center gap-1 text-[13px] font-semibold text-brand">
+                  {PREVIOUS_RECOMMENDATION.cta}
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </div>
+              </Link>
+            </div>
           )}
 
-          {/* Progress */}
-          <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+          {/* Step indicator */}
+          <StepIndicator currentStep={currentStep} totalSteps={TOTAL_STEPS} />
 
-          {/* Step content + navigation */}
-          <div className="flex-1 overflow-y-auto px-5 py-4 md:px-12 md:py-8">
-            <div className="mx-auto max-w-2xl">
+          {/* Step content */}
+          <div className="flex-1 overflow-y-auto px-5 py-5 md:px-12 md:py-8">
+            <div className="mx-auto max-w-xl" key={currentStep}>
               {currentStep === 1 && (
                 <Step1
                   vehicleType={answers.vehicleType}
@@ -157,7 +159,7 @@ export default function QuizPage() {
                 />
               )}
 
-              {/* Navigation footer — desktop: inline after content */}
+              {/* Desktop navigation */}
               <div className="hidden md:block">
                 <NavigationFooter
                   currentStep={currentStep}
@@ -171,7 +173,7 @@ export default function QuizPage() {
             </div>
           </div>
 
-          {/* Navigation footer — mobile: pinned at bottom */}
+          {/* Mobile navigation */}
           <div className="pb-20 md:hidden">
             <NavigationFooter
               currentStep={currentStep}
