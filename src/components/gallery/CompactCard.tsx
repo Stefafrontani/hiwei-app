@@ -36,7 +36,7 @@ export function CompactCard({ product, activeAngle, onAngleChange }: CompactCard
         </div>
         <CardDescription className="text-[12px]">{product.description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4 px-2 md:px-4">
+      <CardContent className="mt-auto flex flex-col gap-4 px-2 md:px-4">
         <div className="overflow-hidden rounded-lg">
           {activeVideo && (
             <div key={videoIndex} className={slideClass}>
