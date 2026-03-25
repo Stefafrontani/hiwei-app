@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Camera, Headphones, Send, RotateCcw, Clock } from 'lucide-react'
+import { Camera, Headphones, RotateCcw, Clock } from 'lucide-react'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { ResultSummaryBanner } from '@/components/result/ResultSummaryBanner'
 import { MainRecommendationCard } from '@/components/result/MainRecommendationCard'
 import { BudgetBreakdown } from '@/components/result/BudgetBreakdown'
-import { AlternativesSection } from '@/components/result/AlternativesSection'
 import { ResultDesktopSidebar } from '@/components/result/ResultDesktopSidebar'
 import { ContactMethodOverlay } from '@/components/overlays/ContactMethodOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
@@ -19,12 +18,7 @@ import type { MemoryCard } from '@/domain/entities/MemoryCard'
 /* Flow: Recommendation - (1): UI */
 export default function ResultadoPage() {
   const router = useRouter()
-  const [answers] = useState<QuizAnswers>(() => {
-    if (typeof window === 'undefined') return createEmptyAnswers()
-    const raw = localStorage.getItem('hiwei-quiz')
-    if (!raw) return createEmptyAnswers()
-    return { ...createEmptyAnswers(), ...JSON.parse(raw) }
-  })
+  const [answers, setAnswers] = useState<QuizAnswers>(createEmptyAnswers)
   const [result, setResult] = useState<RecommendationResult | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -42,16 +36,19 @@ export default function ResultadoPage() {
       return
     }
 
+    const parsed = { ...createEmptyAnswers(), ...JSON.parse(raw) }
+    setAnswers(parsed)
+
     // Check localStorage cache — skip API if answers haven't changed
     const cached = localStorage.getItem('hiwei-recommendation')
     if (cached) {
       try {
-        const parsed = JSON.parse(cached)
-        if (parsed.answers === raw) {
-          setResult(parsed.result)
-          setRecommendationId(parsed.recommendationId)
-          setExpiresAt(parsed.expiresAt)
-          setMemoryCards(parsed.memoryCards ?? [])
+        const cachedData = JSON.parse(cached)
+        if (cachedData.answers === raw) {
+          setResult(cachedData.result)
+          setRecommendationId(cachedData.recommendationId)
+          setExpiresAt(cachedData.expiresAt)
+          setMemoryCards(cachedData.memoryCards ?? [])
           setLoading(false)
           return
         }
@@ -64,7 +61,7 @@ export default function ResultadoPage() {
       fetch('/api/recommendation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(answers),
+        body: JSON.stringify(parsed),
       }).then((r) => r.json()),
       fetch('/api/memory-cards').then((r) => r.json()),
     ])
@@ -75,7 +72,6 @@ export default function ResultadoPage() {
         setExpiresAt(recData.data.expiresAt)
         if (cardsData.data) setMemoryCards(cardsData.data)
 
-        // Cache in localStorage for this session
         localStorage.setItem('hiwei-recommendation', JSON.stringify({
           answers: raw,
           result: recData.data,
@@ -86,7 +82,7 @@ export default function ResultadoPage() {
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
-  }, [router, answers])
+  }, [router])
 
   const handleRestart = () => {
     localStorage.removeItem('hiwei-quiz')
@@ -97,11 +93,10 @@ export default function ResultadoPage() {
   const productName = result?.main.product.name
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-background">
+    <div className="quiz-gradient grain-overlay flex h-screen flex-col overflow-hidden">
       <SiteHeader activeNav="cotizador" />
 
-      {/* Desktop layout: main column + CTA sidebar */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-1 overflow-hidden">
         {/* Main scrollable column */}
         <main className="flex flex-1 flex-col overflow-y-auto">
           {/* Summary Banner */}
@@ -123,7 +118,7 @@ export default function ResultadoPage() {
             <div className="m-4 flex flex-col items-center gap-3 rounded-xl bg-destructive/10 p-6 text-center">
               <p className="text-[16px] font-semibold text-destructive">Algo salió mal</p>
               <p className="text-[13px] text-muted-foreground">{error}</p>
-              <button onClick={() => router.push('/cotiza-tu-dashcam')} className="text-[13px] font-semibold text-brand underline">
+              <button type="button" onClick={() => router.push('/cotiza-tu-dashcam')} className="text-[13px] font-semibold text-brand underline">
                 Intentar de nuevo
               </button>
             </div>
@@ -131,14 +126,10 @@ export default function ResultadoPage() {
 
           {/* Content */}
           {result && !loading && (
-            <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-4 py-4 pb-20 md:px-12 md:py-8 md:pb-8">
-              {/* Main Recommendation */}
+            <div className="flex w-full flex-col gap-4 px-5 py-4 pb-20 md:px-8 md:py-8 md:pb-8">
               <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} onSendRecommendation={() => setShowSend(true)} />
-
-              {/* Budget Breakdown */}
               <BudgetBreakdown product={result.main.product} answers={answers} memoryCards={memoryCards} />
 
-              {/* Expiration banner */}
               {expiresAt && (
                 <div className="flex items-center gap-1.5 rounded-lg bg-warning/15 px-3 py-2">
                   <Clock className="h-3.5 w-3.5 shrink-0 text-warning" />
@@ -148,16 +139,14 @@ export default function ResultadoPage() {
                 </div>
               )}
 
-              {/* Alternatives — hidden temporarily, will be redesigned with more detail */}
-              {/* <AlternativesSection alternatives={result.alternatives} /> */}
-
               {/* Restart prompt (mobile) */}
-              <div className="flex flex-col items-center gap-2 rounded-xl border border-border bg-muted/40 px-4 py-5 text-center md:hidden">
+              <div className="flex flex-col items-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-5 text-center md:hidden">
                 <p className="text-[14px] font-semibold text-foreground">¿No es lo que buscabas?</p>
                 <p className="text-[12px] leading-relaxed text-muted-foreground">Podés ajustar tus respuestas y encontrar la dashcam ideal.</p>
                 <button
+                  type="button"
                   onClick={handleRestart}
-                  className="mt-1 inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border bg-card px-4 py-2 text-[13px] font-semibold text-foreground transition-colors hover:bg-muted"
+                  className="mt-1 inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03] px-4 py-2 text-[13px] font-semibold text-foreground transition-colors hover:bg-white/[0.06]"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
                   Empezar de nuevo
@@ -200,10 +189,11 @@ export default function ResultadoPage() {
 
       {/* Fixed bottom CTA — mobile only */}
       {result && !loading && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card px-4 py-3 md:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.06] backdrop-blur-xl bg-background/60 px-4 py-3 md:hidden">
           <button
+            type="button"
             onClick={() => setShowContact(true)}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand text-[14px] font-semibold text-brand-foreground transition-colors hover:bg-brand/90"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-brand to-brand/80 text-[14px] font-semibold text-brand-foreground transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
           >
             <Headphones className="h-4 w-4" />
             Consultanos
