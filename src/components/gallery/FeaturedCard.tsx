@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { DotIndicator } from '@/components/ui/dot-indicator'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { VideoThumbnail } from './VideoThumbnail'
+import { useVideoPlaylist } from '@/hooks/useVideoPlaylist'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 import { type CameraPosition, CAMERA_POSITION_LABELS } from '@/domain/value-objects/CameraPosition'
 
@@ -16,14 +16,12 @@ interface FeaturedCardProps {
 }
 
 export function FeaturedCard({ product, activeAngle, onAngleChange }: FeaturedCardProps) {
-  const [videoIndex, setVideoIndex] = useState(0)
-  const angleVideos = product.videos.filter((v) => v.cameraPosition === activeAngle)
-  const activeVideo = angleVideos[videoIndex] ?? product.videos[0]
+  const { angleVideos, activeVideo, videoIndex, setVideoIndex, handleVideoEnded, slideDirection, shouldAutoplay } = useVideoPlaylist({
+    videos: product.videos,
+    activeAngle,
+  })
 
-  const handleAngleChange = (angle: CameraPosition) => {
-    setVideoIndex(0)
-    onAngleChange(angle)
-  }
+  const slideClass = slideDirection === 'right' ? 'slide-in-right' : slideDirection === 'left' ? 'slide-in-left' : ''
 
   return (
     <Card className="border-0 shadow-none py-2 md:py-4">
@@ -39,9 +37,15 @@ export function FeaturedCard({ product, activeAngle, onAngleChange }: FeaturedCa
         <CardDescription>{product.description}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4 px-2 md:px-4">
-        <VideoThumbnail video={activeVideo} size="lg" />
+        <div className="overflow-hidden rounded-lg">
+          {activeVideo && (
+            <div key={videoIndex} className={slideClass}>
+              <VideoThumbnail video={activeVideo} size="lg" onEnded={handleVideoEnded} autoplay={shouldAutoplay} />
+            </div>
+          )}
+        </div>
         <DotIndicator total={angleVideos.length} active={videoIndex} onDotClick={setVideoIndex} />
-        <Tabs value={activeAngle} onValueChange={(v) => handleAngleChange(v as CameraPosition)}>
+        <Tabs value={activeAngle} onValueChange={(v) => onAngleChange(v as CameraPosition)}>
           <TabsList className="w-full bg-muted p-1 rounded-lg gap-1">
             {product.cameraPositions.map((angle) => (
               <TabsTrigger

@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Play } from 'lucide-react'
 import type { DashcamVideo } from '@/domain/value-objects/DashcamVideo'
@@ -18,13 +18,18 @@ interface VideoThumbnailProps {
   size?: 'lg' | 'md' | 'sm'
   showLabel?: boolean
   autoplay?: boolean
+  onEnded?: () => void
 }
 
-function ActivePlayer({ video, size }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm' }) {
+function ActivePlayer({ video, size, onEnded }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm'; onEnded?: () => void }) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
 
   const player = useYouTubePlayer({ videoId: video.youtubeId, autoplay: true })
+
+  useEffect(() => {
+    if (player.isEnded) onEnded?.()
+  }, [player.isEnded, onEnded])
 
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
@@ -66,7 +71,7 @@ function ActivePlayer({ video, size }: { video: DashcamVideo; size: 'lg' | 'md' 
   )
 }
 
-export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay = false }: VideoThumbnailProps) {
+export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay = false, onEnded }: VideoThumbnailProps) {
   const [playing, setPlaying] = useState(autoplay)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
   const playSize = size === 'sm' ? 'h-8 w-8' : size === 'md' ? 'h-10 w-10' : 'h-16 w-16'
@@ -74,7 +79,7 @@ export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay 
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
   if (playing) {
-    return <ActivePlayer video={video} size={size} />
+    return <ActivePlayer video={video} size={size} onEnded={onEnded} />
   }
 
   return (
