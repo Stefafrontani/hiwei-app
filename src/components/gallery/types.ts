@@ -1,1 +1,1 @@
-export type NavItem = 'galeria' | 'comparador' | 'cotizador'
+export type NavItem = 'galeria' | 'comparador' | 'cotizador' | 'tienda'

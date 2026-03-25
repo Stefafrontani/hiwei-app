@@ -11,6 +11,7 @@ const NAV_LINKS: { key: NavItem; label: string; href: string }[] = [
   { key: 'galeria', label: 'Galería', href: '/galeria' },
   { key: 'comparador', label: 'Comparador', href: '/compara-las-dashcams' },
   { key: 'cotizador', label: 'Cotizador', href: '/cotiza-tu-dashcam' },
+  { key: 'tienda', label: 'Ir a la tienda', href: 'https://www.hiwei.com.ar/camaras-autos/' },
 ]
 
 interface SiteHeaderProps {
@@ -47,15 +48,19 @@ export function SiteHeader({ activeNav, answers, currentStep }: SiteHeaderProps)
 
           {/* Desktop Nav */}
           <nav className="ml-8 hidden gap-6 md:flex">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.key}
-                href={link.href}
-                className="text-sm font-semibold transition-colors hover:text-brand"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isExternal = link.href.startsWith('http')
+              return (
+                <Link
+                  key={link.key}
+                  href={link.href}
+                  {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  className="text-sm font-semibold transition-colors hover:text-brand"
+                >
+                  {link.label}
+                </Link>
+              )
+            })}
           </nav>
 
           <div className="flex-1" />
