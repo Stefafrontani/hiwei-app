@@ -1,4 +1,5 @@
 import { InMemoryDashcamRepository } from '@/infrastructure/repositories/mock/InMemoryDashcamRepository'
+import { SiteHeader } from '@/components/layout/SiteHeader'
 import { GalleryFeed } from '@/components/gallery/GalleryFeed'
 import { Badge } from '@/components/ui/badge'
 
@@ -7,7 +8,9 @@ export default async function GaleriaPage() {
   const products = await repo.getAll()
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-32 pt-8 md:px-6">
+    <div className="flex min-h-screen flex-col bg-background">
+      <SiteHeader activeNav="galeria" />
+      <div className="mx-auto max-w-7xl px-4 pb-32 pt-8 md:px-6">
       {/* Section Header */}
       <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
@@ -26,6 +29,7 @@ export default async function GaleriaPage() {
 
       {/* Video Grid */}
       <GalleryFeed products={products} />
+      </div>
     </div>
   )
 }
