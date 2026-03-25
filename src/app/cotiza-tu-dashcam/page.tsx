@@ -82,14 +82,7 @@ export default function QuizPage() {
   const subtitle = SUBTITLE_CONFIG[currentStep]
 
   return (
-    <div className="relative flex h-dvh flex-col bg-background overflow-hidden">
-      {/* Gradient mesh — smaller/subtler on mobile, full on desktop */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-[15%] -left-[10%] h-[250px] w-[250px] md:h-[600px] md:w-[600px] rounded-full bg-brand/[0.04] md:bg-brand/[0.07] blur-[100px] md:blur-[150px]" />
-        <div className="absolute top-[50%] -right-[10%] h-[200px] w-[200px] md:h-[400px] md:w-[400px] rounded-full bg-brand/[0.02] md:bg-brand/[0.04] blur-[80px] md:blur-[120px]" />
-        <div className="absolute -bottom-[10%] left-[30%] h-[200px] w-[200px] md:h-[350px] md:w-[350px] rounded-full bg-amber-500/[0.02] blur-[80px] md:blur-[100px]" />
-      </div>
-
+    <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">
       <SiteHeader activeNav="cotizador" answers={answers} currentStep={currentStep} />
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 overflow-hidden">
