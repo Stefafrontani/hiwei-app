@@ -33,16 +33,16 @@ export function NavigationFooter({
 
   return (
     <footer className={isMobile
-      ? 'flex items-center gap-3 px-5 py-4'
+      ? 'flex items-center gap-4 px-5 py-4'
       : 'mt-8 flex items-center justify-between'}
     >
       {/* Back */}
       <Button
         variant="outline"
-        size={isMobile ? 'icon-lg' : 'xl'}
+        size="lg"
         onClick={onBack}
         disabled={isFirst}
-        className="rounded-xl"
+        className={isMobile ? 'w-12' : ''}
       >
         <ChevronLeft className="h-4 w-4" />
         {!isMobile && <span>Atrás</span>}
@@ -51,7 +51,7 @@ export function NavigationFooter({
       {/* Next / Finish */}
       <Button
         variant={isLast ? 'success' : 'brand'}
-        size="xl"
+        size="lg"
         onClick={onNext}
         disabled={isDisabled}
         className={`${isMobile ? 'flex-1' : ''} ${nextShadow} transition-shadow duration-200`}
