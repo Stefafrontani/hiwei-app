@@ -25,7 +25,7 @@ export function BottomNav() {
   const activeNav = useActiveNav()
 
   return (
-    <nav className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around rounded-t-xl border-t border-border bg-card/95 px-4 py-3 shadow-2xl backdrop-blur-md md:hidden">
+    <nav className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around rounded-t-xl border-t border-white/[0.06] bg-background/60 px-4 py-3 backdrop-blur-xl md:hidden">
       {NAV_ITEMS.map(({ key, label, href, icon: Icon }) => {
         const isActive = key === activeNav
         const isExternal = href.startsWith('http')
