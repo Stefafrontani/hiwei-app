@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 import { ContactMethodOverlay } from '@/components/overlays/ContactMethodOverlay'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import type { NavItem } from '@/components/gallery/types'
@@ -67,21 +68,15 @@ export function SiteHeader({ activeNav, answers, currentStep }: SiteHeaderProps)
 
           {/* CTAs */}
           <div className="flex items-center gap-2">
-            <Link
-              href="/beneficios"
-              className="flex items-center gap-1.5 rounded-lg px-3 py-2 transition-colors hover:bg-muted md:gap-2 md:px-3 md:py-2"
-            >
-              <span className="text-sm font-semibold">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/beneficios">
                 <span className="md:hidden">Beneficios</span>
                 <span className="hidden md:inline">Beneficios exclusivos</span>
-              </span>
-            </Link>
-            <button
-              onClick={() => setShowContact(true)}
-              className="flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 transition-colors hover:bg-brand/90 md:gap-2 md:px-[18px] md:py-2"
-            >
-              <span className="text-sm font-bold text-brand-foreground">Contactanos</span>
-            </button>
+              </Link>
+            </Button>
+            <Button variant="brand" size="sm" onClick={() => setShowContact(true)}>
+              Contactanos
+            </Button>
           </div>
         </div>
       </header>

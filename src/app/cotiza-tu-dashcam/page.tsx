@@ -92,7 +92,7 @@ export default function QuizPage() {
             <div className="px-5 pt-2 pb-1 md:px-8 md:pt-4 md:pb-0">
               <Link
                 href="/resultado"
-                className="flex items-center justify-between rounded-xl px-4 py-2.5 transition-all duration-200
+                className="flex items-center justify-between gap-4 rounded-xl px-4 py-2.5 transition-all duration-200
                   glass-card border-brand/20 hover:border-brand/40 hover:shadow-[0_0_20px_2px_oklch(0.8339_0.1432_93.43/0.12)]"
               >
                 <div className="flex flex-col">
