@@ -1,14 +1,20 @@
 'use client'
 
 import { useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Send, MailCheck, AlertCircle, X } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { FeedbackState } from './FeedbackState'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import {
+  sendRecommendationFormSchema,
+  type SendRecommendationFormValues,
+} from '@/domain/validation/schemas'
 
 interface SendRecommendationOverlayProps {
   open: boolean
@@ -19,15 +25,16 @@ interface SendRecommendationOverlayProps {
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
 function SendForm({ onClose, recommendationId }: { onClose: () => void; recommendationId?: string | null }) {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
-  const [optInMarketing, setOptInMarketing] = useState(false)
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const form = useForm<SendRecommendationFormValues>({
+    resolver: zodResolver(sendRecommendationFormSchema),
+    defaultValues: { name: '', email: '', phone: '', optInMarketing: false },
+    mode: 'onBlur',
+  })
+
+  const onSubmit = async (values: SendRecommendationFormValues) => {
     setStatus('loading')
     setErrorMsg('')
     try {
@@ -36,10 +43,10 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           recommendationId,
-          name: name.trim(),
-          email: email.trim(),
-          phone: phone.trim() || undefined,
-          optInMarketing,
+          name: values.name.trim(),
+          email: values.email.trim(),
+          phone: values.phone?.trim() || undefined,
+          optInMarketing: values.optInMarketing,
         }),
       })
       const data = await res.json()
@@ -79,52 +86,84 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
       <p className="text-[13px] leading-relaxed text-muted-foreground">
         Te enviamos un resumen con tu recomendación personalizada para que puedas revisarla cuando
         quieras.
       </p>
 
       <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1.5">
-          <Label className="text-[12px] font-semibold text-foreground">Nombre y apellido *</Label>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Ej: Juan Pérez"
-            required
-            className="h-11 rounded-[10px] border-border text-[13px]"
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label className="text-[12px] font-semibold text-foreground">Email *</Label>
-          <Input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="tu@email.com"
-            required
-            type="email"
-            className="h-11 rounded-[10px] border-border text-[13px]"
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label className="text-[12px] font-medium text-muted-foreground">Teléfono (opcional)</Label>
-          <Input
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+54 11 1234-5678"
-            type="tel"
-            className="h-11 rounded-[10px] border-border text-[13px]"
-          />
-        </div>
+        <Controller
+          name="name"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel className="text-[12px] font-semibold text-foreground">
+                Nombre y apellido *
+              </FieldLabel>
+              <Input
+                {...field}
+                placeholder="Ej: Juan Pérez"
+                aria-invalid={fieldState.invalid}
+                className="h-11 rounded-[10px] border-border text-[13px]"
+              />
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} className="text-[11px]" />
+              )}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="email"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel className="text-[12px] font-semibold text-foreground">
+                Email *
+              </FieldLabel>
+              <Input
+                {...field}
+                type="email"
+                placeholder="tu@email.com"
+                aria-invalid={fieldState.invalid}
+                className="h-11 rounded-[10px] border-border text-[13px]"
+              />
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} className="text-[11px]" />
+              )}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="phone"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel className="text-[12px] font-medium text-muted-foreground">
+                Teléfono (opcional)
+              </FieldLabel>
+              <Input
+                {...field}
+                type="tel"
+                placeholder="+54 11 1234-5678"
+                aria-invalid={fieldState.invalid}
+                className="h-11 rounded-[10px] border-border text-[13px]"
+              />
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} className="text-[11px]" />
+              )}
+            </Field>
+          )}
+        />
       </div>
 
       {/* Opt-in marketing checkbox */}
       <label className="flex cursor-pointer items-start gap-2.5">
         <input
           type="checkbox"
-          checked={optInMarketing}
-          onChange={(e) => setOptInMarketing(e.target.checked)}
+          {...form.register('optInMarketing')}
           className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-brand"
         />
         <span className="text-[12px] leading-relaxed text-muted-foreground">
@@ -134,7 +173,7 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
 
       <Button
         type="submit"
-        disabled={status === 'loading' || !recommendationId}
+        disabled={status === 'loading' || !form.formState.isValid || !recommendationId}
         variant="brand"
         className="flex h-[50px] w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
       >

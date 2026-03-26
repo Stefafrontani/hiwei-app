@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   ArrowLeft,
   Percent,
@@ -18,13 +20,22 @@ import type { LucideIcon } from 'lucide-react'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
+import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import {
+  leadFormSchema,
+  type LeadFormValues,
+} from '@/domain/validation/schemas'
 
 type ViewState = 'form' | 'success' | 'error'
 
-const BENEFITS: { Icon: LucideIcon; bg: string; fg: string; title: string; sub: string }[] = [
+const BENEFITS: {
+  Icon: LucideIcon
+  bg: string
+  fg: string
+  title: string
+  sub: string
+}[] = [
   {
     Icon: Percent,
     bg: 'bg-success/10',
@@ -51,13 +62,15 @@ const BENEFITS: { Icon: LucideIcon; bg: string; fg: string; title: string; sub: 
 export default function BeneficiosPage() {
   const router = useRouter()
   const [view, setView] = useState<ViewState>('form')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const form = useForm<LeadFormValues>({
+    resolver: zodResolver(leadFormSchema),
+    defaultValues: { name: '', email: '', phone: '' },
+    mode: 'onBlur',
+  })
+
+  const onSubmit = async (values: LeadFormValues) => {
     setSubmitting(true)
     try {
       const cached = localStorage.getItem('hiwei-recommendation')
@@ -69,9 +82,9 @@ export default function BeneficiosPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name,
-          email,
-          phone: phone || undefined,
+          name: values.name.trim(),
+          email: values.email.trim(),
+          phone: values.phone?.trim() || undefined,
           recommendationId,
         }),
       })
@@ -95,7 +108,7 @@ export default function BeneficiosPage() {
 
         <main className="flex-1 overflow-y-auto no-scrollbar">
           <div className="mx-auto w-full max-w-7xl px-4 pb-32 pt-6 md:px-6 md:pt-10">
-            {/* Section header — matches gallery/comparator pattern */}
+            {/* Section header */}
             <div className="animate-fade-in-up mb-8 text-center">
               <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
                 Beneficios exclusivos
@@ -127,7 +140,6 @@ export default function BeneficiosPage() {
                           pensados para vos.
                         </p>
 
-                        {/* Benefits list */}
                         <div className="mt-5 flex flex-col gap-4">
                           {BENEFITS.map((b, i) => (
                             <div
@@ -157,7 +169,6 @@ export default function BeneficiosPage() {
                         </div>
                       </div>
 
-                      {/* Trust signal */}
                       <div
                         className="animate-fade-in-up mt-6 flex items-center gap-2"
                         style={{ '--delay': '550ms' } as React.CSSProperties}
@@ -172,102 +183,110 @@ export default function BeneficiosPage() {
 
                     {/* Right — Form */}
                     <div className="flex-1 bg-background p-6 md:p-8">
-                      <p
-                        className="animate-fade-in-up text-[16px] font-bold text-foreground"
-                        style={{ '--delay': '200ms' } as React.CSSProperties}
-                      >
-                        Completá tus datos
-                      </p>
-
-                      <Separator className="my-4 bg-white/[0.06]" />
-
                       <form
-                        onSubmit={handleSubmit}
+                        onSubmit={form.handleSubmit(onSubmit)}
                         className="flex flex-col gap-4"
                       >
-                        <div
-                          className="animate-fade-in-up flex flex-col gap-2"
-                          style={
-                            { '--delay': '280ms' } as React.CSSProperties
-                          }
-                        >
-                          <Label
-                            htmlFor="benefit-name"
-                            className="text-[12px] font-semibold"
-                          >
-                            Nombre y apellido *
-                          </Label>
-                          <Input
-                            id="benefit-name"
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="Ej: Juan Pérez"
-                            required
-                            className="h-11 rounded-lg"
-                          />
-                        </div>
+                        <Controller
+                          name="name"
+                          control={form.control}
+                          render={({ field, fieldState }) => (
+                            <Field data-invalid={fieldState.invalid}>
+                              <FieldLabel
+                                htmlFor="benefit-name"
+                                className="text-[12px] font-semibold"
+                              >
+                                Nombre y apellido *
+                              </FieldLabel>
+                              <Input
+                                {...field}
+                                id="benefit-name"
+                                placeholder="Ej: Juan Pérez"
+                                aria-invalid={fieldState.invalid}
+                                className="h-11 rounded-lg"
+                              />
+                              {fieldState.invalid && (
+                                <FieldError
+                                  errors={[fieldState.error]}
+                                  className="text-[11px]"
+                                />
+                              )}
+                            </Field>
+                          )}
+                        />
 
-                        <div
-                          className="animate-fade-in-up flex flex-col gap-2"
-                          style={
-                            { '--delay': '360ms' } as React.CSSProperties
-                          }
-                        >
-                          <Label
-                            htmlFor="benefit-email"
-                            className="text-[12px] font-semibold"
-                          >
-                            Email *
-                          </Label>
-                          <Input
-                            id="benefit-email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="tu@email.com"
-                            required
-                            className="h-11 rounded-lg"
-                          />
-                        </div>
+                        <Controller
+                          name="email"
+                          control={form.control}
+                          render={({ field, fieldState }) => (
+                            <Field data-invalid={fieldState.invalid}>
+                              <FieldLabel
+                                htmlFor="benefit-email"
+                                className="text-[12px] font-semibold"
+                              >
+                                Email *
+                              </FieldLabel>
+                              <Input
+                                {...field}
+                                id="benefit-email"
+                                type="email"
+                                placeholder="tu@email.com"
+                                aria-invalid={fieldState.invalid}
+                                className="h-11 rounded-lg"
+                              />
+                              {fieldState.invalid && (
+                                <FieldError
+                                  errors={[fieldState.error]}
+                                  className="text-[11px]"
+                                />
+                              )}
+                            </Field>
+                          )}
+                        />
 
-                        <div
-                          className="animate-fade-in-up flex flex-col gap-2"
-                          style={
-                            { '--delay': '440ms' } as React.CSSProperties
-                          }
-                        >
-                          <Label
-                            htmlFor="benefit-phone"
-                            className="text-[12px] font-medium text-muted-foreground"
-                          >
-                            Teléfono (opcional)
-                          </Label>
-                          <Input
-                            id="benefit-phone"
-                            type="tel"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            placeholder="+54 11 1234-5678"
-                            className="h-11 rounded-lg"
-                          />
-                        </div>
+                        <Controller
+                          name="phone"
+                          control={form.control}
+                          render={({ field, fieldState }) => (
+                            <Field data-invalid={fieldState.invalid}>
+                              <FieldLabel
+                                htmlFor="benefit-phone"
+                                className="text-[12px] font-medium text-muted-foreground"
+                              >
+                                Teléfono (opcional)
+                              </FieldLabel>
+                              <Input
+                                {...field}
+                                id="benefit-phone"
+                                type="tel"
+                                placeholder="+54 11 1234-5678"
+                                aria-invalid={fieldState.invalid}
+                                className="h-11 rounded-lg"
+                              />
+                              {fieldState.invalid && (
+                                <FieldError
+                                  errors={[fieldState.error]}
+                                  className="text-[11px]"
+                                />
+                              )}
+                            </Field>
+                          )}
+                        />
 
-                        <Button
-                          type="submit"
-                          variant="brand"
-                          size="lg"
-                          disabled={submitting}
-                          className="animate-fade-in-up mt-2 w-full font-bold"
-                          style={
-                            { '--delay': '520ms' } as React.CSSProperties
-                          }
-                        >
-                          <Sparkles className="h-[18px] w-[18px]" />
-                          {submitting
-                            ? 'Registrando...'
-                            : 'Quiero mis beneficios'}
-                        </Button>
+                        <div className="mt-2">
+                          <Button
+                            type="submit"
+                            variant="brand"
+                            size="lg"
+                            disabled={submitting || !form.formState.isValid}
+                            className="w-full font-bold"
+                          >
+                            <Sparkles className="h-[18px] w-[18px]" />
+                            {submitting
+                              ? 'Registrando...'
+                              : 'Quiero mis beneficios'}
+                          </Button>
+                        </div>
                       </form>
                     </div>
                   </div>
@@ -288,25 +307,18 @@ export default function BeneficiosPage() {
         <main className="flex flex-1 flex-col items-center justify-center overflow-y-auto no-scrollbar px-4">
           <div className="mx-auto w-full max-w-[480px]">
             <div className="animate-fade-in-up glass-card rounded-2xl border-white/[0.06] p-6 md:p-8">
-              {/* Icon */}
               <div className="mb-5 flex justify-center">
                 <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-success/10">
                   <CircleCheck className="h-9 w-9 text-success" />
                 </div>
               </div>
-
-              {/* Title */}
               <h2 className="mb-2 text-center text-[22px] font-bold text-foreground">
                 ¡Ya sos parte!
               </h2>
-
-              {/* Subtitle */}
               <p className="mb-5 text-center text-[14px] leading-relaxed text-muted-foreground">
                 Te enviamos un email con tus beneficios exclusivos. Revisá tu
                 bandeja de entrada.
               </p>
-
-              {/* Benefits checklist */}
               <Alert variant="success" className="mb-5 rounded-xl">
                 <Check className="h-4 w-4" />
                 <AlertTitle>Beneficios activados</AlertTitle>
@@ -321,8 +333,6 @@ export default function BeneficiosPage() {
                   </ul>
                 </AlertDescription>
               </Alert>
-
-              {/* Back button */}
               <Button
                 variant="brand"
                 size="lg"
@@ -346,25 +356,18 @@ export default function BeneficiosPage() {
       <main className="flex flex-1 flex-col items-center justify-center overflow-y-auto no-scrollbar px-4">
         <div className="mx-auto w-full max-w-[480px]">
           <div className="animate-fade-in-up glass-card rounded-2xl border-white/[0.06] p-6 md:p-8">
-            {/* Icon */}
             <div className="mb-5 flex justify-center">
               <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-destructive/10">
                 <TriangleAlert className="h-9 w-9 text-destructive" />
               </div>
             </div>
-
-            {/* Title */}
             <h2 className="mb-2 text-center text-[22px] font-bold text-foreground">
               Algo salió mal
             </h2>
-
-            {/* Subtitle */}
             <p className="mb-5 text-center text-[14px] leading-relaxed text-muted-foreground">
               No pudimos procesar tu solicitud. Verificá tu conexión e intentá
               de nuevo.
             </p>
-
-            {/* Actions */}
             <div className="flex flex-col gap-3">
               <Button
                 variant="destructive"
@@ -375,7 +378,6 @@ export default function BeneficiosPage() {
                 <RefreshCw className="h-4 w-4" />
                 Intentar de nuevo
               </Button>
-
               <Button
                 variant="outline"
                 size="lg"
