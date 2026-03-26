@@ -1,9 +1,9 @@
 import type { LucideIcon } from 'lucide-react'
 
-type InfoVariant = 'blue' | 'orange' | 'amber' | 'green' | 'red'
+type InfoVariant = 'brand' | 'orange' | 'amber' | 'green' | 'red'
 
 const VARIANT_STYLES: Record<InfoVariant, { bg: string; border: string; leftAccent: string; iconBg: string; iconColor: string; textColor: string }> = {
-  blue:   { bg: 'bg-brand/5',       border: 'border-brand/15',       leftAccent: 'before:bg-brand',       iconBg: 'bg-brand/15',       iconColor: 'text-brand',       textColor: 'text-brand/90' },
+  brand:  { bg: 'bg-brand/5',       border: 'border-brand/15',       leftAccent: 'before:bg-brand',       iconBg: 'bg-brand/15',       iconColor: 'text-brand',       textColor: 'text-brand/90' },
   orange: { bg: 'bg-warning/5',     border: 'border-warning/15',     leftAccent: 'before:bg-warning',     iconBg: 'bg-warning/15',     iconColor: 'text-warning',     textColor: 'text-warning/90' },
   amber:  { bg: 'bg-warning/5',     border: 'border-warning/15',     leftAccent: 'before:bg-warning',     iconBg: 'bg-warning/15',     iconColor: 'text-warning',     textColor: 'text-warning/90' },
   green:  { bg: 'bg-success/5',     border: 'border-success/15',     leftAccent: 'before:bg-success',     iconBg: 'bg-success/15',     iconColor: 'text-success',     textColor: 'text-success/90' },
@@ -17,7 +17,7 @@ interface InfoBoxProps {
   className?: string
 }
 
-export function InfoBox({ icon: Icon, text, variant = 'blue', className = '' }: InfoBoxProps) {
+export function InfoBox({ icon: Icon, text, variant = 'brand', className = '' }: InfoBoxProps) {
   const s = VARIANT_STYLES[variant]
   return (
     <div

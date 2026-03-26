@@ -8,7 +8,7 @@ interface OptionRowProps {
   isActive: boolean
   onClick: () => void
   badge?: string
-  accentColor?: 'blue' | 'green'
+  accentColor?: 'brand' | 'green'
 }
 
 export function OptionRow({
@@ -18,10 +18,10 @@ export function OptionRow({
   isActive,
   onClick,
   badge,
-  accentColor = 'blue',
+  accentColor = 'brand',
 }: OptionRowProps) {
   const colors = {
-    blue: {
+    brand: {
       border: 'border-brand/50',
       leftAccent: 'before:bg-brand',
       bg: 'bg-brand/10',
