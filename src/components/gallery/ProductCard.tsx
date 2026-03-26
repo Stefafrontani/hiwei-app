@@ -1,6 +1,8 @@
 'use client'
 
+import { useRef, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { DotIndicator } from '@/components/ui/dot-indicator'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { VideoThumbnail } from './VideoThumbnail'
@@ -21,6 +23,8 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
   })
 
   const slideClass = slideDirection === 'right' ? 'slide-in-right' : slideDirection === 'left' ? 'slide-in-left' : ''
+  const [descOpen, setDescOpen] = useState(false)
+  const descWrapRef = useRef<HTMLDivElement>(null)
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl glass-card border-white/[0.06] p-3 md:p-4">
@@ -61,9 +65,27 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
             </Badge>
           ))}
         </div>
-        <p className="text-[12px] leading-relaxed text-muted-foreground line-clamp-2">
-          {product.description}
-        </p>
+
+        {/* Expandable description */}
+        <Collapsible open={descOpen} onOpenChange={setDescOpen}>
+          <div
+            ref={descWrapRef}
+            className="overflow-hidden transition-[max-height] duration-300 ease-out"
+            style={{ maxHeight: descOpen ? `${descWrapRef.current?.scrollHeight ?? 200}px` : '1.3rem' }}
+          >
+            <p className="text-[12px] leading-relaxed text-muted-foreground">
+              {product.description}
+            </p>
+          </div>
+          <CollapsibleTrigger asChild>
+            <button
+              type="button"
+              className="mt-1 text-[11px] font-semibold text-brand hover:underline"
+            >
+              {descOpen ? 'Ver menos' : 'Ver más'}
+            </button>
+          </CollapsibleTrigger>
+        </Collapsible>
       </div>
     </div>
   )

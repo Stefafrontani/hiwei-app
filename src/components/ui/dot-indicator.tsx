@@ -8,7 +8,7 @@ interface DotIndicatorProps {
 }
 
 export function DotIndicator({ total, active, onDotClick, className }: DotIndicatorProps) {
-  if (total <= 1) return null
+  if (total <= 1) return <div className="h-2" />
 
   return (
     <div className={cn('flex items-center justify-center gap-1.5', className)}>
