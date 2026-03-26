@@ -166,23 +166,23 @@
   padding: 1px;
   background: conic-gradient(
     from var(--border-angle),
-    var(--brand) 0%,
-    oklch(0.9 0.12 93.43) 12%,
-    transparent 25%,
-    transparent 75%,
-    oklch(0.9 0.12 93.43) 88%,
-    var(--brand) 100%
+    oklch(0.8339 0.1432 93.43 / 0.6) 0%,
+    oklch(0.8339 0.1432 93.43 / 0.25) 10%,
+    transparent 20%,
+    transparent 80%,
+    oklch(0.8339 0.1432 93.43 / 0.25) 90%,
+    oklch(0.8339 0.1432 93.43 / 0.6) 100%
   );
-  animation: border-rotate 4s linear infinite;
+  animation: border-rotate 5s linear infinite;
 }
 .shimmer-border::before {
   content: '';
   position: absolute;
-  inset: -4px;
+  inset: -3px;
   border-radius: inherit;
   background: inherit;
-  filter: blur(14px);
-  opacity: 0.35;
+  filter: blur(10px);
+  opacity: 0.2;
   z-index: -1;
 }
 
