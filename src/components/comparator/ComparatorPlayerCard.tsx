@@ -1,7 +1,6 @@
 'use client'
 
 import { VideoOff } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DotIndicator } from '@/components/ui/dot-indicator'
 import { VideoThumbnail } from '@/components/gallery/VideoThumbnail'
 import { useVideoPlaylist } from '@/hooks/useVideoPlaylist'
@@ -32,47 +31,39 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
 
   if (!product) {
     return (
-      <Card className="border-0 shadow-none gap-2 py-2 md:py-4">
-        <CardHeader className="px-2 md:px-4">
-          <CardTitle className="text-lg font-bold invisible">&lrm;</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-2 px-2 md:px-4">
-          <div className="flex aspect-[16/10] items-center justify-center rounded-lg bg-muted/30">
-            <p className="text-sm text-muted-foreground">Seleccioná un modelo</p>
-          </div>
-          <div className="h-4" />
-        </CardContent>
-      </Card>
+      <div className="flex flex-col gap-3 rounded-2xl glass-card border-white/[0.06] p-3 md:p-4">
+        <div className="invisible text-[16px] font-bold">&lrm;</div>
+        <div className="flex aspect-[16/10] items-center justify-center rounded-xl bg-white/[0.03]">
+          <p className="text-[13px] text-muted-foreground/60">Seleccioná un modelo</p>
+        </div>
+        <div className="h-2" />
+      </div>
     )
   }
 
   return (
-    <Card className="border-0 shadow-none gap-2 py-2 md:py-4">
-      <CardHeader className="px-2 md:px-4">
-        <CardTitle className="text-lg font-bold">{product.name}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-2 px-2 md:px-4">
-        <div className="overflow-hidden rounded-lg">
-          {activeVideo ? (
-            <div key={`${playbackKey}-${videoIndex}`} className={slideClass}>
-              <VideoThumbnail video={activeVideo} size="md" showLabel autoplay={autoplay || shouldAutoplay} onEnded={handleVideoEnded} />
+    <div className="flex flex-col gap-3 rounded-2xl glass-card border-white/[0.06] p-3 md:p-4">
+      <h3 className="text-[16px] font-bold text-foreground px-1">{product.name}</h3>
+      <div className="overflow-hidden rounded-xl">
+        {activeVideo ? (
+          <div key={`${playbackKey}-${videoIndex}`} className={slideClass}>
+            <VideoThumbnail video={activeVideo} size="md" showLabel autoplay={autoplay || shouldAutoplay} onEnded={handleVideoEnded} />
+          </div>
+        ) : (
+          <div className="flex aspect-[16/10] flex-col items-center justify-center gap-3 rounded-xl bg-white/[0.03] px-8 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.05]">
+              <VideoOff className="h-6 w-6 text-muted-foreground/50" />
             </div>
-          ) : (
-            <div className="flex aspect-[16/10] flex-col items-center justify-center gap-3 rounded-lg bg-muted/20 px-8 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted/30">
-                <VideoOff className="h-7 w-7 text-muted-foreground" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">No disponible</h4>
-              <p className="text-xs text-muted-foreground">
+            <div>
+              <h4 className="text-[13px] font-bold text-foreground/80">No disponible</h4>
+              <p className="text-[11px] text-muted-foreground/50">
                 Este modelo no cuenta con cámara {ANGLE_LABELS[activeAngle]}.
               </p>
             </div>
-          )}
-        </div>
-        <div className="h-4 flex items-center justify-center">
-          <DotIndicator total={angleVideos.length} active={videoIndex} onDotClick={setVideoIndex} />
-        </div>
-      </CardContent>
-    </Card>
+          </div>
+        )}
+      </div>
+      <DotIndicator total={angleVideos.length} active={videoIndex} onDotClick={setVideoIndex} />
+    </div>
   )
 }

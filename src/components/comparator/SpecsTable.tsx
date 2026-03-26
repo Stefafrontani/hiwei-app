@@ -63,35 +63,34 @@ export function SpecsTable({ productA, productB }: SpecsTableProps) {
   const rows = getRows(productA, productB)
 
   const wrap = 'whitespace-normal'
-  const pad = isMobile ? 'p-3' : 'p-2'
+  const pad = isMobile ? 'p-3' : 'p-3'
   const headSize = isMobile ? 'text-xs' : 'text-sm'
   const cellSize = isMobile ? 'text-xs' : 'text-sm'
   const labelSize = isMobile ? 'text-[10px]' : 'text-xs'
 
   return (
-    <div>
-      <h3 className="mb-4 flex items-center gap-3 text-lg font-bold">
-        Especificaciones
-      </h3>
+    <div className="glass-card rounded-2xl border-white/[0.06] overflow-hidden">
+      <div className="px-4 pt-4 pb-2">
+        <h3 className="text-[15px] font-bold text-foreground">Especificaciones</h3>
+      </div>
       <Table>
         <TableHeader>
-          <TableRow className="bg-muted/20 hover:bg-muted/20">
-            <TableHead className={`w-1/3 ${wrap} ${pad} text-[10px] font-bold uppercase tracking-wider text-muted-foreground`}>Modelo</TableHead>
+          <TableRow className="bg-white/[0.03] hover:bg-white/[0.03] border-white/[0.06]">
+            <TableHead className={`w-1/3 ${wrap} ${pad} text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60`}>Modelo</TableHead>
             <TableHead className={`w-1/3 ${wrap} ${pad} ${headSize} font-bold text-brand`}>{productA?.name ?? '—'}</TableHead>
             <TableHead className={`w-1/3 ${wrap} ${pad} ${headSize} font-bold text-brand`}>{productB?.name ?? '—'}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.label}>
-              <TableCell className={`w-1/3 ${wrap} ${pad} ${labelSize} font-medium text-muted-foreground`}>{row.label}</TableCell>
-              <TableCell className={`w-1/3 ${wrap} ${pad} ${cellSize} font-semibold text-foreground`}>{row.valueA}</TableCell>
-              <TableCell className={`w-1/3 ${wrap} ${pad} ${cellSize} font-semibold text-foreground`}>{row.valueB}</TableCell>
+            <TableRow key={row.label} className="border-white/[0.04] hover:bg-white/[0.02]">
+              <TableCell className={`w-1/3 ${wrap} ${pad} ${labelSize} font-medium text-muted-foreground/60`}>{row.label}</TableCell>
+              <TableCell className={`w-1/3 ${wrap} ${pad} ${cellSize} font-semibold text-foreground/80`}>{row.valueA}</TableCell>
+              <TableCell className={`w-1/3 ${wrap} ${pad} ${cellSize} font-semibold text-foreground/80`}>{row.valueB}</TableCell>
             </TableRow>
           ))}
-          {/* Ver más info row */}
-          <TableRow>
-            <TableCell className={`w-1/3 ${wrap} ${pad} ${labelSize} font-medium text-muted-foreground`}>Tienda</TableCell>
+          <TableRow className="border-white/[0.04] hover:bg-white/[0.02]">
+            <TableCell className={`w-1/3 ${wrap} ${pad} ${labelSize} font-medium text-muted-foreground/60`}>Tienda</TableCell>
             <TableCell className={`w-1/3 ${wrap} ${pad}`}>
               {productA?.ecommerceUrl ? (
                 <Link

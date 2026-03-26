@@ -7,22 +7,21 @@ export default async function ComparatorPage() {
   const products = await repo.getAll()
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">
       <SiteHeader activeNav="comparador" />
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 pb-32 pt-8 md:px-6">
-        {/* Section Header */}
-        <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <div>
-            <h2 className="text-3xl font-extrabold tracking-tight text-foreground">
-              Compará los modelos
+      <main className="flex-1 overflow-y-auto no-scrollbar">
+        <div className="mx-auto w-full max-w-7xl px-4 pb-32 pt-6 md:px-6 md:pt-8">
+          <div className="animate-fade-in-up mb-8">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+              Compará lado a lado
             </h2>
-            <p className="max-w-xl text-muted-foreground">
-              Elegí dos dashcams y compará su calidad de video, especificaciones y precio lado a lado.
+            <p className="mt-1 text-[13px] text-muted-foreground md:text-[14px]">
+              Elegí dos modelos y mirá la diferencia en calidad de video y especificaciones.
             </p>
           </div>
-        </div>
 
-        <ComparatorView products={products} />
+          <ComparatorView products={products} />
+        </div>
       </main>
     </div>
   )

@@ -8,7 +8,7 @@ import type { NavItem } from './types'
 
 const NAV_ITEMS: { key: NavItem; label: string; href: string; icon: ComponentType<{ className?: string }> }[] = [
   { key: 'galeria', label: 'Galería', href: '/galeria', icon: MonitorPlay },
-  { key: 'comparador', label: 'Comparador', href: '/compara-las-dashcams', icon: Columns3 },
+  { key: 'comparador', label: 'Comparar', href: '/compara-las-dashcams', icon: Columns3 },
   { key: 'cotizador', label: 'Cotizador', href: '/cotiza-tu-dashcam', icon: Calculator },
   { key: 'tienda', label: 'Tienda', href: 'https://www.hiwei.com.ar/camaras-autos/', icon: ShoppingBag },
 ]

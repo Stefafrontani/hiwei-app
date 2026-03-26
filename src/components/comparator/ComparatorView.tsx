@@ -32,7 +32,6 @@ export function ComparatorView({ products }: ComparatorViewProps) {
     setPlaybackKey((k) => k + 1)
   }
 
-  // Union of camera positions from both selected models
   const availableAngles = useMemo(() => {
     const angles = new Set<CameraPosition>()
     if (productA) productA.cameraPositions.forEach((a) => angles.add(a))
@@ -46,13 +45,13 @@ export function ComparatorView({ products }: ComparatorViewProps) {
   }, [productA, productB])
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-6">
       {/* Model Selectors */}
-      <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Modelo A</label>
+      <section className="animate-fade-in-up grid grid-cols-1 gap-4 md:grid-cols-2" style={{ '--delay': '80ms' } as React.CSSProperties}>
+        <div className="flex flex-col gap-2">
+          <label className="text-[11px] font-semibold uppercase tracking-[1.5px] text-muted-foreground/70">Modelo A</label>
           <Select value={modelAId ?? ''} onValueChange={(v) => setModelAId(v || null)}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full glass-card border-white/[0.06] h-11">
               <SelectValue placeholder="Seleccioná un modelo" />
             </SelectTrigger>
             <SelectContent>
@@ -64,10 +63,10 @@ export function ComparatorView({ products }: ComparatorViewProps) {
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Modelo B</label>
+        <div className="flex flex-col gap-2">
+          <label className="text-[11px] font-semibold uppercase tracking-[1.5px] text-muted-foreground/70">Modelo B</label>
           <Select value={modelBId ?? ''} onValueChange={(v) => setModelBId(v || null)}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full glass-card border-white/[0.06] h-11">
               <SelectValue placeholder="Seleccioná un modelo" />
             </SelectTrigger>
             <SelectContent>
@@ -84,12 +83,12 @@ export function ComparatorView({ products }: ComparatorViewProps) {
       {/* Shared Camera Angle Tabs */}
       <div className={`transition-all duration-300 ${bothSelected ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0 overflow-hidden'}`}>
         <Tabs value={activeAngle} onValueChange={(v) => handleAngleChange(v as CameraPosition)}>
-          <TabsList className="w-full bg-muted p-1 rounded-lg gap-1">
+          <TabsList className="w-full bg-white/[0.05] p-1 rounded-lg gap-1">
             {availableAngles.map((angle) => (
               <TabsTrigger
                 key={angle}
                 value={angle}
-                className="flex-1 py-2 text-xs font-medium data-[state=active]:bg-brand data-[state=active]:text-brand-foreground data-[state=active]:font-bold data-[state=active]:shadow-none"
+                className="flex-1 py-2 text-[11px] font-medium data-[state=active]:bg-brand data-[state=active]:text-brand-foreground data-[state=active]:font-bold data-[state=active]:shadow-none"
               >
                 {CAMERA_POSITION_LABELS[angle]}
               </TabsTrigger>
@@ -99,13 +98,15 @@ export function ComparatorView({ products }: ComparatorViewProps) {
       </div>
 
       {/* Video Comparison Cards */}
-      <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <section className="animate-fade-in-up grid grid-cols-1 gap-4 md:grid-cols-2" style={{ '--delay': '160ms' } as React.CSSProperties}>
         <ComparatorPlayerCard product={productA} activeAngle={activeAngle} autoplay={bothSelected} playbackKey={playbackKey} />
         <ComparatorPlayerCard product={productB} activeAngle={activeAngle} autoplay={bothSelected} playbackKey={playbackKey} />
       </section>
 
       {/* Specs Comparison Table */}
-      <SpecsTable productA={productA} productB={productB} />
+      <div className="animate-fade-in-up" style={{ '--delay': '240ms' } as React.CSSProperties}>
+        <SpecsTable productA={productA} productB={productB} />
+      </div>
     </div>
   )
 }
