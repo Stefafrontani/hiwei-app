@@ -107,9 +107,10 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
                 aria-invalid={fieldState.invalid}
                 className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} className="text-[11px]" />
-              )}
+              <FieldError
+                errors={[fieldState.error]}
+                className="text-[11px]"
+              />
             </Field>
           )}
         />
@@ -129,9 +130,10 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
                 aria-invalid={fieldState.invalid}
                 className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} className="text-[11px]" />
-              )}
+              <FieldError
+                errors={[fieldState.error]}
+                className="text-[11px]"
+              />
             </Field>
           )}
         />
@@ -151,9 +153,10 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
                 aria-invalid={fieldState.invalid}
                 className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} className="text-[11px]" />
-              )}
+              <FieldError
+                errors={[fieldState.error]}
+                className="text-[11px]"
+              />
             </Field>
           )}
         />

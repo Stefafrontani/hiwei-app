@@ -218,18 +218,25 @@ function FieldError({
     )
   }, [children, errors])
 
-  if (!content) {
-    return null
-  }
-
   return (
     <div
-      role="alert"
-      data-slot="field-error"
-      className={cn("text-sm font-normal text-destructive", className)}
-      {...props}
+      className="grid transition-[grid-template-rows,opacity] duration-300 ease-out"
+      style={{
+        gridTemplateRows: content ? '1fr' : '0fr',
+        opacity: content ? 1 : 0,
+      }}
     >
-      {content}
+      <div
+        role="alert"
+        data-slot="field-error"
+        className={cn(
+          "overflow-hidden text-sm font-normal text-destructive",
+          className
+        )}
+        {...props}
+      >
+        {content}
+      </div>
     </div>
   )
 }

@@ -105,9 +105,10 @@ function ContactForm({ onClose }: { onClose: () => void }) {
                 aria-invalid={fieldState.invalid}
                 className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} className="text-[11px]" />
-              )}
+              <FieldError
+                errors={[fieldState.error]}
+                className="text-[11px]"
+              />
             </Field>
           )}
         />
@@ -127,9 +128,10 @@ function ContactForm({ onClose }: { onClose: () => void }) {
                 aria-invalid={fieldState.invalid}
                 className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} className="text-[11px]" />
-              )}
+              <FieldError
+                errors={[fieldState.error]}
+                className="text-[11px]"
+              />
             </Field>
           )}
         />
@@ -149,9 +151,10 @@ function ContactForm({ onClose }: { onClose: () => void }) {
                 aria-invalid={fieldState.invalid}
                 className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} className="text-[11px]" />
-              )}
+              <FieldError
+                errors={[fieldState.error]}
+                className="text-[11px]"
+              />
             </Field>
           )}
         />
@@ -171,9 +174,10 @@ function ContactForm({ onClose }: { onClose: () => void }) {
                 aria-invalid={fieldState.invalid}
                 className="rounded-[10px] border border-border px-3.5 py-3 text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-brand/30 resize-none aria-invalid:border-destructive aria-invalid:ring-destructive/20"
               />
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} className="text-[11px]" />
-              )}
+              <FieldError
+                errors={[fieldState.error]}
+                className="text-[11px]"
+              />
             </Field>
           )}
         />

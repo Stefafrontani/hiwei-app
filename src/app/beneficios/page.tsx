@@ -67,7 +67,7 @@ export default function BeneficiosPage() {
   const form = useForm<LeadFormValues>({
     resolver: zodResolver(leadFormSchema),
     defaultValues: { name: '', email: '', phone: '' },
-    mode: 'onBlur',
+    mode: 'onChange',
   })
 
   const onSubmit = async (values: LeadFormValues) => {
@@ -205,12 +205,10 @@ export default function BeneficiosPage() {
                                 aria-invalid={fieldState.invalid}
                                 className="h-11 rounded-lg"
                               />
-                              {fieldState.invalid && (
-                                <FieldError
-                                  errors={[fieldState.error]}
-                                  className="text-[11px]"
-                                />
-                              )}
+                              <FieldError
+                                errors={[fieldState.error]}
+                                className="text-[11px]"
+                              />
                             </Field>
                           )}
                         />
@@ -234,12 +232,10 @@ export default function BeneficiosPage() {
                                 aria-invalid={fieldState.invalid}
                                 className="h-11 rounded-lg"
                               />
-                              {fieldState.invalid && (
-                                <FieldError
-                                  errors={[fieldState.error]}
-                                  className="text-[11px]"
-                                />
-                              )}
+                              <FieldError
+                                errors={[fieldState.error]}
+                                className="text-[11px]"
+                              />
                             </Field>
                           )}
                         />
@@ -263,12 +259,10 @@ export default function BeneficiosPage() {
                                 aria-invalid={fieldState.invalid}
                                 className="h-11 rounded-lg"
                               />
-                              {fieldState.invalid && (
-                                <FieldError
-                                  errors={[fieldState.error]}
-                                  className="text-[11px]"
-                                />
-                              )}
+                              <FieldError
+                                errors={[fieldState.error]}
+                                className="text-[11px]"
+                              />
                             </Field>
                           )}
                         />
