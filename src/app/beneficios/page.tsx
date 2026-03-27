@@ -1,11 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
-  ArrowLeft,
   Percent,
   UserCheck,
   PackageCheck,
@@ -15,13 +14,29 @@ import {
   TriangleAlert,
   RefreshCw,
   ShieldCheck,
+  ImageIcon,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from '@/components/ui/sheet'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import {
   leadFormSchema,
   type LeadFormValues,
@@ -60,9 +75,9 @@ const BENEFITS: {
 ]
 
 export default function BeneficiosPage() {
-  const router = useRouter()
   const [view, setView] = useState<ViewState>('form')
   const [submitting, setSubmitting] = useState(false)
+  const isDesktop = useMediaQuery('(min-width: 768px)')
 
   const form = useForm<LeadFormValues>({
     resolver: zodResolver(leadFormSchema),
@@ -98,11 +113,9 @@ export default function BeneficiosPage() {
     }
   }
 
-  const handleBack = () => router.back()
-
-  /* ── Form view ───────────────────────────────────────────────────────── */
-  if (view === 'form') {
-    return (
+  /* ── Render ────────────────────────────────────────────────────────── */
+  return (
+    <>
       <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">
         <SiteHeader />
 
@@ -290,101 +303,159 @@ export default function BeneficiosPage() {
           </div>
         </main>
       </div>
-    )
-  }
 
-  /* ── Success view ────────────────────────────────────────────────────── */
-  if (view === 'success') {
-    return (
-      <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">
-        <SiteHeader />
-        <main className="flex flex-1 flex-col items-center justify-center overflow-y-auto no-scrollbar px-4">
-          <div className="mx-auto w-full max-w-[480px]">
-            <div className="animate-fade-in-up glass-card rounded-2xl border-white/[0.06] p-6 md:p-8">
-              <div className="mb-5 flex justify-center">
-                <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-success/10">
-                  <CircleCheck className="h-9 w-9 text-success" />
+      {/* ── Success overlay ──────────────────────────────────────────── */}
+      {isDesktop ? (
+        <Dialog open={view === 'success'} onOpenChange={() => {}}>
+          <DialogContent
+            showCloseButton={false}
+            onPointerDownOutside={(e) => e.preventDefault()}
+            onEscapeKeyDown={(e) => e.preventDefault()}
+            className="sm:max-w-[425px]"
+          >
+            <DialogHeader className="text-center sm:text-center">
+              <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-success/10 animate-glow-pulse">
+                <CircleCheck className="h-8 w-8 text-success" />
+              </div>
+              <DialogTitle className="text-xl">¡Ya sos parte!</DialogTitle>
+              <DialogDescription>
+                Revisá tu email — te enviamos un resumen con todo lo que
+                activaste.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-2">
+              {BENEFITS.map((b) => (
+                <div key={b.title} className="flex items-center gap-3 rounded-lg border px-3 py-2.5">
+                  <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${b.bg}`}>
+                    <b.Icon className={`h-3.5 w-3.5 ${b.fg}`} />
+                  </div>
+                  <span className="text-sm font-medium">{b.title}</span>
+                  <Check className="ml-auto h-4 w-4 text-success" />
                 </div>
-              </div>
-              <h2 className="mb-2 text-center text-[22px] font-bold text-foreground">
-                ¡Ya sos parte!
-              </h2>
-              <p className="mb-5 text-center text-[14px] leading-relaxed text-muted-foreground">
-                Te enviamos un email con tus beneficios exclusivos. Revisá tu
-                bandeja de entrada.
-              </p>
-              <Alert variant="success" className="mb-5 rounded-xl">
-                <Check className="h-4 w-4" />
-                <AlertTitle>Beneficios activados</AlertTitle>
-                <AlertDescription>
-                  <ul className="mt-1.5 flex flex-col gap-1.5">
-                    {BENEFITS.map((b) => (
-                      <li key={b.title} className="flex items-center gap-2">
-                        <Check className="h-3 w-3 shrink-0" />
-                        <span className="text-[13px]">{b.title}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </AlertDescription>
-              </Alert>
-              <Button
-                variant="brand"
-                size="lg"
-                onClick={handleBack}
-                className="h-[50px] w-full rounded-xl"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Volver a mi recomendación
-              </Button>
+              ))}
             </div>
-          </div>
-        </main>
-      </div>
-    )
-  }
+            <DialogFooter className="flex-col gap-2 sm:flex-col">
+              <Button variant="brand" className="w-full" asChild>
+                <Link href="/galeria">
+                  Explorá la galería
+                </Link>
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <Sheet open={view === 'success'} onOpenChange={() => {}}>
+          <SheetContent
+            side="bottom"
+            showCloseButton={false}
+            className="rounded-t-[20px] p-0"
+            onPointerDownOutside={(e) => e.preventDefault()}
+            onEscapeKeyDown={(e) => e.preventDefault()}
+          >
+            <div className="flex justify-center pt-3">
+              <div className="h-1 w-10 rounded-full bg-border" />
+            </div>
+            <div className="flex flex-col gap-4 px-5 pb-8 pt-4">
+              <SheetHeader className="text-center">
+                <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-success/10 animate-glow-pulse">
+                  <CircleCheck className="h-8 w-8 text-success" />
+                </div>
+                <SheetTitle className="text-xl font-bold">¡Ya sos parte!</SheetTitle>
+                <SheetDescription>
+                  Revisá tu email — te enviamos un resumen con todo lo que
+                  activaste.
+                </SheetDescription>
+              </SheetHeader>
+              <div className="grid gap-2">
+                {BENEFITS.map((b) => (
+                  <div key={b.title} className="flex items-center gap-3 rounded-lg border px-3 py-2.5">
+                    <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${b.bg}`}>
+                      <b.Icon className={`h-3.5 w-3.5 ${b.fg}`} />
+                    </div>
+                    <span className="text-sm font-medium">{b.title}</span>
+                    <Check className="ml-auto h-4 w-4 text-success" />
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col gap-2">
+                <Button variant="brand" className="w-full" asChild>
+                  <Link href="/galeria">
+                    Explorar la galería
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      )}
 
-  /* ── Error view ──────────────────────────────────────────────────────── */
-  return (
-    <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">
-      <SiteHeader />
-      <main className="flex flex-1 flex-col items-center justify-center overflow-y-auto no-scrollbar px-4">
-        <div className="mx-auto w-full max-w-[480px]">
-          <div className="animate-fade-in-up glass-card rounded-2xl border-white/[0.06] p-6 md:p-8">
-            <div className="mb-5 flex justify-center">
-              <div className="flex h-[72px] w-[72px] items-center justify-center rounded-full bg-destructive/10">
-                <TriangleAlert className="h-9 w-9 text-destructive" />
+      {/* ── Error overlay ────────────────────────────────────────────── */}
+      {isDesktop ? (
+        <Dialog open={view === 'error'} onOpenChange={(open) => { if (!open) setView('form') }}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader className="text-center sm:text-center">
+              <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
+                <TriangleAlert className="h-8 w-8 text-destructive" />
+              </div>
+              <DialogTitle className="text-xl">No pudimos registrarte</DialogTitle>
+              <DialogDescription>
+                Hubo un problema con la conexión. Tus datos no se perdieron
+                — podés volver a intentar.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex-col gap-2 sm:flex-col">
+              <Button
+                variant="default"
+                className="w-full"
+                onClick={() => setView('form')}
+              >
+                <RefreshCw />
+                Reintentar
+              </Button>
+              <Button variant="outline" className="w-full" asChild>
+                <Link href="/galeria">
+                    Explorar la galería
+                  </Link>
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <Sheet open={view === 'error'} onOpenChange={(open) => { if (!open) setView('form') }}>
+          <SheetContent side="bottom" className="rounded-t-[20px] p-0">
+            <div className="flex justify-center pt-3">
+              <div className="h-1 w-10 rounded-full bg-border" />
+            </div>
+            <div className="flex flex-col gap-4 px-5 pb-8 pt-4">
+              <SheetHeader className="text-center">
+                <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
+                  <TriangleAlert className="h-8 w-8 text-destructive" />
+                </div>
+                <SheetTitle className="text-xl font-bold">No pudimos registrarte</SheetTitle>
+                <SheetDescription>
+                  Hubo un problema con la conexión. Tus datos no se perdieron
+                  — podés volver a intentar.
+                </SheetDescription>
+              </SheetHeader>
+              <div className="flex flex-col gap-2">
+                <Button
+                  variant="default"
+                  className="w-full"
+                  onClick={() => setView('form')}
+                >
+                  <RefreshCw />
+                  Reintentar
+                </Button>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="/galeria">
+                    Explorar la galería
+                  </Link>
+                </Button>
               </div>
             </div>
-            <h2 className="mb-2 text-center text-[22px] font-bold text-foreground">
-              Algo salió mal
-            </h2>
-            <p className="mb-5 text-center text-[14px] leading-relaxed text-muted-foreground">
-              No pudimos procesar tu solicitud. Verificá tu conexión e intentá
-              de nuevo.
-            </p>
-            <div className="flex flex-col gap-3">
-              <Button
-                variant="destructive"
-                size="lg"
-                onClick={() => setView('form')}
-                className="h-[50px] w-full rounded-xl"
-              >
-                <RefreshCw className="h-4 w-4" />
-                Intentar de nuevo
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={handleBack}
-                className="h-12 w-full rounded-xl"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Volver a mi recomendación
-              </Button>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
+          </SheetContent>
+        </Sheet>
+      )}
+    </>
   )
 }
