@@ -69,6 +69,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         title="¡Recibimos tu consulta!"
         message="Un asesor se va a comunicar con vos por email o teléfono a la brevedad."
         onClose={onClose}
+        glow
       />
     )
   }
@@ -84,6 +85,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         onClose={() => setStatus('idle')}
         buttonLabel="Reintentar"
         buttonVariant="default"
+        glow
       />
     )
   }
@@ -92,6 +94,13 @@ function ContactForm({ onClose }: { onClose: () => void }) {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+      <div className="grid gap-1">
+        <p className="text-lg font-semibold leading-none">Dejanos tu consulta</p>
+        <p className="text-sm text-muted-foreground">
+          Completá el formulario y un asesor te contactará a la brevedad.
+        </p>
+      </div>
+
       <div className="grid gap-3">
         <Controller
           name="name"
@@ -201,11 +210,9 @@ export function ContactAdvisorOverlay({ open, onClose }: ContactAdvisorOverlayPr
     return (
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
         <DialogContent showCloseButton={false} className="sm:max-w-[480px]">
-          <DialogHeader>
+          <DialogHeader className="sr-only">
             <DialogTitle>Dejanos tu consulta</DialogTitle>
-            <DialogDescription>
-              Completá el formulario y un asesor te contacta a la brevedad.
-            </DialogDescription>
+            <DialogDescription>Completá el formulario y un asesor te contactará a la brevedad.</DialogDescription>
           </DialogHeader>
           <ContactForm onClose={onClose} />
         </DialogContent>
@@ -219,11 +226,9 @@ export function ContactAdvisorOverlay({ open, onClose }: ContactAdvisorOverlayPr
         <div className="flex justify-center pt-3">
           <div className="h-1 w-10 rounded-full bg-border" />
         </div>
-        <SheetHeader>
+        <SheetHeader className="sr-only">
           <SheetTitle>Dejanos tu consulta</SheetTitle>
-          <SheetDescription>
-            Completá el formulario y un asesor te contactará a la brevedad.
-          </SheetDescription>
+          <SheetDescription>Completá el formulario y un asesor te contactará a la brevedad.</SheetDescription>
         </SheetHeader>
         <div className="px-4 pb-6">
           <ContactForm onClose={onClose} />

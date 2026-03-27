@@ -67,6 +67,7 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
         title="¡Listo, revisá tu email!"
         message="Te enviamos tu recomendación personalizada. Si no la encontrás, revisá en Promociones o Spam."
         onClose={onClose}
+        glow
       />
     )
   }
@@ -82,12 +83,20 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
         onClose={() => setStatus('idle')}
         buttonLabel="Reintentar"
         buttonVariant="default"
+        glow
       />
     )
   }
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+      <div className="grid gap-1">
+        <p className="text-lg font-semibold leading-none">Recibí tu recomendación</p>
+        <p className="text-sm text-muted-foreground">
+          Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.
+        </p>
+      </div>
+
       <div className="grid gap-3">
         <Controller
           name="name"
@@ -174,11 +183,9 @@ export function SendRecommendationOverlay({ open, onClose, recommendationId }: S
     return (
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
         <DialogContent showCloseButton={false} className="sm:max-w-[480px]">
-          <DialogHeader>
+          <DialogHeader className="sr-only">
             <DialogTitle>Recibí tu recomendación</DialogTitle>
-            <DialogDescription>
-              Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.
-            </DialogDescription>
+            <DialogDescription>Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.</DialogDescription>
           </DialogHeader>
           <SendForm onClose={onClose} recommendationId={recommendationId} />
         </DialogContent>
@@ -192,11 +199,9 @@ export function SendRecommendationOverlay({ open, onClose, recommendationId }: S
         <div className="flex justify-center pt-3">
           <div className="h-1 w-10 rounded-full bg-border" />
         </div>
-        <SheetHeader>
+        <SheetHeader className="sr-only">
           <SheetTitle>Recibí tu recomendación</SheetTitle>
-          <SheetDescription>
-            Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.
-          </SheetDescription>
+          <SheetDescription>Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.</SheetDescription>
         </SheetHeader>
         <div className="px-4 pb-6">
           <SendForm onClose={onClose} recommendationId={recommendationId} />

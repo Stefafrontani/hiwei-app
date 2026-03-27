@@ -11,6 +11,7 @@ interface FeedbackStateProps {
   onClose: () => void
   buttonLabel?: string
   buttonVariant?: VariantProps<typeof buttonVariants>['variant']
+  glow?: boolean
 }
 
 export function FeedbackState({
@@ -22,11 +23,12 @@ export function FeedbackState({
   onClose,
   buttonLabel = 'Entendido',
   buttonVariant = 'brand',
+  glow = false,
 }: FeedbackStateProps) {
   return (
     <div className="flex flex-col items-center gap-4 text-center">
       <div
-        className={`flex h-16 w-16 items-center justify-center rounded-full ${iconBg}`}
+        className={`flex h-16 w-16 items-center justify-center rounded-full ${iconBg} ${glow ? 'animate-glow-pulse' : ''}`}
       >
         <Icon className={`h-8 w-8 ${iconColor}`} />
       </div>
