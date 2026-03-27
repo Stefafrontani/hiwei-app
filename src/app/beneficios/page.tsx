@@ -355,17 +355,17 @@ export default function BeneficiosPage() {
             <div className="flex justify-center pt-3">
               <div className="h-1 w-10 rounded-full bg-border" />
             </div>
-            <div className="flex flex-col gap-4 px-5 pb-8 pt-4">
-              <SheetHeader className="text-center">
-                <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-success/10 animate-glow-pulse">
-                  <CircleCheck className="h-8 w-8 text-success" />
-                </div>
-                <SheetTitle className="text-xl font-bold">¡Ya sos parte!</SheetTitle>
-                <SheetDescription>
-                  Revisá tu email — te enviamos un resumen con todo lo que
-                  activaste.
-                </SheetDescription>
-              </SheetHeader>
+            <SheetHeader className="text-center">
+              <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-success/10 animate-glow-pulse">
+                <CircleCheck className="h-8 w-8 text-success" />
+              </div>
+              <SheetTitle className="text-xl font-bold">¡Ya sos parte!</SheetTitle>
+              <SheetDescription>
+                Revisá tu email — te enviamos un resumen con todo lo que
+                activaste.
+              </SheetDescription>
+            </SheetHeader>
+            <div className="grid gap-4 px-4 pb-6">
               <div className="grid gap-2">
                 {BENEFITS.map((b) => (
                   <div key={b.title} className="flex items-center gap-3 rounded-lg border px-3 py-2.5">
@@ -377,13 +377,11 @@ export default function BeneficiosPage() {
                   </div>
                 ))}
               </div>
-              <div className="flex flex-col gap-2">
-                <Button variant="brand" className="w-full" asChild>
-                  <Link href="/galeria">
-                    Explorar la galería
-                  </Link>
-                </Button>
-              </div>
+              <Button variant="brand" className="w-full" asChild>
+                <Link href="/galeria">
+                  Explorar la galería
+                </Link>
+              </Button>
             </div>
           </SheetContent>
         </Sheet>
@@ -426,18 +424,17 @@ export default function BeneficiosPage() {
             <div className="flex justify-center pt-3">
               <div className="h-1 w-10 rounded-full bg-border" />
             </div>
-            <div className="flex flex-col gap-4 px-5 pb-8 pt-4">
-              <SheetHeader className="text-center">
-                <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
-                  <TriangleAlert className="h-8 w-8 text-destructive" />
-                </div>
-                <SheetTitle className="text-xl font-bold">No pudimos registrarte</SheetTitle>
-                <SheetDescription>
-                  Hubo un problema con la conexión. Tus datos no se perdieron
-                  — podés volver a intentar.
-                </SheetDescription>
-              </SheetHeader>
-              <div className="flex flex-col gap-2">
+            <SheetHeader className="text-center">
+              <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
+                <TriangleAlert className="h-8 w-8 text-destructive" />
+              </div>
+              <SheetTitle className="text-xl font-bold">No pudimos registrarte</SheetTitle>
+              <SheetDescription>
+                Hubo un problema con la conexión. Tus datos no se perdieron
+                — podés volver a intentar.
+              </SheetDescription>
+            </SheetHeader>
+            <div className="grid gap-2 px-4 pb-6">
                 <Button
                   variant="default"
                   className="w-full"
@@ -451,7 +448,6 @@ export default function BeneficiosPage() {
                     Explorar la galería
                   </Link>
                 </Button>
-              </div>
             </div>
           </SheetContent>
         </Sheet>

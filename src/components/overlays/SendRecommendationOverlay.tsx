@@ -3,9 +3,9 @@
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Send, MailCheck, AlertCircle, X } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Send, MailCheck, AlertCircle } from 'lucide-react'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
@@ -31,7 +31,7 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
   const form = useForm<SendRecommendationFormValues>({
     resolver: zodResolver(sendRecommendationFormSchema),
     defaultValues: { name: '', email: '', phone: '', optInMarketing: false },
-    mode: 'onBlur',
+    mode: 'onChange',
   })
 
   const onSubmit = async (values: SendRecommendationFormValues) => {
@@ -64,8 +64,8 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
         icon={MailCheck}
         iconBg="bg-success/10"
         iconColor="text-success"
-        title="¡Recomendación enviada!"
-        message="Revisá tu email. Te enviamos un resumen completo con tu recomendación personalizada. Si no lo encontrás, revisá la sección de Promociones o Spam."
+        title="¡Listo, revisá tu email!"
+        message="Te enviamos tu recomendación personalizada. Si no la encontrás, revisá en Promociones o Spam."
         onClose={onClose}
       />
     )
@@ -77,40 +77,30 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
         icon={AlertCircle}
         iconBg="bg-destructive/10"
         iconColor="text-destructive"
-        title="Hubo un problema"
-        message={errorMsg || 'No pudimos enviar tu recomendación. Por favor, intentá nuevamente.'}
+        title="No pudimos enviar tu recomendación"
+        message={errorMsg || 'Verificá tu conexión e intentá de nuevo. Tus datos no se perdieron.'}
         onClose={() => setStatus('idle')}
         buttonLabel="Reintentar"
+        buttonVariant="default"
       />
     )
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <p className="text-[13px] leading-relaxed text-muted-foreground">
-        Te enviamos un resumen con tu recomendación personalizada para que puedas revisarla cuando
-        quieras.
-      </p>
-
-      <div className="flex flex-col gap-3">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+      <div className="grid gap-3">
         <Controller
           name="name"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel className="text-[12px] font-semibold text-foreground">
-                Nombre y apellido *
-              </FieldLabel>
+              <FieldLabel>Nombre y apellido</FieldLabel>
               <Input
                 {...field}
                 placeholder="Ej: Juan Pérez"
                 aria-invalid={fieldState.invalid}
-                className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              <FieldError
-                errors={[fieldState.error]}
-                className="text-[11px]"
-              />
+              <FieldError errors={[fieldState.error]} />
             </Field>
           )}
         />
@@ -120,20 +110,14 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel className="text-[12px] font-semibold text-foreground">
-                Email *
-              </FieldLabel>
+              <FieldLabel>Email</FieldLabel>
               <Input
                 {...field}
                 type="email"
                 placeholder="tu@email.com"
                 aria-invalid={fieldState.invalid}
-                className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              <FieldError
-                errors={[fieldState.error]}
-                className="text-[11px]"
-              />
+              <FieldError errors={[fieldState.error]} />
             </Field>
           )}
         />
@@ -143,7 +127,7 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel className="text-[12px] font-medium text-muted-foreground">
+              <FieldLabel className="text-muted-foreground">
                 Teléfono (opcional)
               </FieldLabel>
               <Input
@@ -151,25 +135,20 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
                 type="tel"
                 placeholder="+54 11 1234-5678"
                 aria-invalid={fieldState.invalid}
-                className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              <FieldError
-                errors={[fieldState.error]}
-                className="text-[11px]"
-              />
+              <FieldError errors={[fieldState.error]} />
             </Field>
           )}
         />
       </div>
 
-      {/* Opt-in marketing checkbox */}
       <label className="flex cursor-pointer items-start gap-2.5">
         <input
           type="checkbox"
           {...form.register('optInMarketing')}
           className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-brand"
         />
-        <span className="text-[12px] leading-relaxed text-muted-foreground">
+        <span className="text-xs leading-relaxed text-muted-foreground">
           Quiero recibir noticias, ofertas exclusivas y descuentos de Hiwei
         </span>
       </label>
@@ -178,9 +157,10 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
         type="submit"
         disabled={status === 'loading' || !form.formState.isValid || !recommendationId}
         variant="brand"
-        className="flex h-[50px] w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
+        size="lg"
+        className="w-full"
       >
-        <Send className="h-4 w-4" />
+        <Send />
         {status === 'loading' ? 'Enviando...' : 'Enviar a mi mail'}
       </Button>
     </form>
@@ -190,14 +170,15 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
 export function SendRecommendationOverlay({ open, onClose, recommendationId }: SendRecommendationOverlayProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  const title = 'Recibí tu recomendación por email'
-
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-        <DialogContent className="max-w-[480px] rounded-2xl p-8">
+        <DialogContent showCloseButton={false} className="sm:max-w-[480px]">
           <DialogHeader>
-            <DialogTitle className="text-[20px] font-bold text-foreground">{title}</DialogTitle>
+            <DialogTitle>Recibí tu recomendación</DialogTitle>
+            <DialogDescription>
+              Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.
+            </DialogDescription>
           </DialogHeader>
           <SendForm onClose={onClose} recommendationId={recommendationId} />
         </DialogContent>
@@ -207,23 +188,17 @@ export function SendRecommendationOverlay({ open, onClose, recommendationId }: S
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="bottom" className="rounded-t-[20px] p-0">
-        <div className="flex flex-col gap-4 px-5 pb-8 pt-5">
-          {/* Handle */}
-          <div className="flex justify-center">
-            <div className="h-1 w-10 rounded-full bg-border" />
-          </div>
-          <SheetHeader>
-            <div className="flex items-center justify-between">
-              <SheetTitle className="text-[18px] font-bold text-foreground">{title}</SheetTitle>
-              <button
-                onClick={onClose}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-muted"
-              >
-                <X className="h-4 w-4 text-muted-foreground" />
-              </button>
-            </div>
-          </SheetHeader>
+      <SheetContent side="bottom" showCloseButton={false} className="rounded-t-[20px] p-0">
+        <div className="flex justify-center pt-3">
+          <div className="h-1 w-10 rounded-full bg-border" />
+        </div>
+        <SheetHeader>
+          <SheetTitle>Recibí tu recomendación</SheetTitle>
+          <SheetDescription>
+            Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.
+          </SheetDescription>
+        </SheetHeader>
+        <div className="px-4 pb-6">
           <SendForm onClose={onClose} recommendationId={recommendationId} />
         </div>
       </SheetContent>

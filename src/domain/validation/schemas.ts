@@ -32,8 +32,13 @@ export const leadFormSchema = z.object({
   phone: phoneSchema,
 })
 
+const QUERY_MAX = 500
+
 export const contactFormSchema = leadFormSchema.extend({
-  query: z.string().min(1, 'La consulta es obligatoria'),
+  query: z
+    .string()
+    .min(1, 'La consulta es obligatoria')
+    .max(QUERY_MAX, `Máximo ${QUERY_MAX} caracteres`),
   optInMarketing: z.boolean(),
 })
 

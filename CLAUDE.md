@@ -48,7 +48,7 @@ Route handlers are the **only** place where all layers are wired together via ma
 
 ### Installed shadcn/ui components
 
-`button`, `card`, `input`, `label`, `badge`, `separator`, `avatar`, `dropdown-menu`, `sonner`
+`button`, `card`, `input`, `label`, `badge`, `separator`, `avatar`, `dropdown-menu`, `sonner`, `textarea`
 
 Add new components with: `npx shadcn add <component>`
 

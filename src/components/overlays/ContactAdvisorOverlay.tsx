@@ -3,11 +3,12 @@
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Send, CircleCheck, AlertCircle, X } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Send, CircleCheck, AlertCircle } from 'lucide-react'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { FeedbackState } from './FeedbackState'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
@@ -23,6 +24,8 @@ interface ContactAdvisorOverlayProps {
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
+const QUERY_MAX = 500
+
 function ContactForm({ onClose }: { onClose: () => void }) {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
@@ -30,7 +33,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: { name: '', email: '', phone: '', query: '', optInMarketing: false },
-    mode: 'onBlur',
+    mode: 'onChange',
   })
 
   const onSubmit = async (values: ContactFormValues) => {
@@ -63,8 +66,8 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         icon={CircleCheck}
         iconBg="bg-success/10"
         iconColor="text-success"
-        title="¡Solicitud enviada!"
-        message="Un asesor te va a contactar a la brevedad. Revisá tu teléfono y email."
+        title="¡Recibimos tu consulta!"
+        message="Un asesor se va a comunicar con vos por email o teléfono a la brevedad."
         onClose={onClose}
       />
     )
@@ -76,39 +79,32 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         icon={AlertCircle}
         iconBg="bg-destructive/10"
         iconColor="text-destructive"
-        title="Hubo un problema"
-        message={errorMsg || 'No pudimos enviar tu solicitud. Por favor, intentá nuevamente.'}
+        title="No pudimos enviar tu consulta"
+        message={errorMsg || 'Verificá tu conexión e intentá de nuevo. Tus datos no se perdieron.'}
         onClose={() => setStatus('idle')}
         buttonLabel="Reintentar"
+        buttonVariant="default"
       />
     )
   }
 
-  return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <p className="text-[13px] leading-relaxed text-muted-foreground">
-        A la brevedad nos estaremos comunicando con vos para ayudarte en lo que necesites.
-      </p>
+  const queryLength = form.watch('query')?.length ?? 0
 
-      <div className="flex flex-col gap-3">
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+      <div className="grid gap-3">
         <Controller
           name="name"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel className="text-[12px] font-semibold text-foreground">
-                Nombre y apellido *
-              </FieldLabel>
+              <FieldLabel>Nombre y apellido</FieldLabel>
               <Input
                 {...field}
                 placeholder="Ej: Juan Pérez"
                 aria-invalid={fieldState.invalid}
-                className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              <FieldError
-                errors={[fieldState.error]}
-                className="text-[11px]"
-              />
+              <FieldError errors={[fieldState.error]} />
             </Field>
           )}
         />
@@ -118,20 +114,14 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel className="text-[12px] font-semibold text-foreground">
-                Email *
-              </FieldLabel>
+              <FieldLabel>Email</FieldLabel>
               <Input
                 {...field}
                 type="email"
                 placeholder="tu@email.com"
                 aria-invalid={fieldState.invalid}
-                className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              <FieldError
-                errors={[fieldState.error]}
-                className="text-[11px]"
-              />
+              <FieldError errors={[fieldState.error]} />
             </Field>
           )}
         />
@@ -141,7 +131,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel className="text-[12px] font-medium text-muted-foreground">
+              <FieldLabel className="text-muted-foreground">
                 Teléfono (opcional)
               </FieldLabel>
               <Input
@@ -149,12 +139,8 @@ function ContactForm({ onClose }: { onClose: () => void }) {
                 type="tel"
                 placeholder="+54 11 1234-5678"
                 aria-invalid={fieldState.invalid}
-                className="h-11 rounded-[10px] border-border text-[13px]"
               />
-              <FieldError
-                errors={[fieldState.error]}
-                className="text-[11px]"
-              />
+              <FieldError errors={[fieldState.error]} />
             </Field>
           )}
         />
@@ -164,33 +150,32 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel className="text-[12px] font-semibold text-foreground">
-                Consulta *
-              </FieldLabel>
-              <textarea
+              <div className="flex items-baseline justify-between">
+                <FieldLabel>Consulta</FieldLabel>
+                <span className={`text-xs tabular-nums ${queryLength > QUERY_MAX ? 'text-destructive' : 'text-muted-foreground'}`}>
+                  {queryLength}/{QUERY_MAX}
+                </span>
+              </div>
+              <Textarea
                 {...field}
-                placeholder="Escribí tu consulta..."
+                placeholder="Contanos en qué podemos ayudarte..."
                 rows={3}
                 aria-invalid={fieldState.invalid}
-                className="rounded-[10px] border border-border px-3.5 py-3 text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-brand/30 resize-none aria-invalid:border-destructive aria-invalid:ring-destructive/20"
+                className="resize-none"
               />
-              <FieldError
-                errors={[fieldState.error]}
-                className="text-[11px]"
-              />
+              <FieldError errors={[fieldState.error]} />
             </Field>
           )}
         />
       </div>
 
-      {/* Opt-in marketing checkbox */}
       <label className="flex cursor-pointer items-start gap-2.5">
         <input
           type="checkbox"
           {...form.register('optInMarketing')}
           className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-brand"
         />
-        <span className="text-[12px] leading-relaxed text-muted-foreground">
+        <span className="text-xs leading-relaxed text-muted-foreground">
           Quiero recibir noticias, ofertas exclusivas y descuentos de Hiwei
         </span>
       </label>
@@ -199,9 +184,10 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         type="submit"
         disabled={status === 'loading' || !form.formState.isValid}
         variant="brand"
-        className="flex h-[50px] w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
+        size="lg"
+        className="w-full"
       >
-        <Send className="h-4 w-4" />
+        <Send />
         {status === 'loading' ? 'Enviando...' : 'Enviar consulta'}
       </Button>
     </form>
@@ -211,16 +197,15 @@ function ContactForm({ onClose }: { onClose: () => void }) {
 export function ContactAdvisorOverlay({ open, onClose }: ContactAdvisorOverlayProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  const title = 'Dejanos tu consulta'
-
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-        <DialogContent className="max-w-[520px] rounded-2xl p-8">
+        <DialogContent showCloseButton={false} className="sm:max-w-[480px]">
           <DialogHeader>
-            <div className="flex items-center justify-between">
-              <DialogTitle className="text-[20px] font-bold text-foreground">{title}</DialogTitle>
-            </div>
+            <DialogTitle>Dejanos tu consulta</DialogTitle>
+            <DialogDescription>
+              Completá el formulario y un asesor te contacta a la brevedad.
+            </DialogDescription>
           </DialogHeader>
           <ContactForm onClose={onClose} />
         </DialogContent>
@@ -230,23 +215,17 @@ export function ContactAdvisorOverlay({ open, onClose }: ContactAdvisorOverlayPr
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="bottom" className="rounded-t-[20px] p-0">
-        <div className="flex flex-col gap-4 px-5 pb-8 pt-5">
-          {/* Handle */}
-          <div className="flex justify-center">
-            <div className="h-1 w-10 rounded-full bg-border" />
-          </div>
-          <SheetHeader>
-            <div className="flex items-center justify-between">
-              <SheetTitle className="text-[18px] font-bold text-foreground">{title}</SheetTitle>
-              <button
-                onClick={onClose}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-muted"
-              >
-                <X className="h-4 w-4 text-muted-foreground" />
-              </button>
-            </div>
-          </SheetHeader>
+      <SheetContent side="bottom" showCloseButton={false} className="rounded-t-[20px] p-0">
+        <div className="flex justify-center pt-3">
+          <div className="h-1 w-10 rounded-full bg-border" />
+        </div>
+        <SheetHeader>
+          <SheetTitle>Dejanos tu consulta</SheetTitle>
+          <SheetDescription>
+            Completá el formulario y un asesor te contactará a la brevedad.
+          </SheetDescription>
+        </SheetHeader>
+        <div className="px-4 pb-6">
           <ContactForm onClose={onClose} />
         </div>
       </SheetContent>
