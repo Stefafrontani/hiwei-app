@@ -18,14 +18,14 @@ export function Step3({ cameraPositions, onChange }: Step3Props) {
     <div className="flex flex-col gap-6">
       {/* Step title */}
       <div className="animate-fade-in-up flex items-start gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand/10">
+        <div className="hidden md:flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand/10">
           <Camera className="h-5 w-5 text-brand" />
         </div>
         <div className="flex flex-col gap-1">
-          <p className="text-[18px] font-bold text-foreground md:text-[26px] md:tracking-tight">
+          <p className="text-lg font-bold text-foreground md:text-2xl md:tracking-tight">
             {STEP3.title}
           </p>
-          <p className="text-[12px] text-muted-foreground md:text-[14px]">
+          <p className="hidden md:block text-sm text-muted-foreground">
             {STEP3.subtitle}
           </p>
         </div>
