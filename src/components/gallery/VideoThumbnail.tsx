@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { Play } from 'lucide-react'
 import type { DashcamVideo } from '@/domain/value-objects/DashcamVideo'
 import { useYouTubePlayer } from '@/hooks/useYouTubePlayer'
+import { useFullscreen } from '@/hooks/useFullscreen'
+import { useDoubleTap } from '@/hooks/useDoubleTap'
 import { PlayerControls } from './PlayerControls'
 
 function formatDuration(seconds: number): string {
@@ -26,6 +28,15 @@ function ActivePlayer({ video, size, onEnded }: { video: DashcamVideo; size: 'lg
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
 
   const player = useYouTubePlayer({ videoId: video.youtubeId, autoplay: true })
+  const { isFullscreen, toggleFullscreen } = useFullscreen({ targetRef: wrapperRef })
+
+  const { handlers: doubleTapHandlers } = useDoubleTap({
+    onSingleTap: () => {
+      player.togglePlay()
+    },
+    onDoubleTap: toggleFullscreen,
+    delay: 300,
+  })
 
   useEffect(() => {
     if (player.isEnded) onEnded?.()
@@ -34,7 +45,11 @@ function ActivePlayer({ video, size, onEnded }: { video: DashcamVideo; size: 'lg
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
   return (
-    <div ref={wrapperRef} className={`relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}>
+    <div
+      ref={wrapperRef}
+      className={`relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}
+      {...doubleTapHandlers}
+    >
       {/* YouTube player target — pointer-events disabled to block all YT UI interaction */}
       <div
         ref={player.containerRef}
@@ -54,7 +69,7 @@ function ActivePlayer({ video, size, onEnded }: { video: DashcamVideo; size: 'lg
 
       {/* Custom controls overlay */}
       <PlayerControls
-        size={size}
+        size={isFullscreen ? 'lg' : size}
         isPlaying={player.isPlaying}
         isBuffering={player.isBuffering}
         isReady={player.isReady}
@@ -62,10 +77,12 @@ function ActivePlayer({ video, size, onEnded }: { video: DashcamVideo; size: 'lg
         duration={player.duration}
         volume={player.volume}
         isMuted={player.isMuted}
+        isFullscreen={isFullscreen}
         onTogglePlay={player.togglePlay}
         onVolumeChange={player.setVolume}
         onToggleMute={player.toggleMute}
-        containerRef={wrapperRef}
+        onToggleFullscreen={toggleFullscreen}
+        onSeek={player.seekTo}
       />
     </div>
   )

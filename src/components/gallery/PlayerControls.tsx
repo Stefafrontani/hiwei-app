@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Pause, Play, Volume2, VolumeX, Maximize2, Minimize2, Loader2 } from 'lucide-react'
+import { useTouchSeek } from '@/hooks/useTouchSeek'
 
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60)
@@ -18,10 +19,12 @@ interface PlayerControlsProps {
   duration: number
   volume: number
   isMuted: boolean
+  isFullscreen: boolean
   onTogglePlay: () => void
   onVolumeChange: (volume: number) => void
   onToggleMute: () => void
-  containerRef: React.RefObject<HTMLElement | null>
+  onToggleFullscreen: () => void
+  onSeek: (seconds: number) => void
 }
 
 export function PlayerControls({
@@ -33,30 +36,40 @@ export function PlayerControls({
   duration,
   volume,
   isMuted,
+  isFullscreen,
   onTogglePlay,
   onVolumeChange,
   onToggleMute,
-  containerRef,
+  onToggleFullscreen,
+  onSeek,
 }: PlayerControlsProps) {
   const [visible, setVisible] = useState(true)
-  const [isFullscreen, setIsFullscreen] = useState(false)
   const [showVolume, setShowVolume] = useState(false)
   const hideTimer = useRef<ReturnType<typeof setTimeout>>(null)
   const volumeRef = useRef<HTMLDivElement>(null)
+  const progressRef = useRef<HTMLDivElement>(null)
 
   const isCompact = size === 'sm'
+
+  // Touch seeking
+  const { isSeeking, seekPreview, touchHandlers, mouseHandlers } = useTouchSeek({
+    progressRef,
+    duration,
+    onSeek,
+    enabled: isReady && duration > 0,
+  })
 
   // Auto-hide controls after 3s of inactivity
   const resetHideTimer = useCallback(() => {
     setVisible(true)
     if (hideTimer.current) clearTimeout(hideTimer.current)
-    if (isPlaying) {
+    if (isPlaying && !isSeeking) {
       hideTimer.current = setTimeout(() => setVisible(false), 3000)
     }
-  }, [isPlaying])
+  }, [isPlaying, isSeeking])
 
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && !isSeeking) {
       hideTimer.current = setTimeout(() => setVisible(false), 3000)
     } else {
       setVisible(true)
@@ -65,24 +78,7 @@ export function PlayerControls({
     return () => {
       if (hideTimer.current) clearTimeout(hideTimer.current)
     }
-  }, [isPlaying])
-
-  // Fullscreen change listener
-  useEffect(() => {
-    const onChange = () => setIsFullscreen(!!document.fullscreenElement)
-    document.addEventListener('fullscreenchange', onChange)
-    return () => document.removeEventListener('fullscreenchange', onChange)
-  }, [])
-
-  const toggleFullscreen = useCallback(() => {
-    const el = containerRef.current
-    if (!el) return
-    if (document.fullscreenElement) {
-      document.exitFullscreen()
-    } else {
-      el.requestFullscreen()
-    }
-  }, [containerRef])
+  }, [isPlaying, isSeeking])
 
   // Volume slider
   const handleVolumeInteraction = useCallback(
@@ -113,6 +109,7 @@ export function PlayerControls({
   )
 
   const progress = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0
+  const displayProgress = seekPreview ?? progress
 
   // Loading state
   if (!isReady) {
@@ -125,11 +122,12 @@ export function PlayerControls({
 
   return (
     <div
+      data-player-controls
       className="absolute inset-0 z-10 flex flex-col justify-end"
       onMouseMove={resetHideTimer}
       onMouseEnter={resetHideTimer}
       onClick={(e) => {
-        // Click on the overlay (not on controls) toggles play
+        // Click on the overlay (not on controls) toggles play — desktop only
         if (e.target === e.currentTarget || (e.target as HTMLElement).hasAttribute('data-overlay')) {
           onTogglePlay()
           resetHideTimer()
@@ -161,13 +159,29 @@ export function PlayerControls({
       <div
         className={`flex flex-col transition-opacity duration-300 ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       >
-        {/* Progress bar (read-only) */}
-        <div className="relative h-1 w-full">
+        {/* Progress bar — interactive */}
+        <div
+          ref={progressRef}
+          className="relative h-1 w-full group/progress cursor-pointer"
+          {...touchHandlers}
+          {...mouseHandlers}
+        >
+          {/* Enlarged touch target */}
+          <div className="absolute -inset-y-3 inset-x-0" />
+          {/* Background track */}
           <div className="absolute inset-0 bg-white/20" />
+          {/* Filled track */}
           <div
             className="absolute inset-y-0 left-0 bg-brand"
-            style={{ width: `${progress}%` }}
+            style={{ width: `${displayProgress}%` }}
           />
+          {/* Seek thumb — visible on drag */}
+          {isSeeking && (
+            <div
+              className="absolute top-1/2 h-3 w-3 rounded-full bg-brand shadow-md"
+              style={{ left: `${displayProgress}%`, transform: 'translate(-50%, -50%)' }}
+            />
+          )}
         </div>
 
         {/* Controls row */}
@@ -196,8 +210,24 @@ export function PlayerControls({
 
           <div className="flex-1" />
 
-          {/* Volume (hidden on compact) */}
-          {!isCompact && (
+          {/* Volume: compact = mute button only, full = hover slider */}
+          {isCompact ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                onToggleMute()
+                resetHideTimer()
+              }}
+              className="text-white hover:text-brand transition-colors"
+            >
+              {isMuted || volume === 0 ? (
+                <VolumeX className="h-3.5 w-3.5" />
+              ) : (
+                <Volume2 className="h-3.5 w-3.5" />
+              )}
+            </button>
+          ) : (
             <div
               className="relative flex items-center"
               onMouseEnter={() => setShowVolume(true)}
@@ -240,20 +270,20 @@ export function PlayerControls({
             </div>
           )}
 
-          {/* Fullscreen (hidden on compact) */}
-          {!isCompact && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation()
-                toggleFullscreen()
-                resetHideTimer()
-              }}
-              className="text-white hover:text-brand transition-colors"
-            >
-              {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-            </button>
-          )}
+          {/* Fullscreen — always shown */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation()
+              onToggleFullscreen()
+              resetHideTimer()
+            }}
+            className="text-white hover:text-brand transition-colors"
+          >
+            {isFullscreen
+              ? <Minimize2 className={isCompact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
+              : <Maximize2 className={isCompact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />}
+          </button>
         </div>
       </div>
     </div>
