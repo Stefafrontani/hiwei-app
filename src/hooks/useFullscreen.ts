@@ -20,27 +20,22 @@ interface UseFullscreenReturn {
 export function useFullscreen({ targetRef }: UseFullscreenOptions): UseFullscreenReturn {
   const [isFullscreen, setIsFullscreen] = useState(false)
   const scrollYRef = useRef(0)
-  const overlayRef = useRef<HTMLDivElement | null>(null)
-  const originalParentRef = useRef<HTMLElement | null>(null)
-  const originalNextSiblingRef = useRef<Node | null>(null)
 
   const enterFullscreen = useCallback(() => {
     const el = targetRef.current
     if (!el) return
 
-    // Save original DOM position for restoration
-    originalParentRef.current = el.parentElement
-    originalNextSiblingRef.current = el.nextSibling
+    // Promote to browser's top layer via Popover API
+    // Escapes ALL stacking contexts without moving the DOM (iframe stays intact)
+    try {
+      el.showPopover()
+    } catch {
+      // Fallback for browsers without Popover API — apply class anyway
+    }
 
-    // Create overlay container at body level (escapes all stacking contexts)
-    const overlay = document.createElement('div')
+    // Apply fullscreen CSS
     const isPortrait = window.innerHeight > window.innerWidth
-    overlay.className = isPortrait ? FS_ROTATED_CLASS : FS_CLASS
-    document.body.appendChild(overlay)
-    overlayRef.current = overlay
-
-    // Move the element into the body-level overlay
-    overlay.appendChild(el)
+    el.classList.add(isPortrait ? FS_ROTATED_CLASS : FS_CLASS)
 
     // Lock body scroll
     scrollYRef.current = window.scrollY
@@ -57,21 +52,14 @@ export function useFullscreen({ targetRef }: UseFullscreenOptions): UseFullscree
     const el = targetRef.current
     if (!el) return
 
-    // Move element back to its original DOM position
-    if (originalParentRef.current) {
-      if (originalNextSiblingRef.current && originalNextSiblingRef.current.parentNode === originalParentRef.current) {
-        originalParentRef.current.insertBefore(el, originalNextSiblingRef.current)
-      } else {
-        originalParentRef.current.appendChild(el)
-      }
-    }
-    originalParentRef.current = null
-    originalNextSiblingRef.current = null
+    // Remove fullscreen CSS
+    el.classList.remove(FS_CLASS, FS_ROTATED_CLASS)
 
-    // Remove overlay
-    if (overlayRef.current) {
-      overlayRef.current.remove()
-      overlayRef.current = null
+    // Return from top layer
+    try {
+      el.hidePopover()
+    } catch {
+      // Fallback for browsers without Popover API
     }
 
     // Restore body scroll
@@ -123,32 +111,28 @@ export function useFullscreen({ targetRef }: UseFullscreenOptions): UseFullscree
     if (!isFullscreen) return
 
     const handleResize = () => {
-      const overlay = overlayRef.current
-      if (!overlay) return
+      const el = targetRef.current
+      if (!el) return
 
       const isPortrait = window.innerHeight > window.innerWidth
-      const currentlyRotated = overlay.classList.contains(FS_ROTATED_CLASS)
+      const currentlyRotated = el.classList.contains(FS_ROTATED_CLASS)
       if (isPortrait !== currentlyRotated) {
-        overlay.classList.remove(FS_CLASS, FS_ROTATED_CLASS)
-        overlay.classList.add(isPortrait ? FS_ROTATED_CLASS : FS_CLASS)
+        el.classList.remove(FS_CLASS, FS_ROTATED_CLASS)
+        el.classList.add(isPortrait ? FS_ROTATED_CLASS : FS_CLASS)
       }
     }
 
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [isFullscreen])
+  }, [isFullscreen, targetRef])
 
-  // Cleanup on unmount — move element back if still in fullscreen
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (overlayRef.current && targetRef.current && originalParentRef.current) {
-        const el = targetRef.current
-        if (originalNextSiblingRef.current && originalNextSiblingRef.current.parentNode === originalParentRef.current) {
-          originalParentRef.current.insertBefore(el, originalNextSiblingRef.current)
-        } else {
-          originalParentRef.current.appendChild(el)
-        }
-        overlayRef.current.remove()
+      const el = targetRef.current
+      if (el) {
+        el.classList.remove(FS_CLASS, FS_ROTATED_CLASS)
+        try { el.hidePopover() } catch { /* ignore */ }
       }
       document.body.classList.remove(BODY_CLASS)
       document.body.style.top = ''

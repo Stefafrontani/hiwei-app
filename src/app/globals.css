@@ -198,38 +198,57 @@
 .slide-in-left { animation: slide-in-from-left 0.3s ease-out; }
 
 /* ──────────────────────────────────────────────────────────────
-   VIDEO FULLSCREEN (CSS-based, no native Fullscreen API)
+   VIDEO FULLSCREEN (Popover API — top layer)
+   Uses showPopover() to escape ALL stacking contexts without
+   moving the DOM (YouTube iframe stays intact, video continues).
    ────────────────────────────────────────────────────────────── */
 
-/* Base fullscreen: covers viewport, no rotation (landscape device or desktop) */
+/* Keep video visible inline when popover is NOT open */
+[popover].video-popover:not(:popover-open) {
+  display: block;
+}
+
+/* Black backdrop behind fullscreen video (provided by top layer) */
+.video-popover::backdrop {
+  background: black;
+}
+
+/* Base fullscreen: covers viewport (landscape device or desktop) */
 .video-fullscreen {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 9999 !important;
   width: 100dvw !important;
   height: 100dvh !important;
   max-width: none !important;
   max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
   border-radius: 0 !important;
   background: black !important;
   aspect-ratio: auto !important;
+  overflow: hidden !important;
 }
 
 /* Rotated fullscreen: for portrait phones — rotate 90deg, swap dimensions */
 .video-fullscreen-rotated {
   position: fixed !important;
+  inset: auto !important;
   top: 50% !important;
   left: 50% !important;
-  z-index: 9999 !important;
   width: 100dvh !important;
   height: 100dvw !important;
   max-width: none !important;
   max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
   transform: translate(-50%, -50%) rotate(90deg) !important;
   transform-origin: center center !important;
   border-radius: 0 !important;
   background: black !important;
   aspect-ratio: auto !important;
+  overflow: hidden !important;
 }
 
 /* Prevent body scroll while fullscreen is active */

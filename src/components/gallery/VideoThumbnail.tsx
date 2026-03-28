@@ -38,10 +38,8 @@ function ActivePlayer({ video, size, onEnded }: { video: DashcamVideo; size: 'lg
   return (
     <div
       ref={wrapperRef}
-      className={isFullscreen
-        ? 'relative w-full h-full overflow-hidden bg-black'
-        : `relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`
-      }
+      popover="manual"
+      className={`video-popover relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}
     >
       {/* YouTube player target — pointer-events disabled to block all YT UI interaction */}
       <div
