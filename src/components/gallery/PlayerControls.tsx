@@ -176,20 +176,19 @@ export function PlayerControls({
           {/* Enlarged touch target */}
           <div className="absolute -inset-y-4 inset-x-0" />
 
-          {/* Track — 3px, expands to 5px on hover */}
+          {/* Track + scrubber dot — same container so % coordinates align */}
           <div className="relative h-[3px] w-full group-hover/progress:h-[5px] transition-[height] duration-150">
             <div className="absolute inset-0 rounded-full bg-white/25" />
             <div
               className="absolute inset-y-0 left-0 rounded-full bg-brand"
               style={{ width: `${displayProgress}%` }}
             />
+            {/* Scrubber dot — always visible, grows on drag */}
+            <div
+              className={`absolute top-1/2 rounded-full bg-brand shadow-md transition-[width,height] duration-150 ${isSeeking ? 'h-4 w-4' : 'h-3 w-3'}`}
+              style={{ left: `${displayProgress}%`, transform: 'translate(-50%, -50%)' }}
+            />
           </div>
-
-          {/* Scrubber dot — always visible, grows on drag */}
-          <div
-            className={`absolute top-1/2 rounded-full bg-brand shadow-md transition-[width,height] duration-150 ${isSeeking ? 'h-4 w-4' : 'h-3 w-3'}`}
-            style={{ left: `${displayProgress}%`, transform: 'translate(-50%, -50%)' }}
-          />
         </div>
 
         {/* Spacing */}
