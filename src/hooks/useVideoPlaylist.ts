@@ -49,7 +49,7 @@ export function useVideoPlaylist({ videos, activeAngle, resetKey }: UseVideoPlay
       return
     }
     const next = (prevIndexRef.current + 1) % angleVideos.length
-    setSlideDirection('right')
+    setSlideDirection(null) // No animation for auto-advance (only for manual dot clicks)
     setShouldAutoplay(true)
     prevIndexRef.current = next
     setVideoIndexRaw(next)

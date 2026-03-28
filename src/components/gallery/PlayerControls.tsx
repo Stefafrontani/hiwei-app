@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Pause, Play, Volume2, VolumeX, Maximize2, Minimize2, Loader2 } from 'lucide-react'
+import { Pause, Play, Volume2, VolumeX, Maximize2, Minimize2 } from 'lucide-react'
 import { useTouchSeek } from '@/hooks/useTouchSeek'
 
 function formatTime(seconds: number): string {
@@ -49,14 +49,24 @@ export function PlayerControls({
   const volumeRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
 
+  // Debounce buffering to avoid flash on quick state changes
+  const [showBuffering, setShowBuffering] = useState(false)
+  const bufferTimer = useRef<ReturnType<typeof setTimeout>>(null)
+
+  useEffect(() => {
+    if (bufferTimer.current) clearTimeout(bufferTimer.current)
+    if (isBuffering) {
+      // Only show spinner after 400ms of continuous buffering
+      bufferTimer.current = setTimeout(() => setShowBuffering(true), 400)
+    } else {
+      setShowBuffering(false)
+    }
+    return () => { if (bufferTimer.current) clearTimeout(bufferTimer.current) }
+  }, [isBuffering])
+
   const isCompact = size === 'sm'
 
   const iconClass = isCompact ? 'h-4 w-4' : 'h-5 w-5'
-
-  // YouTube-style: circular bg on each button
-  const btnClass = isCompact
-    ? 'p-1.5 rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors'
-    : 'p-2 rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors'
 
   // Touch seeking
   const { isSeeking, seekPreview, touchHandlers, mouseHandlers } = useTouchSeek({
@@ -118,11 +128,11 @@ export function PlayerControls({
   const progress = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0
   const displayProgress = seekPreview ?? progress
 
-  // Loading state
+  // Initial loading — subtle centered spinner, no overlay
   if (!isReady) {
     return (
-      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-        <Loader2 className="h-8 w-8 animate-spin text-white/80" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="video-loading-spinner" />
       </div>
     )
   }
@@ -141,9 +151,17 @@ export function PlayerControls({
         }
       }}
     >
-      {/* Center play/pause indicator */}
-      {(!isPlaying || isBuffering) && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none bg-black/60" data-overlay>
+      {/* Buffering spinner — small, centered, no overlay (Reels style)
+          Only appears after 400ms debounce to avoid flash */}
+      {showBuffering && isPlaying && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="video-loading-spinner" />
+        </div>
+      )}
+
+      {/* Center play button — only when paused (not buffering), subtle tap target */}
+      {!isPlaying && !isBuffering && (
+        <div className="absolute inset-0 flex items-center justify-center" data-overlay>
           <button
             type="button"
             onClick={(e) => {
@@ -151,13 +169,9 @@ export function PlayerControls({
               onTogglePlay()
               resetHideTimer()
             }}
-            className="pointer-events-auto rounded-full bg-brand p-4 text-brand-foreground shadow-lg transition-transform hover:scale-110 active:scale-90"
+            className="pointer-events-auto rounded-full bg-black/40 p-3.5 text-white backdrop-blur-sm transition-all duration-200 hover:bg-black/55 hover:scale-105 active:scale-95"
           >
-            {isBuffering ? (
-              <Loader2 className="h-7 w-7 animate-spin" />
-            ) : (
-              <Play className="h-7 w-7 fill-brand-foreground" />
-            )}
+            <Play className="h-6 w-6 fill-white" />
           </button>
         </div>
       )}

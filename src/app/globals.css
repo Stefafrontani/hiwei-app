@@ -187,15 +187,33 @@
 }
 
 @keyframes slide-in-from-right {
-  from { transform: translateX(40%); opacity: 0; }
+  from { transform: translateX(8%); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
 }
 @keyframes slide-in-from-left {
-  from { transform: translateX(-40%); opacity: 0; }
+  from { transform: translateX(-8%); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
 }
-.slide-in-right { animation: slide-in-from-right 0.3s ease-out; }
-.slide-in-left { animation: slide-in-from-left 0.3s ease-out; }
+.slide-in-right { animation: slide-in-from-right 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); }
+.slide-in-left { animation: slide-in-from-left 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); }
+
+/* Video loading — subtle rotating arc (Instagram/YouTube style) */
+@keyframes video-spinner {
+  to { transform: rotate(360deg); }
+}
+.video-loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2.5px solid transparent;
+  border-top-color: rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  animation: video-spinner 0.8s linear infinite;
+}
+.video-loading-spinner-sm {
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
+}
 
 /* ──────────────────────────────────────────────────────────────
    VIDEO FULLSCREEN (Popover API — top layer)

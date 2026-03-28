@@ -278,9 +278,11 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
     if (!player) return
     setIsEnded(false)
     setCurrentTime(0)
-    durationRef.current = 0
-    // Atomic restart — avoids seekTo+playVideo race condition
-    player.loadVideoById(videoIdRef.current, 0)
+    // Smooth restart via seekTo — avoids the full iframe reload flash
+    // that loadVideoById causes. For different-video transitions, the
+    // video switch effect handles it separately via loadVideoById.
+    player.seekTo(0, true)
+    player.playVideo()
   }, [])
 
   return {
