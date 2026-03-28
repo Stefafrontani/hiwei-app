@@ -1,6 +1,8 @@
 'use client'
 
 import { Car, Truck, CircleHelp, Info } from 'lucide-react'
+import PickupTruck from '@/components/icons/PickupTruck'
+import Sedan from '@/components/icons/Sedan'
 import { OptionCard } from '@/components/quiz/OptionCard'
 import { InfoBox } from '@/components/quiz/InfoBox'
 import {
@@ -14,9 +16,9 @@ import type { VehicleType } from '@/domain/value-objects/VehicleType'
 import { STEP1 } from '@/content/quiz/steps'
 
 const VEHICLE_ICONS: Record<string, typeof Car> = {
-  auto: Car,
-  pickup: Truck,
-  suv: Truck,
+  auto: Sedan,
+  pickup: PickupTruck,
+  suv: Car,
   otro: CircleHelp,
 }
 

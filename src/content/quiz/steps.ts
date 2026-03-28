@@ -9,7 +9,7 @@ import type { Installation } from '@/domain/value-objects/Installation'
 
 export const STEP1 = {
   title: '¿Qué tipo de vehículo tenés?',
-  subtitle: 'Elegí la opción que mejor describa tu vehículo',
+  subtitle: 'Elegí la opción que mejor describa tu vehículo.',
   vehicleTypeLabel: 'TIPO DE VEHÍCULO *',
   vehicleYearLabel: 'AÑO DEL VEHÍCULO *',
   yearPlaceholder: 'Ej: 2020',
