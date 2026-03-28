@@ -51,6 +51,13 @@ export function PlayerControls({
 
   const isCompact = size === 'sm'
 
+  const iconClass = isCompact ? 'h-4 w-4' : 'h-5 w-5'
+
+  // YouTube-style: circular bg on each button
+  const btnClass = isCompact
+    ? 'p-1.5 rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors'
+    : 'p-2 rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors'
+
   // Touch seeking
   const { isSeeking, seekPreview, touchHandlers, mouseHandlers } = useTouchSeek({
     progressRef,
@@ -128,7 +135,6 @@ export function PlayerControls({
       onMouseEnter={resetHideTimer}
       onTouchStart={resetHideTimer}
       onClick={(e) => {
-        // Click on the overlay (not on controls) toggles play — desktop only
         if (e.target === e.currentTarget || (e.target as HTMLElement).hasAttribute('data-overlay')) {
           onTogglePlay()
           resetHideTimer()
@@ -156,84 +162,71 @@ export function PlayerControls({
         </div>
       )}
 
-      {/* Bottom controls bar */}
+      {/* Bottom controls */}
       <div
-        className={`flex flex-col transition-opacity duration-300 ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`flex flex-col transition-opacity duration-300 bg-gradient-to-t from-black/70 via-black/40 to-transparent ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       >
-        {/* Progress bar — interactive */}
+        {/* Progress bar */}
         <div
           ref={progressRef}
-          className="relative h-1 w-full group/progress cursor-pointer"
+          className="group/progress relative cursor-pointer px-3"
           {...touchHandlers}
           {...mouseHandlers}
         >
           {/* Enlarged touch target */}
-          <div className="absolute -inset-y-3 inset-x-0" />
-          {/* Background track */}
-          <div className="absolute inset-0 bg-white/20" />
-          {/* Filled track */}
-          <div
-            className="absolute inset-y-0 left-0 bg-brand"
-            style={{ width: `${displayProgress}%` }}
-          />
-          {/* Seek thumb — visible on drag */}
-          {isSeeking && (
+          <div className="absolute -inset-y-4 inset-x-0" />
+
+          {/* Track — 3px, expands to 5px on hover */}
+          <div className="relative h-[3px] w-full group-hover/progress:h-[5px] transition-[height] duration-150">
+            <div className="absolute inset-0 rounded-full bg-white/25" />
             <div
-              className="absolute top-1/2 h-3 w-3 rounded-full bg-brand shadow-md"
-              style={{ left: `${displayProgress}%`, transform: 'translate(-50%, -50%)' }}
+              className="absolute inset-y-0 left-0 rounded-full bg-brand"
+              style={{ width: `${displayProgress}%` }}
             />
-          )}
+          </div>
+
+          {/* Scrubber dot — always visible, grows on drag */}
+          <div
+            className={`absolute top-1/2 rounded-full bg-brand shadow-md transition-[width,height] duration-150 ${isSeeking ? 'h-4 w-4' : 'h-3 w-3'}`}
+            style={{ left: `${displayProgress}%`, transform: 'translate(-50%, -50%)' }}
+          />
         </div>
 
+        {/* Spacing */}
+        <div className={isCompact ? 'h-1.5' : 'h-2'} />
+
         {/* Controls row */}
-        <div className="flex items-center gap-2 bg-gradient-to-t from-black/60 to-transparent px-3 py-2">
-          {/* Play/Pause */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation()
-              onTogglePlay()
-              resetHideTimer()
-            }}
-            className="text-white hover:text-brand transition-colors"
-          >
-            {isPlaying ? (
-              <Pause className={isCompact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
-            ) : (
-              <Play className={`${isCompact ? 'h-3.5 w-3.5' : 'h-4 w-4'} fill-white`} />
-            )}
-          </button>
-
-          {/* Time */}
-          <span className={`text-white select-none ${isCompact ? 'text-[9px]' : 'text-[11px]'} tabular-nums`}>
-            {formatTime(currentTime)} / {formatTime(duration)}
-          </span>
-
-          <div className="flex-1" />
-
-          {/* Volume: compact = mute button only, full = hover slider */}
-          {isCompact ? (
+        <div className={`flex items-center ${isCompact ? 'gap-1.5 px-2 pb-2' : 'gap-2 px-3 pb-3'}`}>
+          {/* Left group: Play + Time in a pill */}
+          <div className="flex items-center gap-1 rounded-full bg-black/30 pr-2.5">
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation()
-                onToggleMute()
+                onTogglePlay()
                 resetHideTimer()
               }}
-              className="text-white hover:text-brand transition-colors"
+              className={isCompact
+                ? 'p-1.5 rounded-full text-white hover:bg-white/10 transition-colors'
+                : 'p-2 rounded-full text-white hover:bg-white/10 transition-colors'
+              }
             >
-              {isMuted || volume === 0 ? (
-                <VolumeX className="h-3.5 w-3.5" />
+              {isPlaying ? (
+                <Pause className={iconClass} />
               ) : (
-                <Volume2 className="h-3.5 w-3.5" />
+                <Play className={`${iconClass} fill-white`} />
               )}
             </button>
-          ) : (
-            <div
-              className="relative flex items-center"
-              onMouseEnter={() => setShowVolume(true)}
-              onMouseLeave={() => setShowVolume(false)}
-            >
+            <span className={`text-white select-none tabular-nums ${isCompact ? 'text-[10px]' : 'text-xs'}`}>
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </span>
+          </div>
+
+          <div className="flex-1" />
+
+          {/* Right group: Volume + Fullscreen in a pill */}
+          <div className="flex items-center rounded-full bg-black/30">
+            {isCompact ? (
               <button
                 type="button"
                 onClick={(e) => {
@@ -241,50 +234,74 @@ export function PlayerControls({
                   onToggleMute()
                   resetHideTimer()
                 }}
-                className="text-white hover:text-brand transition-colors"
+                className="p-1.5 rounded-full text-white hover:bg-white/10 transition-colors"
               >
                 {isMuted || volume === 0 ? (
-                  <VolumeX className="h-4 w-4" />
+                  <VolumeX className={iconClass} />
                 ) : (
-                  <Volume2 className="h-4 w-4" />
+                  <Volume2 className={iconClass} />
                 )}
               </button>
-
-              {/* Volume slider */}
+            ) : (
               <div
-                className={`overflow-hidden transition-all duration-200 ${showVolume ? 'w-20 ml-2' : 'w-0 ml-0'}`}
+                className="relative flex items-center"
+                onMouseEnter={() => setShowVolume(true)}
+                onMouseLeave={() => setShowVolume(false)}
               >
-                <div
-                  ref={volumeRef}
-                  className="h-1 w-20 cursor-pointer rounded-full bg-white/20"
-                  onMouseDown={(e) => {
+                <button
+                  type="button"
+                  onClick={(e) => {
                     e.stopPropagation()
-                    handleVolumeMouseDown(e)
+                    onToggleMute()
+                    resetHideTimer()
                   }}
+                  className="p-2 rounded-full text-white hover:bg-white/10 transition-colors"
+                >
+                  {isMuted || volume === 0 ? (
+                    <VolumeX className={iconClass} />
+                  ) : (
+                    <Volume2 className={iconClass} />
+                  )}
+                </button>
+
+                {/* Volume slider */}
+                <div
+                  className={`overflow-hidden transition-all duration-200 ${showVolume ? 'w-20 mr-1' : 'w-0 mr-0'}`}
                 >
                   <div
-                    className="h-full rounded-full bg-white"
-                    style={{ width: `${isMuted ? 0 : volume}%` }}
-                  />
+                    ref={volumeRef}
+                    className="h-1 w-20 cursor-pointer rounded-full bg-white/20"
+                    onMouseDown={(e) => {
+                      e.stopPropagation()
+                      handleVolumeMouseDown(e)
+                    }}
+                  >
+                    <div
+                      className="h-full rounded-full bg-white"
+                      style={{ width: `${isMuted ? 0 : volume}%` }}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Fullscreen — always shown */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation()
-              onToggleFullscreen()
-              resetHideTimer()
-            }}
-            className="text-white hover:text-brand transition-colors"
-          >
-            {isFullscreen
-              ? <Minimize2 className={isCompact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
-              : <Maximize2 className={isCompact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />}
-          </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                onToggleFullscreen()
+                resetHideTimer()
+              }}
+              className={isCompact
+                ? 'p-1.5 rounded-full text-white hover:bg-white/10 transition-colors'
+                : 'p-2 rounded-full text-white hover:bg-white/10 transition-colors'
+              }
+            >
+              {isFullscreen
+                ? <Minimize2 className={iconClass} />
+                : <Maximize2 className={iconClass} />}
+            </button>
+          </div>
         </div>
       </div>
     </div>
