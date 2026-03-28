@@ -126,6 +126,7 @@ export function PlayerControls({
       className="absolute inset-0 z-10 flex flex-col justify-end"
       onMouseMove={resetHideTimer}
       onMouseEnter={resetHideTimer}
+      onTouchStart={resetHideTimer}
       onClick={(e) => {
         // Click on the overlay (not on controls) toggles play — desktop only
         if (e.target === e.currentTarget || (e.target as HTMLElement).hasAttribute('data-overlay')) {
@@ -144,12 +145,12 @@ export function PlayerControls({
               onTogglePlay()
               resetHideTimer()
             }}
-            className="pointer-events-auto rounded-full bg-black/50 p-4 text-white backdrop-blur-sm transition-transform hover:scale-110 active:scale-90"
+            className="pointer-events-auto rounded-full bg-brand p-4 text-brand-foreground shadow-lg transition-transform hover:scale-110 active:scale-90"
           >
             {isBuffering ? (
               <Loader2 className="h-7 w-7 animate-spin" />
             ) : (
-              <Play className="h-7 w-7 fill-white" />
+              <Play className="h-7 w-7 fill-brand-foreground" />
             )}
           </button>
         </div>

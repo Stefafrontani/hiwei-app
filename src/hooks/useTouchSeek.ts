@@ -22,8 +22,23 @@ interface UseTouchSeekReturn {
   }
 }
 
-function getRatio(clientX: number, el: HTMLElement): number {
+/**
+ * Calculate the seek ratio (0–1) accounting for CSS transforms on ancestors.
+ * When the progress bar is inside a rotated container (e.g. fullscreen with rotate(90deg)),
+ * the visual orientation differs from the DOM layout. We detect this by comparing
+ * the element's layout dimensions (offsetWidth/Height) with its visual bounding rect.
+ */
+function getRatio(clientX: number, clientY: number, el: HTMLElement): number {
   const rect = el.getBoundingClientRect()
+
+  // Detect rotation: a thin horizontal bar (offsetWidth >> offsetHeight)
+  // that visually appears tall (rect.height >> rect.width) must be rotated
+  const isRotated = el.offsetWidth > el.offsetHeight * 4 && rect.height > rect.width * 4
+
+  if (isRotated) {
+    return Math.max(0, Math.min(1, (clientY - rect.top) / rect.height))
+  }
+
   return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
 }
 
@@ -37,7 +52,8 @@ export function useTouchSeek({ progressRef, duration, onSeek, enabled = true }: 
       if (!enabled || !progressRef.current) return
       e.stopPropagation()
       setIsSeeking(true)
-      const ratio = getRatio(e.touches[0].clientX, progressRef.current)
+      const touch = e.touches[0]
+      const ratio = getRatio(touch.clientX, touch.clientY, progressRef.current)
       setSeekPreview(ratio * 100)
     },
     [enabled, progressRef],
@@ -47,7 +63,8 @@ export function useTouchSeek({ progressRef, duration, onSeek, enabled = true }: 
     (e: React.TouchEvent) => {
       if (!enabled || !progressRef.current || !isSeeking) return
       e.stopPropagation()
-      const ratio = getRatio(e.touches[0].clientX, progressRef.current)
+      const touch = e.touches[0]
+      const ratio = getRatio(touch.clientX, touch.clientY, progressRef.current)
       setSeekPreview(ratio * 100)
 
       // Throttle actual seeks to every 100ms
@@ -65,7 +82,7 @@ export function useTouchSeek({ progressRef, duration, onSeek, enabled = true }: 
       if (!enabled || !progressRef.current || !isSeeking) return
       e.stopPropagation()
       const touch = e.changedTouches[0]
-      const ratio = getRatio(touch.clientX, progressRef.current)
+      const ratio = getRatio(touch.clientX, touch.clientY, progressRef.current)
       onSeek(ratio * duration)
       setIsSeeking(false)
       setSeekPreview(null)
@@ -80,13 +97,13 @@ export function useTouchSeek({ progressRef, duration, onSeek, enabled = true }: 
       e.stopPropagation()
 
       const el = progressRef.current
-      const ratio = getRatio(e.clientX, el)
+      const ratio = getRatio(e.clientX, e.clientY, el)
       onSeek(ratio * duration)
       setIsSeeking(true)
       setSeekPreview(ratio * 100)
 
       const onMove = (ev: MouseEvent) => {
-        const r = getRatio(ev.clientX, el)
+        const r = getRatio(ev.clientX, ev.clientY, el)
         setSeekPreview(r * 100)
         const now = Date.now()
         if (now - lastSeekRef.current > 100) {
@@ -96,7 +113,7 @@ export function useTouchSeek({ progressRef, duration, onSeek, enabled = true }: 
       }
 
       const onUp = (ev: MouseEvent) => {
-        const r = getRatio(ev.clientX, el)
+        const r = getRatio(ev.clientX, ev.clientY, el)
         onSeek(r * duration)
         setIsSeeking(false)
         setSeekPreview(null)

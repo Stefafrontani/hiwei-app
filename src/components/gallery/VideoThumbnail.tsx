@@ -6,7 +6,6 @@ import { Play } from 'lucide-react'
 import type { DashcamVideo } from '@/domain/value-objects/DashcamVideo'
 import { useYouTubePlayer } from '@/hooks/useYouTubePlayer'
 import { useFullscreen } from '@/hooks/useFullscreen'
-import { useDoubleTap } from '@/hooks/useDoubleTap'
 import { PlayerControls } from './PlayerControls'
 
 function formatDuration(seconds: number): string {
@@ -30,14 +29,6 @@ function ActivePlayer({ video, size, onEnded }: { video: DashcamVideo; size: 'lg
   const player = useYouTubePlayer({ videoId: video.youtubeId, autoplay: true })
   const { isFullscreen, toggleFullscreen } = useFullscreen({ targetRef: wrapperRef })
 
-  const { handlers: doubleTapHandlers } = useDoubleTap({
-    onSingleTap: () => {
-      player.togglePlay()
-    },
-    onDoubleTap: toggleFullscreen,
-    delay: 300,
-  })
-
   useEffect(() => {
     if (player.isEnded) onEnded?.()
   }, [player.isEnded, onEnded])
@@ -47,8 +38,10 @@ function ActivePlayer({ video, size, onEnded }: { video: DashcamVideo; size: 'lg
   return (
     <div
       ref={wrapperRef}
-      className={`relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}
-      {...doubleTapHandlers}
+      className={isFullscreen
+        ? 'relative w-full h-full overflow-hidden bg-black'
+        : `relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`
+      }
     >
       {/* YouTube player target — pointer-events disabled to block all YT UI interaction */}
       <div

@@ -232,13 +232,6 @@
   aspect-ratio: auto !important;
 }
 
-/* Ensure the YouTube iframe container fills the fullscreen container */
-.video-fullscreen > [class*="pointer-events-none"],
-.video-fullscreen-rotated > [class*="pointer-events-none"] {
-  width: 100% !important;
-  height: 100% !important;
-}
-
 /* Prevent body scroll while fullscreen is active */
 body.video-fullscreen-active {
   overflow: hidden !important;

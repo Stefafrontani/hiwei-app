@@ -59,9 +59,10 @@ interface UseYouTubePlayerReturn {
 export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerOptions): UseYouTubePlayerReturn {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const playerRef = useRef<YT.Player | null>(null)
-  const rafRef = useRef<number>(0)
   const innerDivRef = useRef<HTMLDivElement | null>(null)
   const durationRef = useRef(0)
+  const seekingRef = useRef(false)
+  const seekTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -70,22 +71,7 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [volume, setVolumeState] = useState(100)
-  const [isMuted, setIsMuted] = useState(false)
-
-  const updateTime = useCallback(() => {
-    const player = playerRef.current
-    if (!player) return
-
-    try {
-      const state = player.getPlayerState()
-      if (state === YT.PlayerState.PLAYING) {
-        setCurrentTime(player.getCurrentTime())
-        rafRef.current = requestAnimationFrame(updateTime)
-      }
-    } catch {
-      // player may have been destroyed
-    }
-  }, [])
+  const [isMuted, setIsMuted] = useState(true)
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -104,6 +90,7 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
         host: 'https://www.youtube-nocookie.com',
         playerVars: {
           autoplay: autoplay ? 1 : 0,
+          mute: 1,
           controls: 0,
           rel: 0,
           modestbranding: 1, // deprecated but kept for older player versions
@@ -137,23 +124,18 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
                 durationRef.current = Math.floor(event.target.getDuration())
               }
               setDuration(durationRef.current)
-              rafRef.current = requestAnimationFrame(updateTime)
-            } else {
-              cancelAnimationFrame(rafRef.current)
-              if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.ENDED) {
-                try {
-                  if (state === YT.PlayerState.ENDED) {
-                    setIsEnded(true)
-                    setCurrentTime(durationRef.current)
-                  } else {
-                    setCurrentTime(event.target.getCurrentTime())
-                  }
-                } catch {
-                  // ignore
+            } else if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.ENDED) {
+              try {
+                if (state === YT.PlayerState.ENDED) {
+                  setIsEnded(true)
+                  setCurrentTime(durationRef.current)
+                } else {
+                  setCurrentTime(event.target.getCurrentTime())
                 }
+              } catch {
+                // ignore
               }
             }
-
           },
         },
       })
@@ -161,7 +143,6 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
 
     return () => {
       destroyed = true
-      cancelAnimationFrame(rafRef.current)
       try {
         playerRef.current?.destroy()
       } catch {
@@ -172,7 +153,31 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
       innerDivRef.current?.remove()
       innerDivRef.current = null
     }
-  }, [videoId, autoplay, updateTime])
+  }, [videoId, autoplay])
+
+  // Keep currentTime updated while playing — effect restarts if isPlaying changes
+  useEffect(() => {
+    if (!isPlaying) return
+
+    let rafId: number
+    const tick = () => {
+      if (seekingRef.current) {
+        rafId = requestAnimationFrame(tick)
+        return
+      }
+      const player = playerRef.current
+      if (!player) return
+      try {
+        setCurrentTime(player.getCurrentTime())
+      } catch {
+        return // player destroyed
+      }
+      rafId = requestAnimationFrame(tick)
+    }
+    rafId = requestAnimationFrame(tick)
+
+    return () => cancelAnimationFrame(rafId)
+  }, [isPlaying])
 
   const play = useCallback(() => playerRef.current?.playVideo(), [])
   const pause = useCallback(() => playerRef.current?.pauseVideo(), [])
@@ -192,8 +197,14 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
   }, [])
 
   const seekTo = useCallback((seconds: number) => {
+    seekingRef.current = true
+    if (seekTimerRef.current) clearTimeout(seekTimerRef.current)
     playerRef.current?.seekTo(seconds, true)
     setCurrentTime(seconds)
+    // Allow time for the YouTube player to seek before reading getCurrentTime again
+    seekTimerRef.current = setTimeout(() => {
+      seekingRef.current = false
+    }, 500)
   }, [])
 
   const setVolume = useCallback((v: number) => {
