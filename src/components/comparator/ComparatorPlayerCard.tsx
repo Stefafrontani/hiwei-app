@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { VideoOff } from 'lucide-react'
 import { DotIndicator } from '@/components/ui/dot-indicator'
 import { VideoThumbnail } from '@/components/gallery/VideoThumbnail'
@@ -21,13 +22,23 @@ interface ComparatorPlayerCardProps {
 }
 
 export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackKey }: ComparatorPlayerCardProps) {
-  const { angleVideos, activeVideo, videoIndex, setVideoIndex, handleVideoEnded, slideDirection, shouldAutoplay } = useVideoPlaylist({
+  const { angleVideos, activeVideo, videoIndex, setVideoIndex, handleVideoEnded, slideDirection, shouldAutoplay, replayToken } = useVideoPlaylist({
     videos: product?.videos ?? [],
     activeAngle,
     resetKey: playbackKey,
   })
 
+  const slideRef = useRef<HTMLDivElement>(null)
   const slideClass = slideDirection === 'right' ? 'slide-in-right' : slideDirection === 'left' ? 'slide-in-left' : ''
+
+  // Re-trigger slide animation imperatively (no key-based remount)
+  useEffect(() => {
+    const el = slideRef.current
+    if (!el || !slideClass) return
+    el.classList.remove('slide-in-right', 'slide-in-left')
+    void el.offsetWidth // force reflow
+    el.classList.add(slideClass)
+  }, [videoIndex, slideClass])
 
   if (!product) {
     return (
@@ -46,8 +57,8 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
       <h3 className="text-[16px] font-bold text-foreground px-1">{product.name}</h3>
       <div className="overflow-hidden rounded-xl">
         {activeVideo ? (
-          <div key={`${playbackKey}-${videoIndex}`} className={slideClass}>
-            <VideoThumbnail video={activeVideo} size="md" showLabel autoplay={autoplay || shouldAutoplay} onEnded={handleVideoEnded} />
+          <div ref={slideRef}>
+            <VideoThumbnail video={activeVideo} size="md" showLabel autoplay={autoplay || shouldAutoplay} onEnded={handleVideoEnded} replayToken={replayToken} />
           </div>
         ) : (
           <div className="flex aspect-[16/10] flex-col items-center justify-center gap-3 rounded-xl bg-white/[0.03] px-8 text-center">

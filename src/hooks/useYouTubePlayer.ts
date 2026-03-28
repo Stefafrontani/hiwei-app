@@ -54,6 +54,7 @@ interface UseYouTubePlayerReturn {
   seekTo: (seconds: number) => void
   setVolume: (volume: number) => void
   toggleMute: () => void
+  replay: () => void
 }
 
 export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerOptions): UseYouTubePlayerReturn {
@@ -63,6 +64,8 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
   const durationRef = useRef(0)
   const seekingRef = useRef(false)
   const seekTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const videoIdRef = useRef(videoId)
+  const isReadyRef = useRef(false)
 
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -73,6 +76,10 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
   const [volume, setVolumeState] = useState(100)
   const [isMuted, setIsMuted] = useState(true)
 
+  // Always track the latest videoId
+  videoIdRef.current = videoId
+
+  // Player creation effect — runs once on mount, destroys on unmount
   useEffect(() => {
     if (!containerRef.current) return
 
@@ -81,12 +88,13 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
     containerRef.current.appendChild(target)
 
     let destroyed = false
+    const initialVideoId = videoIdRef.current
 
     loadYouTubeAPI().then(() => {
       if (destroyed || !innerDivRef.current) return
 
       playerRef.current = new YT.Player(innerDivRef.current, {
-        videoId,
+        videoId: initialVideoId,
         host: 'https://www.youtube-nocookie.com',
         playerVars: {
           autoplay: autoplay ? 1 : 0,
@@ -104,12 +112,21 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
         events: {
           onReady: (event) => {
             if (destroyed) return
+            isReadyRef.current = true
             setIsReady(true)
             const d = Math.floor(event.target.getDuration())
             if (d > 0 && durationRef.current === 0) durationRef.current = d
             setDuration(durationRef.current || d)
             setVolumeState(event.target.getVolume())
             setIsMuted(event.target.isMuted())
+
+            // If videoId changed before player was ready, load the correct video
+            if (videoIdRef.current !== initialVideoId) {
+              durationRef.current = 0
+              setIsEnded(false)
+              setCurrentTime(0)
+              event.target.loadVideoById(videoIdRef.current)
+            }
           },
           onStateChange: (event) => {
             if (destroyed) return
@@ -124,6 +141,10 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
                 durationRef.current = Math.floor(event.target.getDuration())
               }
               setDuration(durationRef.current)
+            } else if (state === YT.PlayerState.CUED) {
+              // loadVideoById sometimes cues instead of auto-playing
+              // (especially on youtube-nocookie.com or after ENDED state)
+              event.target.playVideo()
             } else if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.ENDED) {
               try {
                 if (state === YT.PlayerState.ENDED) {
@@ -143,6 +164,7 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
 
     return () => {
       destroyed = true
+      isReadyRef.current = false
       try {
         playerRef.current?.destroy()
       } catch {
@@ -153,7 +175,28 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
       innerDivRef.current?.remove()
       innerDivRef.current = null
     }
-  }, [videoId, autoplay])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoplay])
+
+  // Video switch effect — when videoId changes, load new video into existing player
+  const prevVideoIdRef = useRef(videoId)
+  useEffect(() => {
+    if (prevVideoIdRef.current === videoId) return
+    prevVideoIdRef.current = videoId
+
+    const player = playerRef.current
+    if (!player || !isReadyRef.current) return
+
+    // Reset state and load new video (preserves iframe + fullscreen)
+    durationRef.current = 0
+    setIsEnded(false)
+    setCurrentTime(0)
+    setDuration(0)
+    // Pass startSeconds=0 explicitly — loadVideoById without it may not
+    // auto-play reliably when the player is in ENDED state (especially
+    // on youtube-nocookie.com host)
+    player.loadVideoById(videoId, 0)
+  }, [videoId])
 
   // Keep currentTime updated while playing — effect restarts if isPlaying changes
   useEffect(() => {
@@ -230,6 +273,16 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
     }
   }, [])
 
+  const replay = useCallback(() => {
+    const player = playerRef.current
+    if (!player) return
+    setIsEnded(false)
+    setCurrentTime(0)
+    durationRef.current = 0
+    // Atomic restart — avoids seekTo+playVideo race condition
+    player.loadVideoById(videoIdRef.current, 0)
+  }, [])
+
   return {
     containerRef,
     isReady,
@@ -246,5 +299,6 @@ export function useYouTubePlayer({ videoId, autoplay = true }: UseYouTubePlayerO
     seekTo,
     setVolume,
     toggleMute,
+    replay,
   }
 }

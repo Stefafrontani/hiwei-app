@@ -20,18 +20,34 @@ interface VideoThumbnailProps {
   showLabel?: boolean
   autoplay?: boolean
   onEnded?: () => void
+  replayToken?: number
 }
 
-function ActivePlayer({ video, size, onEnded }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm'; onEnded?: () => void }) {
+function ActivePlayer({ video, size, onEnded, replayToken }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm'; onEnded?: () => void; replayToken?: number }) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
 
   const player = useYouTubePlayer({ videoId: video.youtubeId, autoplay: true })
   const { isFullscreen, toggleFullscreen } = useFullscreen({ targetRef: wrapperRef })
 
+  // Use ref for onEnded to prevent double-firing when callback identity changes
+  const onEndedRef = useRef(onEnded)
+  useEffect(() => { onEndedRef.current = onEnded })
+
   useEffect(() => {
-    if (player.isEnded) onEnded?.()
-  }, [player.isEnded, onEnded])
+    if (player.isEnded) onEndedRef.current?.()
+  }, [player.isEnded])
+
+  // Playlist advancement / single-video loop: replay when replayToken changes.
+  // Uses player.replay() which calls loadVideoById(videoIdRef.current, 0) —
+  // this handles both same-videoId replay and different-videoId transitions.
+  const prevReplayRef = useRef(replayToken)
+  useEffect(() => {
+    if (replayToken !== undefined && replayToken !== prevReplayRef.current) {
+      prevReplayRef.current = replayToken
+      player.replay()
+    }
+  }, [replayToken, player.replay])
 
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
@@ -47,8 +63,9 @@ function ActivePlayer({ video, size, onEnded }: { video: DashcamVideo; size: 'lg
         className="absolute inset-0 h-full w-full pointer-events-none [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:h-full [&>iframe]:w-full"
       />
 
-      {/* Thumbnail overlay when ended — covers YouTube end screen */}
-      {player.isEnded && (
+      {/* Thumbnail overlay when ended — covers YouTube end screen.
+         Skip when onEnded is set (playlist/loop) to prevent flash between render cycles. */}
+      {player.isEnded && !onEnded && (
         <Image
           src={thumbnailUrl}
           alt={video.label}
@@ -79,7 +96,7 @@ function ActivePlayer({ video, size, onEnded }: { video: DashcamVideo; size: 'lg
   )
 }
 
-export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay = false, onEnded }: VideoThumbnailProps) {
+export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay = false, onEnded, replayToken }: VideoThumbnailProps) {
   const [playing, setPlaying] = useState(autoplay)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
   const playSize = size === 'sm' ? 'h-8 w-8' : size === 'md' ? 'h-10 w-10' : 'h-16 w-16'
@@ -87,7 +104,7 @@ export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay 
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
   if (playing) {
-    return <ActivePlayer video={video} size={size} onEnded={onEnded} />
+    return <ActivePlayer video={video} size={size} onEnded={onEnded} replayToken={replayToken} />
   }
 
   return (

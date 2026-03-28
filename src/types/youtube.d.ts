@@ -40,6 +40,7 @@ declare namespace YT {
     getPlayerState(): number
     getCurrentTime(): number
     getDuration(): number
+    loadVideoById(videoId: string, startSeconds?: number): void
     destroy(): void
   }
 }

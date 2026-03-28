@@ -16,6 +16,7 @@ export function useVideoPlaylist({ videos, activeAngle, resetKey }: UseVideoPlay
   const [videoIndex, setVideoIndexRaw] = useState(0)
   const [slideDirection, setSlideDirection] = useState<SlideDirection>(null)
   const [shouldAutoplay, setShouldAutoplay] = useState(false)
+  const [replayToken, setReplayToken] = useState(0)
   const prevIndexRef = useRef(0)
 
   const angleVideos = useMemo(
@@ -42,12 +43,20 @@ export function useVideoPlaylist({ videos, activeAngle, resetKey }: UseVideoPlay
   }, [])
 
   const handleVideoEnded = useCallback(() => {
-    if (angleVideos.length <= 1) return
+    if (angleVideos.length <= 1) {
+      // Single video: signal replay (infinite loop)
+      setReplayToken((t) => t + 1)
+      return
+    }
     const next = (prevIndexRef.current + 1) % angleVideos.length
     setSlideDirection('right')
     setShouldAutoplay(true)
     prevIndexRef.current = next
     setVideoIndexRaw(next)
+    // Always signal replay — handles cases where consecutive videos share
+    // the same youtubeId (the video switch effect won't fire if videoId
+    // is unchanged, so replayToken ensures the player restarts)
+    setReplayToken((t) => t + 1)
   }, [angleVideos.length])
 
   return {
@@ -58,5 +67,6 @@ export function useVideoPlaylist({ videos, activeAngle, resetKey }: UseVideoPlay
     handleVideoEnded,
     slideDirection,
     shouldAutoplay,
+    replayToken,
   }
 }

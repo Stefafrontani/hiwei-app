@@ -17,15 +17,25 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, activeAngle, onAngleChange }: ProductCardProps) {
-  const { angleVideos, activeVideo, videoIndex, setVideoIndex, handleVideoEnded, slideDirection, shouldAutoplay } = useVideoPlaylist({
+  const { angleVideos, activeVideo, videoIndex, setVideoIndex, handleVideoEnded, slideDirection, shouldAutoplay, replayToken } = useVideoPlaylist({
     videos: product.videos,
     activeAngle,
   })
 
+  const slideRef = useRef<HTMLDivElement>(null)
   const slideClass = slideDirection === 'right' ? 'slide-in-right' : slideDirection === 'left' ? 'slide-in-left' : ''
   const [descOpen, setDescOpen] = useState(false)
   const [descOverflows, setDescOverflows] = useState(false)
   const descWrapRef = useRef<HTMLDivElement>(null)
+
+  // Re-trigger slide animation imperatively (no key-based remount)
+  useEffect(() => {
+    const el = slideRef.current
+    if (!el || !slideClass) return
+    el.classList.remove('slide-in-right', 'slide-in-left')
+    void el.offsetWidth // force reflow
+    el.classList.add(slideClass)
+  }, [videoIndex, slideClass])
 
   useEffect(() => {
     const el = descWrapRef.current
@@ -38,8 +48,8 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
       {/* Video area */}
       <div className="overflow-hidden rounded-xl">
         {activeVideo && (
-          <div key={videoIndex} className={slideClass}>
-            <VideoThumbnail video={activeVideo} size="lg" onEnded={handleVideoEnded} autoplay={shouldAutoplay} />
+          <div ref={slideRef}>
+            <VideoThumbnail video={activeVideo} size="lg" onEnded={handleVideoEnded} autoplay={shouldAutoplay} replayToken={replayToken} />
           </div>
         )}
       </div>
