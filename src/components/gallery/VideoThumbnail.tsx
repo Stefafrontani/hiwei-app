@@ -21,10 +21,12 @@ interface VideoThumbnailProps {
   autoplay?: boolean
   onEnded?: () => void
   replayToken?: number
+  isAdvancing?: boolean
 }
 
-function ActivePlayer({ video, size, onEnded, replayToken }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm'; onEnded?: () => void; replayToken?: number }) {
+function ActivePlayer({ video, size, onEnded, replayToken, isAdvancing }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm'; onEnded?: () => void; replayToken?: number; isAdvancing?: boolean }) {
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const transitionRef = useRef<HTMLDivElement>(null)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
 
   const player = useYouTubePlayer({ videoId: video.youtubeId, autoplay: true })
@@ -38,15 +40,44 @@ function ActivePlayer({ video, size, onEnded, replayToken }: { video: DashcamVid
     if (player.isEnded) onEndedRef.current?.()
   }, [player.isEnded])
 
-  // Playlist advancement / single-video loop: replay when replayToken changes.
-  // Uses player.replay() which calls loadVideoById(videoIdRef.current, 0) —
-  // this handles both same-videoId replay and different-videoId transitions.
+  // Playlist advancement / single-video loop.
+  // Slide transition only on multi-video advance, not on single-video loop.
   const prevReplayRef = useRef(replayToken)
+  const isAdvancingRef = useRef(isAdvancing)
+  useEffect(() => { isAdvancingRef.current = isAdvancing })
+
   useEffect(() => {
-    if (replayToken !== undefined && replayToken !== prevReplayRef.current) {
-      prevReplayRef.current = replayToken
+    if (replayToken === undefined || replayToken === prevReplayRef.current) return
+    prevReplayRef.current = replayToken
+
+    const el = transitionRef.current
+    // No animation for single-video loop or if ref unavailable
+    if (!el || !isAdvancingRef.current) {
       player.replay()
+      return
     }
+
+    // Multi-video advance: right-to-left slide transition
+    // Phase 1: exit (slide left + fade out)
+    el.classList.remove('video-transition-enter')
+    el.classList.add('video-transition-exit')
+
+    const exitTimer = setTimeout(() => {
+      // Video changes while content is invisible
+      player.replay()
+
+      // Phase 2: enter (slide in from right + fade in)
+      el.classList.remove('video-transition-exit')
+      el.classList.add('video-transition-enter')
+
+      const enterTimer = setTimeout(() => {
+        el.classList.remove('video-transition-enter')
+      }, 280)
+
+      return () => clearTimeout(enterTimer)
+    }, 120)
+
+    return () => clearTimeout(exitTimer)
   }, [replayToken, player.replay])
 
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
@@ -57,46 +88,49 @@ function ActivePlayer({ video, size, onEnded, replayToken }: { video: DashcamVid
       popover="manual"
       className={`video-popover relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}
     >
-      {/* YouTube player target — pointer-events disabled to block all YT UI interaction */}
-      <div
-        ref={player.containerRef}
-        className="absolute inset-0 h-full w-full pointer-events-none [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:h-full [&>iframe]:w-full"
-      />
-
-      {/* Thumbnail overlay when ended — covers YouTube end screen.
-         Skip when onEnded is set (playlist/loop) to prevent flash between render cycles. */}
-      {player.isEnded && !onEnded && (
-        <Image
-          src={thumbnailUrl}
-          alt={video.label}
-          fill
-          className="absolute inset-0 object-cover"
-          sizes="(max-width: 768px) 100vw, 50vw"
+      {/* Inner wrapper for slide transition — animates without affecting fullscreen transforms */}
+      <div ref={transitionRef} className="absolute inset-0">
+        {/* YouTube player target — pointer-events disabled to block all YT UI interaction */}
+        <div
+          ref={player.containerRef}
+          className="absolute inset-0 h-full w-full pointer-events-none [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:h-full [&>iframe]:w-full"
         />
-      )}
 
-      {/* Custom controls overlay */}
-      <PlayerControls
-        size={isFullscreen ? 'lg' : size}
-        isPlaying={player.isPlaying}
-        isBuffering={player.isBuffering}
-        isReady={player.isReady}
-        currentTime={player.currentTime}
-        duration={player.duration}
-        volume={player.volume}
-        isMuted={player.isMuted}
-        isFullscreen={isFullscreen}
-        onTogglePlay={player.togglePlay}
-        onVolumeChange={player.setVolume}
-        onToggleMute={player.toggleMute}
-        onToggleFullscreen={toggleFullscreen}
-        onSeek={player.seekTo}
-      />
+        {/* Thumbnail overlay when ended — covers YouTube end screen.
+           Skip when onEnded is set (playlist/loop) to prevent flash between render cycles. */}
+        {player.isEnded && !onEnded && (
+          <Image
+            src={thumbnailUrl}
+            alt={video.label}
+            fill
+            className="absolute inset-0 object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        )}
+
+        {/* Custom controls overlay */}
+        <PlayerControls
+          size={isFullscreen ? 'lg' : size}
+          isPlaying={player.isPlaying}
+          isBuffering={player.isBuffering}
+          isReady={player.isReady}
+          currentTime={player.currentTime}
+          duration={player.duration}
+          volume={player.volume}
+          isMuted={player.isMuted}
+          isFullscreen={isFullscreen}
+          onTogglePlay={player.togglePlay}
+          onVolumeChange={player.setVolume}
+          onToggleMute={player.toggleMute}
+          onToggleFullscreen={toggleFullscreen}
+          onSeek={player.seekTo}
+        />
+      </div>
     </div>
   )
 }
 
-export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay = false, onEnded, replayToken }: VideoThumbnailProps) {
+export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay = false, onEnded, replayToken, isAdvancing }: VideoThumbnailProps) {
   const [playing, setPlaying] = useState(autoplay)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
   const playSize = size === 'sm' ? 'h-8 w-8' : size === 'md' ? 'h-10 w-10' : 'h-16 w-16'
@@ -104,7 +138,7 @@ export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay 
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
   if (playing) {
-    return <ActivePlayer video={video} size={size} onEnded={onEnded} replayToken={replayToken} />
+    return <ActivePlayer video={video} size={size} onEnded={onEnded} replayToken={replayToken} isAdvancing={isAdvancing} />
   }
 
   return (
