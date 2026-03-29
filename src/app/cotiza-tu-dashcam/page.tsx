@@ -1,14 +1,15 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { AppHeader } from '@/components/quiz/AppHeader'
-import { SubtitleBar } from '@/components/quiz/SubtitleBar'
-import { ProgressBar } from '@/components/quiz/ProgressBar'
+import { SiteHeader } from '@/components/layout/SiteHeader'
+
+import { StepIndicator } from '@/components/quiz/StepIndicator'
 import { NavigationFooter } from '@/components/quiz/NavigationFooter'
-import { DesktopSidebar } from '@/components/quiz/DesktopSidebar'
+import { DesktopSidebar } from '@/components/layout/DesktopSidebar'
+import { QuizSummarySteps } from '@/components/quiz/QuizSummarySteps'
 import { Step1 } from '@/components/steps/Step1'
 import { Step2 } from '@/components/steps/Step2'
 import { Step3 } from '@/components/steps/Step3'
@@ -23,27 +24,28 @@ import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 import type { VehicleUsage } from '@/domain/value-objects/VehicleUsage'
 import type { ParkingMode } from '@/domain/value-objects/ParkingMode'
 import type { Installation } from '@/domain/value-objects/Installation'
-import { SUBTITLE_CONFIG, PREVIOUS_RECOMMENDATION } from '@/content/quiz/subtitles'
+import { PREVIOUS_RECOMMENDATION } from '@/content/quiz/subtitles'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 const TOTAL_STEPS = 6
 
 export default function QuizPage() {
   const router = useRouter()
+  const isMobile = useIsMobile()
   const [currentStep, setCurrentStep] = useState(1)
   const [answers, setAnswers] = useState<QuizAnswers>(createEmptyAnswers)
   const [showYearError, setShowYearError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [previousProductName] = useState<string | null>(() => {
-    if (typeof window === 'undefined') return null
+  const [previousProductName, setPreviousProductName] = useState<string | null>(null)
+
+  useEffect(() => {
     try {
       const cached = localStorage.getItem('hiwei-recommendation')
-      if (!cached) return null
+      if (!cached) return
       const parsed = JSON.parse(cached)
-      return parsed.result?.main?.product?.name ?? null
-    } catch {
-      return null
-    }
-  })
+      setPreviousProductName(parsed.result?.main?.product?.name ?? null)
+    } catch { /* ignore */ }
+  }, [])
 
   const update = useCallback(<K extends keyof QuizAnswers>(key: K, value: QuizAnswers[K]) => {
     setAnswers((prev) => ({ ...prev, [key]: value }))
@@ -73,50 +75,44 @@ export default function QuizPage() {
     if (currentStep > 1) {
       setCurrentStep((s) => s - 1)
       setShowYearError(false)
+      setIsLoading(false)
     }
   }
 
-  const subtitle = SUBTITLE_CONFIG[currentStep]
-
   return (
-    <div className="flex h-dvh flex-col bg-white">
-      {/* Header */}
-      <AppHeader currentStep={currentStep} showStepPills answers={answers} />
+    <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">
+      <SiteHeader activeNav="cotizador" answers={answers} currentStep={currentStep} />
 
-      {/* Desktop layout */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Main */}
+      <div className="relative mx-auto flex w-full max-w-7xl flex-1 overflow-hidden">
+
+        {/* Main content */}
         <main className="flex flex-1 flex-col overflow-hidden">
-          {/* Subtitle bar */}
-          <SubtitleBar
-            variant={subtitle.variant}
-            title={subtitle.title}
-            subtitle={subtitle.subtitle}
-          />
-
-          {/* Previous recommendation banner */}
+          {/* Previous recommendation — above hero banner */}
           {currentStep === 1 && previousProductName && (
-            <Link
-              href="/resultado"
-              className="mx-5 mt-3 flex items-center justify-between rounded-xl border border-border bg-muted/50 px-4 py-3 transition-colors hover:bg-muted md:mx-4 md:my-6 md:mb-2"
-            >
-              <div className="flex flex-col">
-                <span className="text-[12px] text-muted-foreground">{PREVIOUS_RECOMMENDATION.label}</span>
-                <span className="text-[14px] font-semibold text-foreground">{previousProductName}</span>
-              </div>
-              <div className="flex items-center gap-1 text-[13px] font-semibold text-brand">
-                {PREVIOUS_RECOMMENDATION.cta}
-                <ArrowRight className="h-3.5 w-3.5" />
-              </div>
-            </Link>
+            <div className="px-5 pt-2 pb-1 md:px-8 md:pt-4 md:pb-0">
+              <Link
+                href="/resultado"
+                className="flex items-center justify-between gap-4 rounded-xl px-4 py-2.5 transition-all duration-200
+                  glass-card border-brand/20 hover:border-brand/40 hover:shadow-[0_0_20px_2px_oklch(0.8339_0.1432_93.43/0.12)]"
+              >
+                <div className="flex flex-col">
+                  <span className="text-xs text-muted-foreground">{PREVIOUS_RECOMMENDATION.label}</span>
+                  <span className="text-sm font-semibold text-foreground">{previousProductName}</span>
+                </div>
+                <div className="flex items-center gap-1 text-sm font-semibold text-brand">
+                  {PREVIOUS_RECOMMENDATION.cta}
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </div>
+              </Link>
+            </div>
           )}
 
-          {/* Progress */}
-          <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
+          {/* Step indicator — mobile only */}
+          {isMobile && <StepIndicator currentStep={currentStep} totalSteps={TOTAL_STEPS} />}
 
-          {/* Step content + navigation */}
-          <div className="flex-1 overflow-y-auto px-5 py-4 md:px-12 md:py-8">
-            <div className="mx-auto max-w-2xl">
+          {/* Step content */}
+          <div className="flex-1 overflow-y-auto no-scrollbar px-5 py-5 md:px-8 md:py-8">
+            <div key={currentStep}>
               {currentStep === 1 && (
                 <Step1
                   vehicleType={answers.vehicleType}
@@ -157,7 +153,7 @@ export default function QuizPage() {
                 />
               )}
 
-              {/* Navigation footer — desktop: inline after content */}
+              {/* Desktop navigation */}
               <div className="hidden md:block">
                 <NavigationFooter
                   currentStep={currentStep}
@@ -171,8 +167,8 @@ export default function QuizPage() {
             </div>
           </div>
 
-          {/* Navigation footer — mobile: pinned at bottom */}
-          <div className="md:hidden">
+          {/* Mobile navigation */}
+          <div className="pb-20 md:hidden">
             <NavigationFooter
               currentStep={currentStep}
               totalSteps={TOTAL_STEPS}
@@ -186,7 +182,9 @@ export default function QuizPage() {
         </main>
 
         {/* Desktop sidebar */}
-        <DesktopSidebar currentStep={currentStep} answers={answers} />
+        <DesktopSidebar>
+          <QuizSummarySteps answers={answers} currentStep={currentStep} />
+        </DesktopSidebar>
       </div>
     </div>
   )

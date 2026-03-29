@@ -3,6 +3,7 @@ import type { IDashcamRepository } from '@/domain/ports/IDashcamRepository'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 import type { CameraPosition } from '@/domain/value-objects/CameraPosition'
 import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
+import type { DashcamVideo } from '@/domain/value-objects/DashcamVideo'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function rowToProduct(row: Record<string, any>): DashcamProduct {
@@ -19,6 +20,7 @@ function rowToProduct(row: Record<string, any>): DashcamProduct {
     cycleSize: row.cycle_size as number,
     ecommerceUrl: (row.ecommerce_url as string),
     includedMemoryCardSize: (row.included_memory_card_size as number) ?? null,
+    videos: (row.videos as DashcamVideo[]) ?? [],
   }
 }
 

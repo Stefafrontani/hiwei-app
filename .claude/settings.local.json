@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(cd /c/Users/usuario/desktop/hiwei-app && npm run build 2>&1)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "mcp__shadcn__get_project_registries",
+      "mcp__shadcn__get_item_examples_from_registries",
+      "mcp__shadcn__search_items_in_registries"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "shadcn"
+  ]
 }

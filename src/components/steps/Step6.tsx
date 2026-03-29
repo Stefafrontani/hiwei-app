@@ -12,17 +12,17 @@ interface Step6Props {
 
 export function Step6({ installation, onChange }: Step6Props) {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       {/* Step title */}
-      <div className="flex items-start gap-2.5">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-success/10">
-          <Wrench className="h-[18px] w-[18px] text-success" />
+      <div className="animate-fade-in-up flex items-start gap-3">
+        <div className="hidden md:flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-success/10">
+          <Wrench className="h-5 w-5 text-success" />
         </div>
-        <div className="flex flex-col gap-0.5">
-          <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
+        <div className="flex flex-col gap-1">
+          <p className="text-lg font-bold text-foreground md:text-2xl md:tracking-tight">
             {STEP6.title}
           </p>
-          <p className="text-[12px] text-muted-foreground md:text-[14px]">
+          <p className="hidden md:block text-sm text-muted-foreground">
             {STEP6.subtitle}
           </p>
         </div>
@@ -30,16 +30,17 @@ export function Step6({ installation, onChange }: Step6Props) {
 
       {/* Options */}
       <div className="flex flex-col gap-3">
-        {STEP6.options.map((opt) => (
-          <OptionRow
-            key={opt.value}
-            icon={INSTALL_ICONS[opt.value]}
-            title={opt.title}
-            description={opt.description}
-            isActive={installation === opt.value}
-            onClick={() => onChange(opt.value)}
-            accentColor="green"
-          />
+        {STEP6.options.map((opt, i) => (
+          <div key={opt.value} className="animate-fade-in-up" style={{ '--delay': `${100 + i * 50}ms` } as React.CSSProperties}>
+            <OptionRow
+              icon={INSTALL_ICONS[opt.value]}
+              title={opt.title}
+              description={opt.description}
+              isActive={installation === opt.value}
+              onClick={() => onChange(opt.value)}
+              accentColor="green"
+            />
+          </div>
         ))}
       </div>
     </div>

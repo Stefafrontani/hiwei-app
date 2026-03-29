@@ -1,0 +1,80 @@
+'use client'
+
+import { Check } from 'lucide-react'
+import { Progress } from '@/components/ui/progress'
+
+const STEP_LABELS: Record<number, string> = {
+  1: 'Vehículo',
+  2: 'Calidad',
+  3: 'Cámaras',
+  4: 'Uso',
+  5: 'Extras',
+  6: 'Instalación',
+}
+
+interface StepIndicatorProps {
+  currentStep: number
+  totalSteps?: number
+}
+
+export function StepIndicator({ currentStep, totalSteps = 6 }: StepIndicatorProps) {
+  const steps = Array.from({ length: totalSteps }, (_, i) => i + 1)
+  const percent = Math.round(((currentStep - 1) / (totalSteps - 1)) * 100)
+  const isLastStep = currentStep === totalSteps
+
+  const completedCircle = isLastStep
+    ? 'bg-success text-success-foreground'
+    : 'bg-brand text-brand-foreground'
+  const currentCircle = isLastStep
+    ? 'border-2 border-success bg-background text-success animate-glow-pulse'
+    : 'border-2 border-brand bg-background text-brand animate-glow-pulse'
+  const currentLabel = isLastStep ? 'text-success font-semibold' : 'text-brand font-semibold'
+
+  return (
+    <div className="flex flex-col gap-3 px-5 pt-4 pb-2 overflow-hidden">
+      {/* Horizontal stepper with circles */}
+      <div className="relative flex items-center justify-between">
+        {/* Connecting line (background) */}
+        <div className="absolute top-4 left-4 right-4 h-[2px] bg-border/50 rounded-full" />
+        {/* Connecting line (filled) */}
+        <div
+          className="absolute top-4 left-4 right-4 h-[2px] origin-left rounded-full transition-all duration-500 ease-out"
+          style={{
+            transform: `scaleX(${currentStep === 1 ? 0 : (currentStep - 1) / (totalSteps - 1)})`,
+            background: isLastStep ? 'var(--success)' : 'var(--brand)',
+          }}
+        />
+
+        {steps.map((step) => {
+          const isCompleted = step < currentStep
+          const isCurrent = step === currentStep
+
+          return (
+            <div key={step} className="relative z-10 flex flex-col items-center gap-1.5">
+              <div
+                className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all duration-300
+                  ${isCompleted
+                    ? completedCircle
+                    : isCurrent
+                      ? currentCircle
+                      : 'border border-border/60 bg-background text-muted-foreground/50'}`}
+              >
+                {isCompleted ? <Check className="h-3.5 w-3.5" /> : step}
+              </div>
+              <span
+                className={`text-xs font-medium transition-colors duration-300
+                  ${isCurrent
+                    ? currentLabel
+                    : isCompleted
+                      ? 'text-muted-foreground'
+                      : 'text-muted-foreground/40'}`}
+              >
+                {STEP_LABELS[step]}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}

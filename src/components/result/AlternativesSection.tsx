@@ -15,7 +15,7 @@ export function AlternativesSection({ alternatives }: AlternativesSectionProps) 
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground">
+      <p className="text-xs font-semibold uppercase tracking-[1px] text-muted-foreground">
         ALTERNATIVAS
       </p>
       <div className="flex flex-col gap-2 md:flex-row">
@@ -29,19 +29,19 @@ export function AlternativesSection({ alternatives }: AlternativesSectionProps) 
               key={alt.product.id}
               className="flex flex-1 items-center gap-2.5 rounded-xl border border-border bg-card p-3 transition-colors hover:border-brand/40 hover:bg-brand/5"
             >
-              <span className={`shrink-0 rounded-md px-2 py-1 text-[10px] font-semibold ${badge.bg} ${badge.text}`}>
+              <span className={`shrink-0 rounded-md px-2 py-1 text-xs font-semibold ${badge.bg} ${badge.text}`}>
                 {badge.label}
               </span>
               <div className="flex flex-1 flex-col gap-0.5 min-w-0">
-                <span className="truncate text-[13px] font-semibold text-foreground">
+                <span className="truncate text-sm font-semibold text-foreground">
                   {alt.product.name}
                 </span>
-                <span className="text-[12px] text-muted-foreground">{`$${alt.product.basePrice.toLocaleString('es-AR')} ARS`}</span>
+                <span className="text-xs text-muted-foreground">{`$${alt.product.basePrice.toLocaleString('es-AR')} ARS`}</span>
               </div>
-              <span className="shrink-0 rounded-full bg-muted px-2 py-1 text-[11px] font-bold text-muted-foreground">
+              <span className="shrink-0 rounded-full bg-muted px-2 py-1 text-xs font-bold text-muted-foreground">
                 {alt.matchScore}%
               </span>
-              <span className="shrink-0 rounded-md bg-brand px-3 py-1.5 text-[11px] font-bold text-white transition-colors hover:bg-brand/90">
+              <span className="shrink-0 rounded-md bg-brand px-3 py-1.5 text-xs font-bold text-brand-foreground transition-colors hover:bg-brand/90">
                 Comprar
               </span>
             </a>

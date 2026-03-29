@@ -24,10 +24,10 @@ export function ProgressBar({ currentStep, totalSteps = 6 }: ProgressBarProps) {
     <div className="flex flex-col gap-2 px-5 pb-2 pt-4">
       {/* Header row */}
       <div className="flex items-center justify-between">
-        <span className={`text-[11px] font-semibold tracking-[1px] uppercase ${stepColor}`}>
+        <span className={`text-xs font-semibold tracking-[1px] uppercase ${stepColor}`}>
           PASO {currentStep} DE {totalSteps}
         </span>
-        <span className={`text-[12px] font-semibold ${labelColor}`}>
+        <span className={`text-xs font-semibold ${labelColor}`}>
           {STEP_LABELS[currentStep]}
         </span>
       </div>

@@ -1,6 +1,8 @@
 'use client'
 
 import { Headphones, Send, RotateCcw } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { DesktopSidebar } from '@/components/layout/DesktopSidebar'
 import { ContactMethodOverlay } from '@/components/overlays/ContactMethodOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
 import { QuizSummarySteps } from '@/components/quiz/QuizSummarySteps'
@@ -39,50 +41,36 @@ export function ResultDesktopSidebar({
 }: ResultDesktopSidebarProps) {
   return (
     <>
-      <aside className="hidden w-[360px] shrink-0 flex-col border-l border-border bg-muted/30 md:flex">
-        {/* Section 1: Quiz Summary */}
+      <DesktopSidebar>
         {answers && <QuizSummarySteps answers={answers} />}
 
-        {/* Section 2: CTAs */}
-        <div className="flex flex-col gap-3 border-t border-border bg-card p-6">
+        <div className="flex flex-col gap-3 border-t border-white/[0.06] p-6">
           <div className="flex flex-col gap-1">
-            <p className="text-[14px] font-bold text-foreground">¿Cómo podemos ayudarte?</p>
-            <p className="text-[12px] leading-relaxed text-muted-foreground">
+            <p className="text-sm font-bold text-foreground">¿Cómo podemos ayudarte?</p>
+            <p className="text-xs leading-relaxed text-muted-foreground">
               Elegí una opción para continuar.
             </p>
           </div>
 
-          {/* Primary */}
-          <button
-            onClick={onContactOpen}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand text-[14px] font-bold text-white transition-colors hover:bg-brand/90"
-          >
+          <Button variant="brand" size="xl" className="w-full" onClick={onContactOpen}>
             <Headphones className="h-4 w-4" />
             ¿Tenés dudas? Escribinos
-          </button>
+          </Button>
 
-          {/* Secondary */}
-          <button
-            onClick={onSendOpen}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-brand bg-card text-[14px] font-semibold text-brand transition-colors hover:bg-brand/10"
-          >
+          <Button variant="outline" size="xl" className="w-full" onClick={onSendOpen}>
             <Send className="h-4 w-4" />
             Recibir recomendación por mail
-          </button>
+          </Button>
 
-          {/* Tertiary */}
           <div className="flex flex-col items-center gap-1.5 pt-2 text-center">
-            <p className="text-[12px] text-muted-foreground">¿No es lo que buscabas?</p>
-            <button
-              onClick={onRestart}
-              className="inline-flex cursor-pointer items-center gap-1.5 text-[12px] font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
+            <p className="text-xs text-muted-foreground/60">¿No es lo que buscabas?</p>
+            <Button variant="ghost" size="sm" onClick={onRestart} className="text-muted-foreground/60 hover:text-foreground">
               <RotateCcw className="h-3.5 w-3.5" />
               Empezar de nuevo
-            </button>
+            </Button>
           </div>
         </div>
-      </aside>
+      </DesktopSidebar>
 
       <ContactMethodOverlay
         open={showContact}

@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight, CircleCheck } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 interface NavigationFooterProps {
   currentStep: number
@@ -21,40 +22,46 @@ export function NavigationFooter({
 }: NavigationFooterProps) {
   const isFirst = currentStep === 1
   const isLast = currentStep === totalSteps
+  const isMobile = variant === 'mobile'
+  const isDisabled = !canGoNext || isLoading
 
-  const footerClass =
-    variant === 'mobile'
-      ? 'flex h-20 items-center gap-3 border-t border-border bg-card px-5'
-      : 'mt-6 flex items-center justify-between'
-
-  const nextClass =
-    variant === 'mobile'
-      ? 'flex h-11 flex-1 items-center justify-center gap-1.5 rounded-[10px] text-[14px] font-semibold text-white transition-opacity'
-      : 'flex h-11 w-auto items-center justify-center gap-1.5 rounded-[10px] px-8 text-[14px] font-semibold text-white transition-opacity'
+  const nextShadow = isDisabled
+    ? 'shadow-none'
+    : isLast
+      ? 'shadow-[0_0_20px_2px] shadow-success/15'
+      : 'shadow-[0_0_20px_2px] shadow-brand/15'
 
   return (
-    <footer className={footerClass}>
-      {/* Back button */}
-      <button
+    <footer className={isMobile
+      ? 'flex items-center gap-4 px-5 py-4'
+      : 'mt-8 flex items-center justify-between'}
+    >
+      {/* Back */}
+      <Button
+        variant="outline"
+        size="lg"
         onClick={onBack}
         disabled={isFirst}
-        className={`flex h-11 w-20 items-center justify-center gap-1.5 rounded-[10px] text-[14px] font-medium transition-opacity
-          ${isFirst ? 'cursor-not-allowed bg-muted text-muted-foreground' : 'bg-muted text-muted-foreground hover:opacity-80'}`}
+        className={isMobile ? 'w-12' : ''}
       >
         <ChevronLeft className="h-4 w-4" />
-        Atrás
-      </button>
+        {!isMobile && <span>Atrás</span>}
+      </Button>
 
-      {/* Next / Finish button */}
-      <button
+      {/* Next / Finish */}
+      <Button
+        variant={isLast ? 'success' : 'brand'}
+        size="lg"
         onClick={onNext}
-        disabled={!canGoNext || isLoading}
-        className={`${nextClass}
-          ${!canGoNext || isLoading ? 'cursor-not-allowed opacity-50' : 'hover:opacity-90'}
-          ${isLast ? 'bg-success' : 'bg-brand'}`}
+        disabled={isDisabled}
+        className={`${isMobile ? 'flex-1' : ''} ${nextShadow} transition-shadow duration-200`}
       >
         {isLoading ? (
-          <span>Cargando...</span>
+          <span className="loading-dots flex gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-current" />
+            <span className="h-1.5 w-1.5 rounded-full bg-current" />
+            <span className="h-1.5 w-1.5 rounded-full bg-current" />
+          </span>
         ) : isLast ? (
           <>
             <CircleCheck className="h-4 w-4" />
@@ -66,7 +73,7 @@ export function NavigationFooter({
             <ChevronRight className="h-4 w-4" />
           </>
         )}
-      </button>
+      </Button>
     </footer>
   )
 }

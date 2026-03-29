@@ -18,21 +18,21 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
 
       {/* Name + Score row */}
       <div className="flex items-start justify-between gap-3 pt-1">
-        <p className="text-[18px] font-bold text-foreground md:text-[22px]">{product.name}</p>
-        <span className="shrink-0 rounded-lg bg-brand px-3 py-1.5 text-[13px] font-bold text-white md:text-[14px]">
+        <p className="text-lg font-bold text-foreground md:text-xl">{product.name}</p>
+        <span className="shrink-0 rounded-lg bg-brand px-3 py-1.5 text-sm font-bold text-brand-foreground">
           {matchScore}%
         </span>
       </div>
 
       {/* Description — expandable */}
       <div>
-        <p className={`text-[12px] leading-relaxed text-muted-foreground md:text-[13px] ${expanded ? '' : 'line-clamp-2'}`}>
+        <p className={`text-xs leading-relaxed text-muted-foreground md:text-sm ${expanded ? '' : 'line-clamp-2'}`}>
           {product.description}
         </p>
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="mt-1 text-[12px] font-semibold text-brand hover:underline"
+          className="mt-1 text-xs font-semibold text-brand hover:underline"
         >
           {expanded ? 'Ver menos' : 'Ver más'}
         </button>
@@ -43,7 +43,7 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
         {product.specs.slice(0, 3).map((spec) => (
           <span
             key={spec}
-            className="rounded-full bg-brand/15 px-3 py-1 text-[11px] font-semibold text-brand"
+            className="rounded-full bg-brand/15 px-3 py-1 text-xs font-semibold text-brand"
           >
             {spec}
           </span>
@@ -56,7 +56,7 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
           <button
             type="button"
             onClick={onSendRecommendation}
-            className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-brand bg-card px-4 py-2.5 text-[14px] font-semibold text-brand transition-colors hover:bg-brand/10 md:text-[15px]"
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-brand bg-card px-4 py-2.5 text-sm font-semibold text-brand transition-colors hover:bg-brand/10 md:text-base"
           >
             <Send className="h-4 w-4" />
             Enviar por mail
@@ -66,9 +66,9 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
           href={product.ecommerceUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex flex-1 items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-[14px] font-bold text-white transition-colors hover:bg-brand/90 md:text-[15px]"
+          className="inline-flex flex-1 items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-sm font-bold text-brand-foreground transition-colors hover:bg-brand/90 md:text-base"
         >
-          Comprar
+          Ver más información
         </a>
       </div>
     </div>

@@ -15,6 +15,10 @@ const PRODUCTS: DashcamProduct[] = [
     cycleSize: 0.8,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/anti-radares-full-hd-preventa-exclusiva/',
     includedMemoryCardSize: null,
+    videos: [
+      { youtubeId: 'eqgYzVkllG0', label: 'Ruta de día', cameraPosition: 'frontal' },
+      { youtubeId: 'eqgYzVkllG0', label: 'Vista trasera urbana', cameraPosition: 'trasera' },
+    ],
   },
   {
     id: 'f7np',
@@ -29,6 +33,10 @@ const PRODUCTS: DashcamProduct[] = [
     cycleSize: 1.1,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/f7np/',
     includedMemoryCardSize: 128,
+    videos: [
+      { youtubeId: 'eqgYzVkllG0', label: 'Autopista nocturna 4K', cameraPosition: 'frontal' },
+      { youtubeId: 'eqgYzVkllG0', label: 'Estacionamiento trasero', cameraPosition: 'trasera' },
+    ],
   },
   {
     id: 'vs1',
@@ -43,6 +51,10 @@ const PRODUCTS: DashcamProduct[] = [
     cycleSize: 0.7,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/discreto1/',
     includedMemoryCardSize: 32,
+    videos: [
+      { youtubeId: 'eqgYzVkllG0', label: 'Manejo urbano 2K', cameraPosition: 'frontal' },
+      { youtubeId: 'eASjGtNAaE8', label: 'Visión nocturna', cameraPosition: 'frontal' },
+    ],
   },
   {
     id: 'radares-4k',
@@ -57,6 +69,10 @@ const PRODUCTS: DashcamProduct[] = [
     cycleSize: 2.3,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/anti-radares-4k/',
     includedMemoryCardSize: null,
+    videos: [
+      { youtubeId: 'eqgYzVkllG0', label: 'Detalle patentes 4K', cameraPosition: 'frontal' },
+      { youtubeId: 'eqgYzVkllG0', label: 'Seguimiento trasero 4K', cameraPosition: 'trasera' },
+    ],
   },
   {
     id: 'f17-elite',
@@ -71,6 +87,11 @@ const PRODUCTS: DashcamProduct[] = [
     cycleSize: 2.2,
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/triple-cobertura/',
     includedMemoryCardSize: 128,
+    videos: [
+      { youtubeId: 'eqgYzVkllG0', label: 'Ciudad nocturna 4K', cameraPosition: 'frontal' },
+      { youtubeId: 'eqgYzVkllG0', label: 'Autopista trasera 2.5K', cameraPosition: 'trasera' },
+      { youtubeId: 'eqgYzVkllG0', label: 'Monitoreo interior', cameraPosition: 'interior' },
+    ],
   }
 ]
 

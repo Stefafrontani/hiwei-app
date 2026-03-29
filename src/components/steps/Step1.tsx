@@ -1,6 +1,8 @@
 'use client'
 
 import { Car, Truck, CircleHelp, Info } from 'lucide-react'
+import PickupTruck from '@/components/icons/PickupTruck'
+import Sedan from '@/components/icons/Sedan'
 import { OptionCard } from '@/components/quiz/OptionCard'
 import { InfoBox } from '@/components/quiz/InfoBox'
 import {
@@ -14,9 +16,9 @@ import type { VehicleType } from '@/domain/value-objects/VehicleType'
 import { STEP1 } from '@/content/quiz/steps'
 
 const VEHICLE_ICONS: Record<string, typeof Car> = {
-  auto: Car,
-  pickup: Truck,
-  suv: Truck,
+  auto: Sedan,
+  pickup: PickupTruck,
+  suv: Car,
   otro: CircleHelp,
 }
 
@@ -38,28 +40,28 @@ export function Step1({
   onVehicleYearChange,
 }: Step1Props) {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       {/* Step title */}
-      <div className="flex items-start gap-2.5">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-brand/10">
-          <Car className="h-[18px] w-[18px] text-brand" />
+      <div className="animate-fade-in-up flex items-start gap-3">
+        <div className="hidden md:flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand/10">
+          <Car className="h-5 w-5 text-brand" />
         </div>
-        <div className="flex flex-col gap-0.5">
-          <p className="text-[16px] font-semibold text-foreground md:text-[22px] md:font-bold">
+        <div className="flex flex-col gap-1">
+          <p className="text-lg font-bold text-foreground md:text-2xl md:tracking-tight">
             {STEP1.title}
           </p>
-          <p className="text-[12px] text-muted-foreground md:text-[14px]">
+          <p className="hidden md:block text-sm text-muted-foreground">
             {STEP1.subtitle}
           </p>
         </div>
       </div>
 
       {/* Vehicle type */}
-      <div className="flex flex-col gap-2.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
+      <div className="animate-fade-in-up flex flex-col gap-3" style={{ '--delay': '80ms' } as React.CSSProperties}>
+        <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground/70">
           {STEP1.vehicleTypeLabel}
         </p>
-        <div className="flex flex-wrap gap-2.5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {STEP1.options.map(({ type, label }) => (
             <OptionCard
               key={type}
@@ -73,8 +75,8 @@ export function Step1({
       </div>
 
       {/* Vehicle year */}
-      <div className="flex flex-col gap-2.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[1px] text-muted-foreground md:text-[12px]">
+      <div className="animate-fade-in-up flex flex-col gap-3" style={{ '--delay': '160ms' } as React.CSSProperties}>
+        <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground/70">
           {STEP1.vehicleYearLabel}
         </p>
         <Select
@@ -82,8 +84,8 @@ export function Step1({
           onValueChange={(val) => onVehicleYearChange(Number(val))}
         >
           <SelectTrigger
-            className={`h-12 w-full rounded-[10px] border px-3.5 text-[14px] md:w-80
-              ${showYearError ? 'border-destructive/30' : 'border-border'}`}
+            className={`h-12 w-full rounded-xl border px-4 text-sm glass-card md:w-80
+              ${showYearError ? 'border-destructive/40' : 'border-white/10 hover:border-brand/30'}`}
           >
             <SelectValue placeholder={STEP1.yearPlaceholder} />
           </SelectTrigger>

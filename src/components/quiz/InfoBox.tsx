@@ -1,13 +1,13 @@
 import type { LucideIcon } from 'lucide-react'
 
-type InfoVariant = 'blue' | 'orange' | 'amber' | 'green' | 'red'
+type InfoVariant = 'brand' | 'orange' | 'amber' | 'green' | 'red'
 
-const VARIANT_STYLES: Record<InfoVariant, { bg: string; border: string; iconColor: string; textColor: string }> = {
-  blue:   { bg: 'bg-brand/10',       border: 'border-brand/30',       iconColor: 'text-brand',       textColor: 'text-brand' },
-  orange: { bg: 'bg-warning/10',     border: 'border-warning/30',     iconColor: 'text-warning',     textColor: 'text-warning' },
-  amber:  { bg: 'bg-warning/10',     border: 'border-warning/30',     iconColor: 'text-warning',     textColor: 'text-warning' },
-  green:  { bg: 'bg-success/10',     border: 'border-success/30',     iconColor: 'text-success',     textColor: 'text-success' },
-  red:    { bg: 'bg-destructive/10', border: 'border-destructive/30', iconColor: 'text-destructive', textColor: 'text-destructive' },
+const VARIANT_STYLES: Record<InfoVariant, { bg: string; border: string; leftAccent: string; iconBg: string; iconColor: string; textColor: string }> = {
+  brand:  { bg: 'bg-brand/5',       border: 'border-brand/15',       leftAccent: 'before:bg-brand',       iconBg: 'bg-brand/15',       iconColor: 'text-brand',       textColor: 'text-brand/90' },
+  orange: { bg: 'bg-warning/5',     border: 'border-warning/15',     leftAccent: 'before:bg-warning',     iconBg: 'bg-warning/15',     iconColor: 'text-warning',     textColor: 'text-warning/90' },
+  amber:  { bg: 'bg-warning/5',     border: 'border-warning/15',     leftAccent: 'before:bg-warning',     iconBg: 'bg-warning/15',     iconColor: 'text-warning',     textColor: 'text-warning/90' },
+  green:  { bg: 'bg-success/5',     border: 'border-success/15',     leftAccent: 'before:bg-success',     iconBg: 'bg-success/15',     iconColor: 'text-success',     textColor: 'text-success/90' },
+  red:    { bg: 'bg-destructive/5', border: 'border-destructive/15', leftAccent: 'before:bg-destructive', iconBg: 'bg-destructive/15', iconColor: 'text-destructive', textColor: 'text-destructive/90' },
 }
 
 interface InfoBoxProps {
@@ -17,14 +17,18 @@ interface InfoBoxProps {
   className?: string
 }
 
-export function InfoBox({ icon: Icon, text, variant = 'blue', className = '' }: InfoBoxProps) {
+export function InfoBox({ icon: Icon, text, variant = 'brand', className = '' }: InfoBoxProps) {
   const s = VARIANT_STYLES[variant]
   return (
     <div
-      className={`flex items-start gap-2 rounded-lg border px-3 py-2.5 ${s.bg} ${s.border} ${className}`}
+      className={`relative flex items-start gap-3 rounded-xl border px-4 py-3
+        before:absolute before:left-0 before:top-2.5 before:bottom-2.5 before:w-[3px] before:rounded-full
+        ${s.bg} ${s.border} ${s.leftAccent} ${className}`}
     >
-      <Icon className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${s.iconColor}`} />
-      <p className={`text-[11px] leading-relaxed ${s.textColor}`}>{text}</p>
+      <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${s.iconBg}`}>
+        <Icon className={`h-3 w-3 ${s.iconColor}`} />
+      </div>
+      <p className={`text-xs leading-relaxed ${s.textColor}`}>{text}</p>
     </div>
   )
 }

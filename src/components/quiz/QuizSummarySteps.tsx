@@ -27,48 +27,70 @@ export function QuizSummarySteps({ answers, currentStep }: QuizSummaryStepsProps
   return (
     <>
       {/* Header */}
-      <div className="flex items-center gap-2 border-b border-border bg-card px-6 py-5">
-        <LayoutList className="h-4 w-4 text-brand" />
-        <span className="text-[14px] font-semibold text-foreground">Resumen</span>
+      <div className="flex items-center gap-2.5 px-6 py-5">
+        <LayoutList className="h-3.5 w-3.5 text-brand" />
+        <span className="text-base font-bold text-foreground tracking-tight">Resumen</span>
       </div>
 
-      {/* Steps */}
-      <div className="flex flex-col gap-1 overflow-y-auto p-3">
-        {STEP_CONFIG.map(({ step, label, getSummary }) => {
+      {/* Vertical stepper */}
+      <div className="flex flex-col px-5 pb-4">
+        {STEP_CONFIG.map(({ step, label, getSummary }, index) => {
           const isActive = !allCompleted && step === currentStep
           const isCompleted = allCompleted || step < (currentStep ?? 0)
           const summary = getSummary(answers)
           const isPending = summary === 'Pendiente'
+          const isLast = index === STEP_CONFIG.length - 1
 
           return (
-            <div
-              key={step}
-              className={`flex flex-col gap-1.5 rounded-lg px-3.5 py-3 transition-colors
-                ${isActive ? 'border border-brand bg-brand/10' : isPending ? 'border border-border bg-destructive/3' : 'border border-border bg-card'}`}
-            >
-              <div className="flex items-center justify-between">
+            <div key={step} className="flex gap-3">
+              {/* Vertical line + circle */}
+              <div className="flex flex-col items-center">
+                {/* Circle indicator */}
+                <div
+                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all duration-300
+                    ${isCompleted && !isPending
+                      ? 'bg-brand'
+                      : isActive
+                        ? 'border-2 border-brand bg-brand/10 animate-glow-pulse'
+                        : 'border border-dashed border-muted-foreground/30 bg-transparent'}`}
+                >
+                  {isCompleted && !isPending ? (
+                    <Check className="h-3 w-3 text-brand-foreground" />
+                  ) : (
+                    <span className={`text-xs font-bold
+                      ${isActive ? 'text-brand' : 'text-muted-foreground/40'}`}>
+                      {step}
+                    </span>
+                  )}
+                </div>
+                {/* Connecting line */}
+                {!isLast && (
+                  <div
+                    className={`w-[2px] flex-1 min-h-4 rounded-full transition-all duration-300
+                      ${isCompleted && !isPending ? 'bg-brand/50' : 'bg-border/30'}`}
+                  />
+                )}
+              </div>
+
+              {/* Content */}
+              <div className={`flex flex-col gap-0.5 pb-4 transition-all duration-300
+                ${isActive ? 'pt-0.5' : ''}`}
+              >
                 <span
-                  className={`text-[11px] font-semibold uppercase
-                    ${isActive || isCompleted ? 'text-brand' : 'text-muted-foreground'}`}
+                  className={`text-xs font-semibold uppercase tracking-wider transition-colors duration-300
+                    ${isActive || isCompleted ? 'text-brand' : 'text-muted-foreground/50'}`}
                 >
                   {label}
                 </span>
-                <div className="flex items-center gap-1.5">
-                  {!allCompleted && isCompleted && (
-                    <span className="text-[11px] text-brand/60">Paso {step}</span>
-                  )}
-                  {isCompleted && !isPending && (
-                    <div className="flex h-4 w-4 items-center justify-center rounded-full bg-brand">
-                      <Check className="h-2.5 w-2.5 text-white" />
-                    </div>
-                  )}
-                </div>
+                <span
+                  className={`text-xs font-medium transition-colors duration-300
+                    ${isPending
+                      ? isActive ? 'text-muted-foreground' : 'text-muted-foreground/30'
+                      : 'text-foreground/80'}`}
+                >
+                  {summary}
+                </span>
               </div>
-              <span
-                className={`text-[12px] font-medium ${isPending ? 'text-destructive' : 'text-muted-foreground'}`}
-              >
-                {summary}
-              </span>
             </div>
           )
         })}
