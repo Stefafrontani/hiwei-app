@@ -17,7 +17,7 @@ export function useVideoPlaylist({ videos, activeAngle, resetKey }: UseVideoPlay
   const [slideDirection, setSlideDirection] = useState<SlideDirection>(null)
   const [shouldAutoplay, setShouldAutoplay] = useState(false)
   const [replayToken, setReplayToken] = useState(0)
-  const [isAdvancing, setIsAdvancing] = useState(false)
+  const [advanceDirection, setAdvanceDirection] = useState<'next' | 'prev' | null>(null)
   const prevIndexRef = useRef(0)
 
   const angleVideos = useMemo(
@@ -41,22 +41,25 @@ export function useVideoPlaylist({ videos, activeAngle, resetKey }: UseVideoPlay
     setShouldAutoplay(true)
     prevIndexRef.current = newIndex
     setVideoIndexRaw(newIndex)
+    // Trigger inner transition (visible in fullscreen too)
+    setAdvanceDirection(newIndex > prev ? 'next' : 'prev')
+    setReplayToken((t) => t + 1)
   }, [])
 
   const handleVideoEnded = useCallback(() => {
     if (angleVideos.length <= 1) {
       // Single video: signal replay (infinite loop, no transition)
-      setIsAdvancing(false)
+      setAdvanceDirection(null)
       setReplayToken((t) => t + 1)
       return
     }
     const next = (prevIndexRef.current + 1) % angleVideos.length
-    setSlideDirection(null) // No horizontal animation for auto-advance (only for manual dot clicks)
+    setSlideDirection(null)
     setShouldAutoplay(true)
     prevIndexRef.current = next
     setVideoIndexRaw(next)
-    // Signal advance with transition
-    setIsAdvancing(true)
+    // Signal advance with transition direction
+    setAdvanceDirection('next')
     setReplayToken((t) => t + 1)
   }, [angleVideos.length])
 
@@ -69,6 +72,6 @@ export function useVideoPlaylist({ videos, activeAngle, resetKey }: UseVideoPlay
     slideDirection,
     shouldAutoplay,
     replayToken,
-    isAdvancing,
+    advanceDirection,
   }
 }

@@ -22,12 +22,12 @@ interface VideoThumbnailProps {
   autoplay?: boolean
   onEnded?: () => void
   replayToken?: number
-  isAdvancing?: boolean
+  advanceDirection?: 'next' | 'prev' | null
   onSwipeNext?: () => void
   onSwipePrev?: () => void
 }
 
-function ActivePlayer({ video, size, onEnded, replayToken, isAdvancing, onSwipeNext, onSwipePrev }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm'; onEnded?: () => void; replayToken?: number; isAdvancing?: boolean; onSwipeNext?: () => void; onSwipePrev?: () => void }) {
+function ActivePlayer({ video, size, onEnded, replayToken, advanceDirection, onSwipeNext, onSwipePrev }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm'; onEnded?: () => void; replayToken?: number; advanceDirection?: 'next' | 'prev' | null; onSwipeNext?: () => void; onSwipePrev?: () => void }) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const transitionRef = useRef<HTMLDivElement>(null)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
@@ -52,44 +52,48 @@ function ActivePlayer({ video, size, onEnded, replayToken, isAdvancing, onSwipeN
   }, [player.isEnded])
 
   // Playlist advancement / single-video loop.
-  // Slide transition only on multi-video advance, not on single-video loop.
+  // Slide transition only on multi-video advance (next/prev), not on single-video loop.
   const prevReplayRef = useRef(replayToken)
-  const isAdvancingRef = useRef(isAdvancing)
-  useEffect(() => { isAdvancingRef.current = isAdvancing })
+  const directionRef = useRef(advanceDirection)
+  useEffect(() => { directionRef.current = advanceDirection })
+
+  const allTransitionClasses = 'video-transition-exit-next video-transition-enter-next video-transition-exit-prev video-transition-enter-prev'
 
   useEffect(() => {
     if (replayToken === undefined || replayToken === prevReplayRef.current) return
     prevReplayRef.current = replayToken
 
     const el = transitionRef.current
-    // No animation for single-video loop or if ref unavailable
-    if (!el || !isAdvancingRef.current) {
+    const dir = directionRef.current
+    // No animation for single-video loop (dir === null) or if ref unavailable
+    if (!el || !dir) {
       player.replay()
       return
     }
 
-    // Multi-video advance: right-to-left slide transition
-    // Phase 1: exit (slide left + fade out)
-    el.classList.remove('video-transition-enter')
-    el.classList.add('video-transition-exit')
+    const exitClass = `video-transition-exit-${dir}`
+    const enterClass = `video-transition-enter-${dir}`
+
+    // Phase 1: exit
+    el.classList.remove(...allTransitionClasses.split(' '))
+    el.classList.add(exitClass)
 
     const exitTimer = setTimeout(() => {
-      // Video changes while content is invisible
       player.replay()
 
-      // Phase 2: enter (slide in from right + fade in)
-      el.classList.remove('video-transition-exit')
-      el.classList.add('video-transition-enter')
+      // Phase 2: enter
+      el.classList.remove(exitClass)
+      el.classList.add(enterClass)
 
       const enterTimer = setTimeout(() => {
-        el.classList.remove('video-transition-enter')
+        el.classList.remove(enterClass)
       }, 280)
 
       return () => clearTimeout(enterTimer)
     }, 120)
 
     return () => clearTimeout(exitTimer)
-  }, [replayToken, player.replay])
+  }, [replayToken, player.replay, allTransitionClasses])
 
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
@@ -141,7 +145,7 @@ function ActivePlayer({ video, size, onEnded, replayToken, isAdvancing, onSwipeN
   )
 }
 
-export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay = false, onEnded, replayToken, isAdvancing, onSwipeNext, onSwipePrev }: VideoThumbnailProps) {
+export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay = false, onEnded, replayToken, advanceDirection, onSwipeNext, onSwipePrev }: VideoThumbnailProps) {
   const [playing, setPlaying] = useState(autoplay)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
   const playSize = size === 'sm' ? 'h-8 w-8' : size === 'md' ? 'h-10 w-10' : 'h-16 w-16'
@@ -149,7 +153,7 @@ export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay 
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
   if (playing) {
-    return <ActivePlayer video={video} size={size} onEnded={onEnded} replayToken={replayToken} isAdvancing={isAdvancing} onSwipeNext={onSwipeNext} onSwipePrev={onSwipePrev} />
+    return <ActivePlayer video={video} size={size} onEnded={onEnded} replayToken={replayToken} advanceDirection={advanceDirection} onSwipeNext={onSwipeNext} onSwipePrev={onSwipePrev} />
   }
 
   return (
