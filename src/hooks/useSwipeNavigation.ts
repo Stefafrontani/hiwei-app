@@ -38,15 +38,25 @@ export function useSwipeNavigation({
     if (!el || !enabled) return
 
     const handleTouchStart = (e: TouchEvent) => {
+      // Ignore pinch-zoom (2+ fingers)
+      if (e.touches.length > 1) { tracking.current = false; return }
       const touch = e.touches[0]
       startX.current = touch.clientX
       startY.current = touch.clientY
       tracking.current = true
     }
 
+    // Cancel if a second finger joins mid-gesture (pinch-zoom started)
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 1) tracking.current = false
+    }
+
     const handleTouchEnd = (e: TouchEvent) => {
       if (!tracking.current) return
       tracking.current = false
+
+      // Skip when page is zoomed in — single-finger swipe is for panning, not navigation
+      if (window.visualViewport && window.visualViewport.scale > 1.05) return
 
       const touch = e.changedTouches[0]
       const dx = touch.clientX - startX.current
@@ -64,10 +74,12 @@ export function useSwipeNavigation({
     }
 
     el.addEventListener('touchstart', handleTouchStart, { passive: true })
+    el.addEventListener('touchmove', handleTouchMove, { passive: true })
     el.addEventListener('touchend', handleTouchEnd, { passive: true })
 
     return () => {
       el.removeEventListener('touchstart', handleTouchStart)
+      el.removeEventListener('touchmove', handleTouchMove)
       el.removeEventListener('touchend', handleTouchEnd)
     }
   }, [targetRef, enabled, threshold])
