@@ -57,9 +57,9 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
   }, [product.description])
 
   return (
-    <div className="flex flex-col gap-4 rounded-2xl glass-card border-white/[0.06] p-3 md:p-4">
-      {/* Video area */}
-      <div className="overflow-hidden rounded-xl">
+    <div className="flex flex-col gap-3 md:gap-4 md:rounded-2xl md:glass-card md:border-white/[0.06] md:p-4">
+      {/* Video area — full-width on mobile (breaks out of page padding), contained on desktop */}
+      <div className="-mx-4 overflow-hidden md:mx-0 md:rounded-xl">
         {activeVideo && (
           <div ref={slideRef}>
             <VideoThumbnail video={activeVideo} size="lg" onEnded={handleVideoEnded} autoplay={shouldAutoplay} replayToken={replayToken} advanceDirection={advanceDirection} onSwipeNext={angleVideos.length > 1 ? swipeNext : undefined} onSwipePrev={angleVideos.length > 1 ? swipePrev : undefined} />
@@ -68,7 +68,7 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
       </div>
 
       {/* Controls: dots + angle tabs */}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 md:px-0">
         <DotIndicator total={angleVideos.length} active={videoIndex} onDotClick={setVideoIndex} />
         <Tabs value={activeAngle} onValueChange={(v) => onAngleChange(v as CameraPosition)}>
           <TabsList className="w-full bg-white/[0.05] p-1 rounded-lg gap-1">
@@ -86,7 +86,7 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
       </div>
 
       {/* Product info */}
-      <div className="flex flex-col gap-2 px-1">
+      <div className="flex flex-col gap-2 md:px-1">
         <h3 className="text-[16px] font-bold text-foreground md:text-[18px]">{product.name}</h3>
         <div className="flex flex-wrap gap-1.5">
           {product.tags.slice(0, 4).map((tag) => (
