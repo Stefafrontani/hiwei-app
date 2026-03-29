@@ -49,21 +49,6 @@ export function PlayerControls({
   const volumeRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
 
-  // Debounce buffering to avoid flash on quick state changes
-  const [showBuffering, setShowBuffering] = useState(false)
-  const bufferTimer = useRef<ReturnType<typeof setTimeout>>(null)
-
-  useEffect(() => {
-    if (bufferTimer.current) clearTimeout(bufferTimer.current)
-    if (isBuffering) {
-      // Only show spinner after 400ms of continuous buffering
-      bufferTimer.current = setTimeout(() => setShowBuffering(true), 400)
-    } else {
-      setShowBuffering(false)
-    }
-    return () => { if (bufferTimer.current) clearTimeout(bufferTimer.current) }
-  }, [isBuffering])
-
   const isCompact = size === 'sm'
 
   const iconClass = isCompact ? 'h-4 w-4' : 'h-5 w-5'
@@ -128,14 +113,9 @@ export function PlayerControls({
   const progress = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0
   const displayProgress = seekPreview ?? progress
 
-  // Initial loading — subtle centered spinner, no overlay
-  if (!isReady) {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="video-loading-spinner" />
-      </div>
-    )
-  }
+  // No spinner — the thumbnail stays visible behind the iframe until video plays
+
+  if (!isReady) return null
 
   return (
     <div
@@ -151,14 +131,6 @@ export function PlayerControls({
         }
       }}
     >
-      {/* Buffering spinner — small, centered, no overlay (Reels style)
-          Only appears after 400ms debounce to avoid flash */}
-      {showBuffering && isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="video-loading-spinner" />
-        </div>
-      )}
-
       {/* Center play button — only when paused (not buffering), subtle tap target */}
       {!isPlaying && !isBuffering && (
         <div className="absolute inset-0 flex items-center justify-center" data-overlay>

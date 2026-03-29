@@ -35,6 +35,12 @@ function ActivePlayer({ video, size, onEnded, replayToken, advanceDirection, onS
   const player = useYouTubePlayer({ videoId: video.youtubeId, autoplay: true })
   const { isFullscreen, toggleFullscreen } = useFullscreen({ targetRef: wrapperRef })
 
+  // Hide iframe until video starts playing — thumbnail shows behind it instead of black
+  const [hasStarted, setHasStarted] = useState(false)
+  useEffect(() => {
+    if (player.isPlaying) setHasStarted(true)
+  }, [player.isPlaying])
+
   // Mobile swipe navigation (horizontal) — attached to the actual touch target
   useSwipeNavigation({
     targetRef: wrapperRef,
@@ -71,6 +77,9 @@ function ActivePlayer({ video, size, onEnded, replayToken, advanceDirection, onS
       return
     }
 
+    // Reset so thumbnail shows until new video plays
+    setHasStarted(false)
+
     const exitClass = `video-transition-exit-${dir}`
     const enterClass = `video-transition-enter-${dir}`
 
@@ -103,12 +112,21 @@ function ActivePlayer({ video, size, onEnded, replayToken, advanceDirection, onS
       popover="manual"
       className={`video-popover relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}
     >
-      {/* Inner wrapper for slide transition — animates without affecting fullscreen transforms */}
+      {/* Thumbnail background — visible during transitions instead of black */}
+      <Image
+        src={thumbnailUrl}
+        alt=""
+        fill
+        className="absolute inset-0 object-cover"
+        sizes="(max-width: 768px) 100vw, 50vw"
+      />
+
+      {/* Inner wrapper for slide transition — covers thumbnail when opaque */}
       <div ref={transitionRef} className="absolute inset-0">
-        {/* YouTube player target — pointer-events disabled to block all YT UI interaction */}
+        {/* YouTube player target — hidden until video starts playing so thumbnail shows instead of black iframe */}
         <div
           ref={player.containerRef}
-          className="absolute inset-0 h-full w-full pointer-events-none [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:h-full [&>iframe]:w-full"
+          className={`absolute inset-0 h-full w-full pointer-events-none [&>iframe]:absolute [&>iframe]:inset-0 [&>iframe]:h-full [&>iframe]:w-full ${hasStarted ? '' : 'opacity-0'}`}
         />
 
         {/* Thumbnail overlay when ended — covers YouTube end screen.
