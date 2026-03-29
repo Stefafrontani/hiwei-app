@@ -29,7 +29,7 @@ export function QuizSummarySteps({ answers, currentStep }: QuizSummaryStepsProps
       {/* Header */}
       <div className="flex items-center gap-2.5 px-6 py-5">
         <LayoutList className="h-3.5 w-3.5 text-brand" />
-        <span className="text-[15px] font-bold text-foreground tracking-tight">Resumen</span>
+        <span className="text-base font-bold text-foreground tracking-tight">Resumen</span>
       </div>
 
       {/* Vertical stepper */}
@@ -57,7 +57,7 @@ export function QuizSummarySteps({ answers, currentStep }: QuizSummaryStepsProps
                   {isCompleted && !isPending ? (
                     <Check className="h-3 w-3 text-brand-foreground" />
                   ) : (
-                    <span className={`text-[10px] font-bold
+                    <span className={`text-xs font-bold
                       ${isActive ? 'text-brand' : 'text-muted-foreground/40'}`}>
                       {step}
                     </span>
@@ -77,13 +77,13 @@ export function QuizSummarySteps({ answers, currentStep }: QuizSummaryStepsProps
                 ${isActive ? 'pt-0.5' : ''}`}
               >
                 <span
-                  className={`text-[11px] font-semibold uppercase tracking-wider transition-colors duration-300
+                  className={`text-xs font-semibold uppercase tracking-wider transition-colors duration-300
                     ${isActive || isCompleted ? 'text-brand' : 'text-muted-foreground/50'}`}
                 >
                   {label}
                 </span>
                 <span
-                  className={`text-[12px] font-medium transition-colors duration-300
+                  className={`text-xs font-medium transition-colors duration-300
                     ${isPending
                       ? isActive ? 'text-muted-foreground' : 'text-muted-foreground/30'
                       : 'text-foreground/80'}`}

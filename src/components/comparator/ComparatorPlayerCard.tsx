@@ -55,9 +55,9 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
   if (!product) {
     return (
       <div className="flex flex-col gap-3 rounded-2xl glass-card border-white/[0.06] p-3 md:p-4">
-        <div className="invisible text-[16px] font-bold">&lrm;</div>
+        <div className="invisible text-base font-bold">&lrm;</div>
         <div className="flex aspect-[16/10] items-center justify-center rounded-xl bg-white/[0.03]">
-          <p className="text-[13px] text-muted-foreground/60">Seleccioná un modelo</p>
+          <p className="text-sm text-muted-foreground/60">Seleccioná un modelo</p>
         </div>
         <div className="h-2" />
       </div>
@@ -66,7 +66,7 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
 
   return (
     <div className="flex flex-col gap-3 rounded-2xl glass-card border-white/[0.06] p-3 md:p-4">
-      <h3 className="text-[16px] font-bold text-foreground px-1">{product.name}</h3>
+      <h3 className="text-base font-bold text-foreground px-1">{product.name}</h3>
       <div className="overflow-hidden rounded-xl">
         {activeVideo ? (
           <div ref={slideRef}>
@@ -78,8 +78,8 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
               <VideoOff className="h-6 w-6 text-muted-foreground/50" />
             </div>
             <div>
-              <h4 className="text-[13px] font-bold text-foreground/80">No disponible</h4>
-              <p className="text-[11px] text-muted-foreground/50">
+              <h4 className="text-sm font-bold text-foreground/80">No disponible</h4>
+              <p className="text-xs text-muted-foreground/50">
                 Este modelo no cuenta con cámara {ANGLE_LABELS[activeAngle]}.
               </p>
             </div>

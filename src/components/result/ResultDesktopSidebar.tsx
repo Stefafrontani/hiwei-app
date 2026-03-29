@@ -46,8 +46,8 @@ export function ResultDesktopSidebar({
 
         <div className="flex flex-col gap-3 border-t border-white/[0.06] p-6">
           <div className="flex flex-col gap-1">
-            <p className="text-[14px] font-bold text-foreground">¿Cómo podemos ayudarte?</p>
-            <p className="text-[12px] leading-relaxed text-muted-foreground">
+            <p className="text-sm font-bold text-foreground">¿Cómo podemos ayudarte?</p>
+            <p className="text-xs leading-relaxed text-muted-foreground">
               Elegí una opción para continuar.
             </p>
           </div>
@@ -63,7 +63,7 @@ export function ResultDesktopSidebar({
           </Button>
 
           <div className="flex flex-col items-center gap-1.5 pt-2 text-center">
-            <p className="text-[12px] text-muted-foreground/60">¿No es lo que buscabas?</p>
+            <p className="text-xs text-muted-foreground/60">¿No es lo que buscabas?</p>
             <Button variant="ghost" size="sm" onClick={onRestart} className="text-muted-foreground/60 hover:text-foreground">
               <RotateCcw className="h-3.5 w-3.5" />
               Empezar de nuevo

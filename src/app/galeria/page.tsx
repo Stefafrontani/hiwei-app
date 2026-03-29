@@ -16,7 +16,7 @@ export default async function GaleriaPage() {
             <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
               Mirá cómo graban nuestras dashcams
             </h2>
-            <p className="mt-1 text-[13px] text-muted-foreground md:text-[14px]">
+            <p className="mt-1 text-sm text-muted-foreground">
               Videos reales en distintas condiciones de luz, clima y velocidad.
             </p>
           </div>

@@ -126,7 +126,7 @@ export default function BeneficiosPage() {
               <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
                 Beneficios exclusivos
               </h1>
-              <p className="mt-1 text-[13px] text-muted-foreground md:text-[14px]">
+              <p className="mt-1 text-sm text-muted-foreground">
                 Registrate y accedé a ventajas pensadas para vos.
               </p>
             </div>
@@ -142,13 +142,13 @@ export default function BeneficiosPage() {
                     {/* Left — Benefits */}
                     <div className="flex flex-1 flex-col justify-between bg-card p-6 md:border-r md:border-white/[0.06] md:p-8">
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[1.5px] text-muted-foreground">
+                        <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground">
                           Tus ventajas
                         </p>
-                        <h2 className="mt-2 text-[18px] font-bold leading-tight text-foreground md:text-[20px]">
+                        <h2 className="mt-2 text-lg font-bold leading-tight text-foreground md:text-xl">
                           Ventajas que te esperan
                         </h2>
-                        <p className="mt-1.5 text-[12px] leading-relaxed text-muted-foreground md:text-[13px]">
+                        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground md:text-sm">
                           Completá tus datos y empezá a disfrutar beneficios
                           pensados para vos.
                         </p>
@@ -170,10 +170,10 @@ export default function BeneficiosPage() {
                                 <b.Icon className={`h-4 w-4 ${b.fg}`} />
                               </div>
                               <div>
-                                <p className="text-[13px] font-semibold text-foreground">
+                                <p className="text-sm font-semibold text-foreground">
                                   {b.title}
                                 </p>
-                                <p className="mt-0.5 text-[11px] text-muted-foreground">
+                                <p className="mt-0.5 text-xs text-muted-foreground">
                                   {b.sub}
                                 </p>
                               </div>
@@ -187,7 +187,7 @@ export default function BeneficiosPage() {
                         style={{ '--delay': '550ms' } as React.CSSProperties}
                       >
                         <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-muted-foreground/50" />
-                        <p className="text-[11px] text-muted-foreground/50">
+                        <p className="text-xs text-muted-foreground/50">
                           Tus datos están protegidos. No compartimos tu
                           información.
                         </p>
@@ -207,7 +207,7 @@ export default function BeneficiosPage() {
                             <Field data-invalid={fieldState.invalid}>
                               <FieldLabel
                                 htmlFor="benefit-name"
-                                className="text-[12px] font-semibold"
+                                className="text-xs font-semibold"
                               >
                                 Nombre y apellido *
                               </FieldLabel>
@@ -220,7 +220,7 @@ export default function BeneficiosPage() {
                               />
                               <FieldError
                                 errors={[fieldState.error]}
-                                className="text-[11px]"
+                                className="text-xs"
                               />
                             </Field>
                           )}
@@ -233,7 +233,7 @@ export default function BeneficiosPage() {
                             <Field data-invalid={fieldState.invalid}>
                               <FieldLabel
                                 htmlFor="benefit-email"
-                                className="text-[12px] font-semibold"
+                                className="text-xs font-semibold"
                               >
                                 Email *
                               </FieldLabel>
@@ -247,7 +247,7 @@ export default function BeneficiosPage() {
                               />
                               <FieldError
                                 errors={[fieldState.error]}
-                                className="text-[11px]"
+                                className="text-xs"
                               />
                             </Field>
                           )}
@@ -260,7 +260,7 @@ export default function BeneficiosPage() {
                             <Field data-invalid={fieldState.invalid}>
                               <FieldLabel
                                 htmlFor="benefit-phone"
-                                className="text-[12px] font-medium text-muted-foreground"
+                                className="text-xs font-medium text-muted-foreground"
                               >
                                 Teléfono (opcional)
                               </FieldLabel>
@@ -274,7 +274,7 @@ export default function BeneficiosPage() {
                               />
                               <FieldError
                                 errors={[fieldState.error]}
-                                className="text-[11px]"
+                                className="text-xs"
                               />
                             </Field>
                           )}

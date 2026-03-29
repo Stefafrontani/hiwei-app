@@ -76,7 +76,7 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
               <TabsTrigger
                 key={angle}
                 value={angle}
-                className="flex-1 py-1.5 text-[11px] font-medium data-[state=active]:bg-brand data-[state=active]:text-brand-foreground data-[state=active]:font-bold data-[state=active]:shadow-none"
+                className="flex-1 py-1.5 text-xs font-medium data-[state=active]:bg-brand data-[state=active]:text-brand-foreground data-[state=active]:font-bold data-[state=active]:shadow-none"
               >
                 {CAMERA_POSITION_LABELS[angle]}
               </TabsTrigger>
@@ -87,10 +87,10 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
 
       {/* Product info */}
       <div className="flex flex-col gap-2 md:px-1">
-        <h3 className="text-[16px] font-bold text-foreground md:text-[18px]">{product.name}</h3>
+        <h3 className="text-base font-bold text-foreground md:text-lg">{product.name}</h3>
         <div className="flex flex-wrap gap-1.5">
           {product.tags.slice(0, 4).map((tag) => (
-            <Badge key={tag} variant="secondary" className="text-[10px]">
+            <Badge key={tag} variant="secondary" className="text-xs">
               {tag}
             </Badge>
           ))}
@@ -101,9 +101,9 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
           <div
             ref={descWrapRef}
             className="overflow-hidden transition-[max-height] duration-300 ease-out"
-            style={{ maxHeight: descOpen ? `${descWrapRef.current?.scrollHeight ?? 200}px` : '3.9rem' }}
+            style={{ maxHeight: descOpen ? `${descWrapRef.current?.scrollHeight ?? 200}px` : '4.3rem' }}
           >
-            <p className="text-[12px] leading-relaxed text-muted-foreground">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {product.description}
             </p>
           </div>
@@ -111,7 +111,7 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
             <CollapsibleTrigger asChild>
               <button
                 type="button"
-                className="mt-1 text-[11px] font-semibold text-brand hover:underline"
+                className="mt-1 text-xs font-semibold text-brand hover:underline"
               >
                 {descOpen ? 'Ver menos' : 'Ver más'}
               </button>

@@ -53,7 +53,7 @@ function PickerContent({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-[13px] leading-relaxed text-muted-foreground">
+      <p className="text-sm leading-relaxed text-muted-foreground">
         {isExpand
           ? `Tu dashcam incluye memoria de ${includedSize} GB. Podés agregar una tarjeta adicional de mayor capacidad.`
           : 'Elegí la capacidad de memoria que mejor se adapte a tu uso.'}
@@ -82,23 +82,23 @@ function PickerContent({
               <RadioCircle selected={isSelected && !isDisabled} />
               <div className="flex flex-1 flex-col">
                 <div className="flex items-center gap-2">
-                  <span className="text-[14px] font-semibold text-foreground">{card.size} GB</span>
+                  <span className="text-sm font-semibold text-foreground">{card.size} GB</span>
                   {isRecommended && (
-                    <Badge variant="brand" className="px-1.5 py-0 text-[10px]">
+                    <Badge variant="brand" className="px-1.5 py-0 text-xs">
                       Recomendada
                     </Badge>
                   )}
                   {isDisabled && (
-                    <span className="text-[10px] font-medium text-muted-foreground">
+                    <span className="text-xs font-medium text-muted-foreground">
                       Incluida o menor
                     </span>
                   )}
                 </div>
-                <span className="text-[11px] text-muted-foreground">
+                <span className="text-xs text-muted-foreground">
                   {calculateRecordingHours(card.size, cycleSize)}+ hs de grabación
                 </span>
               </div>
-              <span className="shrink-0 text-[13px] font-semibold text-foreground">
+              <span className="shrink-0 text-sm font-semibold text-foreground">
                 {`$${card.basePrice.toLocaleString('es-AR')} ARS`}
               </span>
             </button>
@@ -109,7 +109,7 @@ function PickerContent({
       <Button
         onClick={handleConfirm}
         variant="brand"
-        className="flex h-[50px] w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
+        className="flex h-[50px] w-full items-center gap-2 rounded-xl text-sm font-semibold"
       >
         <MemoryStick className="h-4 w-4" />
         {isExpand ? 'Agregar expansión' : 'Confirmar selección'}
@@ -137,7 +137,7 @@ export function MemoryCardPicker({
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
         <DialogContent className="max-w-[520px] rounded-2xl p-8">
           <DialogHeader>
-            <DialogTitle className="text-[20px] font-bold text-foreground">{title}</DialogTitle>
+            <DialogTitle className="text-xl font-bold text-foreground">{title}</DialogTitle>
           </DialogHeader>
           <PickerContent
             memoryCards={memoryCards}
@@ -162,7 +162,7 @@ export function MemoryCardPicker({
           </div>
           <SheetHeader>
             <div className="flex items-center justify-between">
-              <SheetTitle className="text-[18px] font-bold text-foreground">{title}</SheetTitle>
+              <SheetTitle className="text-lg font-bold text-foreground">{title}</SheetTitle>
               <button
                 onClick={onClose}
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-muted"

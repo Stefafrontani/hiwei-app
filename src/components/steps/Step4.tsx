@@ -37,7 +37,7 @@ export function Step4({ vehicleUsage, onChange }: Step4Props) {
 
       {/* Usage options */}
       <div className="flex flex-col gap-3">
-        <p className="animate-fade-in-up text-[11px] font-semibold uppercase tracking-[1.5px] text-muted-foreground/70 md:text-[12px]"
+        <p className="animate-fade-in-up text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground/70"
           style={{ '--delay': '120ms' } as React.CSSProperties}
         >
           {STEP4.sectionLabel}

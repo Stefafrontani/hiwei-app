@@ -28,7 +28,7 @@ export function InfoBox({ icon: Icon, text, variant = 'brand', className = '' }:
       <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${s.iconBg}`}>
         <Icon className={`h-3 w-3 ${s.iconColor}`} />
       </div>
-      <p className={`text-[12px] leading-relaxed ${s.textColor}`}>{text}</p>
+      <p className={`text-xs leading-relaxed ${s.textColor}`}>{text}</p>
     </div>
   )
 }

@@ -34,7 +34,7 @@ export function OptionCard({ icon: Icon, label, subLabel, isActive, onClick }: O
       )}
       {label && (
         <span
-          className={`text-[12px] font-semibold md:text-[13px] transition-colors duration-200
+          className={`text-xs font-semibold md:text-sm transition-colors duration-200
             ${isActive ? 'text-brand' : 'text-muted-foreground group-hover:text-foreground'}`}
         >
           {label}
@@ -42,7 +42,7 @@ export function OptionCard({ icon: Icon, label, subLabel, isActive, onClick }: O
       )}
       {subLabel && (
         <span
-          className={`text-[11px] font-medium transition-colors duration-200
+          className={`text-xs font-medium transition-colors duration-200
             ${isActive ? 'text-brand/80' : 'text-muted-foreground/70 group-hover:text-muted-foreground'}`}
         >
           {subLabel}

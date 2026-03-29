@@ -66,17 +66,17 @@ export function SpecsTable({ productA, productB }: SpecsTableProps) {
   const pad = isMobile ? 'p-3' : 'p-3'
   const headSize = isMobile ? 'text-xs' : 'text-sm'
   const cellSize = isMobile ? 'text-xs' : 'text-sm'
-  const labelSize = isMobile ? 'text-[10px]' : 'text-xs'
+  const labelSize = 'text-xs'
 
   return (
     <div className="glass-card rounded-2xl border-white/[0.06] overflow-hidden">
       <div className="px-4 pt-4 pb-2">
-        <h3 className="text-[15px] font-bold text-foreground">Especificaciones</h3>
+        <h3 className="text-base font-bold text-foreground">Especificaciones</h3>
       </div>
       <Table>
         <TableHeader>
           <TableRow className="bg-white/[0.03] hover:bg-white/[0.03] border-white/[0.06]">
-            <TableHead className={`w-1/3 ${wrap} ${pad} text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60`}>Modelo</TableHead>
+            <TableHead className={`w-1/3 ${wrap} ${pad} text-xs font-bold uppercase tracking-wider text-muted-foreground/60`}>Modelo</TableHead>
             <TableHead className={`w-1/3 ${wrap} ${pad} ${headSize} font-bold text-brand`}>{productA?.name ?? '—'}</TableHead>
             <TableHead className={`w-1/3 ${wrap} ${pad} ${headSize} font-bold text-brand`}>{productB?.name ?? '—'}</TableHead>
           </TableRow>

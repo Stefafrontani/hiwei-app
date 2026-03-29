@@ -202,7 +202,7 @@ export function PlayerControls({
                 <Play className={`${iconClass} fill-white`} />
               )}
             </button>
-            <span className={`text-white select-none tabular-nums ${isCompact ? 'text-[10px]' : 'text-xs'}`}>
+            <span className={`text-white select-none tabular-nums text-xs`}>
               {formatTime(currentTime)} / {formatTime(duration)}
             </span>
           </div>

@@ -33,7 +33,7 @@ export function Step3({ cameraPositions, onChange }: Step3Props) {
 
       {/* Options */}
       <div className="flex flex-col gap-3">
-        <p className="animate-fade-in-up text-[11px] font-semibold uppercase tracking-[1.5px] text-muted-foreground/70 md:text-[12px]"
+        <p className="animate-fade-in-up text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground/70"
           style={{ '--delay': '80ms' } as React.CSSProperties}
         >
           {STEP3.sectionLabel}

@@ -67,19 +67,19 @@ export function OptionRow({
       <div className="flex flex-1 flex-col gap-0.5">
         <div className="flex items-center justify-between gap-2">
           <span
-            className={`text-[14px] font-semibold transition-colors duration-200
+            className={`text-sm font-semibold transition-colors duration-200
               ${isActive ? c!.title : 'text-foreground'}`}
           >
             {title}
           </span>
           {badge && isActive && (
-            <Badge className="bg-brand text-brand-foreground text-[10px] px-2 py-0.5 h-auto">
+            <Badge className="bg-brand text-brand-foreground text-xs px-2 py-0.5 h-auto">
               {badge}
             </Badge>
           )}
         </div>
         <span
-          className={`text-[12px] transition-colors duration-200
+          className={`text-xs transition-colors duration-200
             ${isActive ? c!.desc : 'text-muted-foreground'}`}
         >
           {description}

@@ -12,10 +12,10 @@ export function ComparePromoCard() {
               <Columns3 className="h-5 w-5 text-brand" />
             </div>
             <div>
-              <p className="text-[16px] font-bold text-foreground">
+              <p className="text-base font-bold text-foreground">
                 ¿No sabés cuál elegir?
               </p>
-              <p className="mt-0.5 text-[13px] text-muted-foreground">
+              <p className="mt-0.5 text-sm text-muted-foreground">
                 Compará dos modelos lado a lado y encontrá tu dashcam ideal.
               </p>
             </div>

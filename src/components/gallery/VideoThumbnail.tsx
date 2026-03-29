@@ -196,13 +196,13 @@ export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay 
       </div>
 
       {/* Duration */}
-      <div className="absolute bottom-2 right-2 rounded bg-black/60 px-2 py-0.5 text-[10px] text-white backdrop-blur">
+      <div className="absolute bottom-2 right-2 rounded bg-black/60 px-2 py-0.5 text-xs text-white backdrop-blur">
         {formatDuration(video.durationSeconds)}
       </div>
 
       {/* Label */}
       {showLabel && (
-        <div className="absolute left-2 top-2 rounded bg-black/40 px-2 py-0.5 text-[10px] text-white backdrop-blur">
+        <div className="absolute left-2 top-2 rounded bg-black/40 px-2 py-0.5 text-xs text-white backdrop-blur">
           {video.label}
         </div>
       )}

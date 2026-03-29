@@ -58,7 +58,7 @@ export function Step1({
 
       {/* Vehicle type */}
       <div className="animate-fade-in-up flex flex-col gap-3" style={{ '--delay': '80ms' } as React.CSSProperties}>
-        <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-muted-foreground/70 md:text-[12px]">
+        <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground/70">
           {STEP1.vehicleTypeLabel}
         </p>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -76,7 +76,7 @@ export function Step1({
 
       {/* Vehicle year */}
       <div className="animate-fade-in-up flex flex-col gap-3" style={{ '--delay': '160ms' } as React.CSSProperties}>
-        <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-muted-foreground/70 md:text-[12px]">
+        <p className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground/70">
           {STEP1.vehicleYearLabel}
         </p>
         <Select
@@ -84,7 +84,7 @@ export function Step1({
           onValueChange={(val) => onVehicleYearChange(Number(val))}
         >
           <SelectTrigger
-            className={`h-12 w-full rounded-xl border px-4 text-[14px] glass-card md:w-80
+            className={`h-12 w-full rounded-xl border px-4 text-sm glass-card md:w-80
               ${showYearError ? 'border-destructive/40' : 'border-white/10 hover:border-brand/30'}`}
           >
             <SelectValue placeholder={STEP1.yearPlaceholder} />

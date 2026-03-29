@@ -22,7 +22,7 @@ function StepPills({ currentStep, totalSteps = 6 }: StepPillsProps) {
         return (
           <div key={step} className="flex items-center gap-1">
             <div
-              className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-bold transition-colors
+              className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold transition-colors
                 ${isActive ? 'bg-brand text-brand-foreground' : isCompleted ? 'bg-brand/80 text-brand-foreground' : 'bg-muted text-muted-foreground'}`}
             >
               {step}
@@ -84,7 +84,7 @@ export function AppHeader({ currentStep, showStepPills = false, answers }: AppHe
             className="flex items-center gap-1.5 rounded-lg border border-brand px-3 py-2 transition-opacity hover:opacity-90 md:gap-2 md:px-[18px] md:py-2.5"
           >
             <Gift className="h-3.5 w-3.5 text-brand md:h-4 md:w-4" />
-            <span className="text-[11px] font-semibold text-brand md:text-[14px]">
+            <span className="text-xs font-semibold text-brand md:text-sm">
               <span className="md:hidden">Beneficios</span>
               <span className="hidden md:inline">Beneficios exclusivos</span>
             </span>
@@ -94,7 +94,7 @@ export function AppHeader({ currentStep, showStepPills = false, answers }: AppHe
             className="flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 transition-colors hover:bg-brand/90 md:gap-2 md:px-[18px] md:py-2.5"
           >
             <Headphones className="h-3.5 w-3.5 text-brand-foreground md:h-4 md:w-4" />
-            <span className="text-[11px] font-bold text-brand-foreground md:text-[14px]">Contactanos</span>
+            <span className="text-xs font-bold text-brand-foreground md:text-sm">Contactanos</span>
           </button>
         </div>
       </header>

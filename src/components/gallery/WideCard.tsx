@@ -14,7 +14,7 @@ export function WideCard({ product }: WideCardProps) {
         <CardTitle className="text-xl font-bold">{product.name}</CardTitle>
         <div className="flex flex-wrap gap-2">
           {product.tags.slice(0, 4).map((tag) => (
-            <Badge key={tag} variant="secondary" className="text-[10px]">
+            <Badge key={tag} variant="secondary" className="text-xs">
               {tag}
             </Badge>
           ))}

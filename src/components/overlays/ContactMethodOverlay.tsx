@@ -44,8 +44,8 @@ function MethodOptions({
           <MessageCircle className="h-5 w-5 text-whatsapp" />
         </div>
         <div className="flex flex-col gap-0.5">
-          <span className="text-[14px] font-semibold text-foreground">Escribinos por WhatsApp</span>
-          <span className="text-[12px] text-muted-foreground">Respuesta rápida en horario comercial</span>
+          <span className="text-sm font-semibold text-foreground">Escribinos por WhatsApp</span>
+          <span className="text-xs text-muted-foreground">Respuesta rápida en horario comercial</span>
         </div>
       </a>
 
@@ -58,8 +58,8 @@ function MethodOptions({
           <Mail className="h-5 w-5 text-brand" />
         </div>
         <div className="flex flex-col gap-0.5">
-          <span className="text-[14px] font-semibold text-foreground">Dejanos tu consulta</span>
-          <span className="text-[12px] text-muted-foreground">Te contactamos por email o teléfono</span>
+          <span className="text-sm font-semibold text-foreground">Dejanos tu consulta</span>
+          <span className="text-xs text-muted-foreground">Te contactamos por email o teléfono</span>
         </div>
       </button>
     </div>

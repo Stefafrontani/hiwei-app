@@ -32,7 +32,7 @@ export function ResultSummaryBanner({ answers }: ResultSummaryBannerProps) {
 
   return (
     <div className="px-5 py-3.5 md:px-8">
-      <p className="text-[14px] font-bold text-success md:text-[16px]">
+      <p className="text-sm font-bold text-success md:text-base">
         ¡Listo! Ya tenemos tu recomendación
       </p>
       {chips.length > 0 && (
@@ -40,7 +40,7 @@ export function ResultSummaryBanner({ answers }: ResultSummaryBannerProps) {
           {chips.map((chip, i) => (
             <span
               key={i}
-              className="rounded-md bg-success/10 px-2 py-1 text-[11px] font-medium text-success/80 md:text-[12px]"
+              className="rounded-md bg-success/10 px-2 py-1 text-xs font-medium text-success/80"
             >
               {chip}
             </span>

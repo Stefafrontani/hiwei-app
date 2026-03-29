@@ -122,16 +122,16 @@ export default function ResultadoPage() {
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand/10">
                 <Camera className="h-8 w-8 animate-pulse text-brand" />
               </div>
-              <p className="text-[16px] font-semibold text-foreground">Calculando tu recomendación...</p>
-              <p className="text-[13px] text-muted-foreground">Analizando tus respuestas</p>
+              <p className="text-base font-semibold text-foreground">Calculando tu recomendación...</p>
+              <p className="text-sm text-muted-foreground">Analizando tus respuestas</p>
             </div>
           )}
 
           {/* Error */}
           {error && (
             <div className="m-4 flex flex-col items-center gap-3 rounded-xl bg-destructive/10 p-6 text-center">
-              <p className="text-[16px] font-semibold text-destructive">Algo salió mal</p>
-              <p className="text-[13px] text-muted-foreground">{error}</p>
+              <p className="text-base font-semibold text-destructive">Algo salió mal</p>
+              <p className="text-sm text-muted-foreground">{error}</p>
               <Button variant="link" onClick={() => router.push('/cotiza-tu-dashcam')} className="text-brand">
                 Intentar de nuevo
               </Button>
@@ -147,7 +147,7 @@ export default function ResultadoPage() {
               {expiresAt && (
                 <div className="flex items-center gap-1.5 rounded-lg bg-warning/15 px-3 py-2">
                   <Clock className="h-3.5 w-3.5 shrink-0 text-warning" />
-                  <p className="text-[12px] font-semibold text-warning">
+                  <p className="text-xs font-semibold text-warning">
                     Oferta válida hasta el {new Date(expiresAt).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
                   </p>
                 </div>
@@ -155,8 +155,8 @@ export default function ResultadoPage() {
 
               {/* Restart prompt (mobile) */}
               <div className="flex flex-col items-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-5 text-center md:hidden">
-                <p className="text-[14px] font-semibold text-foreground">¿No es lo que buscabas?</p>
-                <p className="text-[12px] leading-relaxed text-muted-foreground">Podés ajustar tus respuestas y encontrar la dashcam ideal.</p>
+                <p className="text-sm font-semibold text-foreground">¿No es lo que buscabas?</p>
+                <p className="text-xs leading-relaxed text-muted-foreground">Podés ajustar tus respuestas y encontrar la dashcam ideal.</p>
                 <Button variant="outline" onClick={handleRestart} className="mt-1">
                   <RotateCcw className="h-3.5 w-3.5" />
                   Empezar de nuevo

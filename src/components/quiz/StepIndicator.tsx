@@ -52,7 +52,7 @@ export function StepIndicator({ currentStep, totalSteps = 6 }: StepIndicatorProp
           return (
             <div key={step} className="relative z-10 flex flex-col items-center gap-1.5">
               <div
-                className={`flex h-8 w-8 items-center justify-center rounded-full text-[12px] font-bold transition-all duration-300
+                className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all duration-300
                   ${isCompleted
                     ? completedCircle
                     : isCurrent
@@ -62,7 +62,7 @@ export function StepIndicator({ currentStep, totalSteps = 6 }: StepIndicatorProp
                 {isCompleted ? <Check className="h-3.5 w-3.5" /> : step}
               </div>
               <span
-                className={`text-[9px] font-medium transition-colors duration-300
+                className={`text-xs font-medium transition-colors duration-300
                   ${isCurrent
                     ? currentLabel
                     : isCompleted

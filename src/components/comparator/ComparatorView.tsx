@@ -49,7 +49,7 @@ export function ComparatorView({ products }: ComparatorViewProps) {
       {/* Model Selectors */}
       <section className="animate-fade-in-up grid grid-cols-1 gap-4 md:grid-cols-2" style={{ '--delay': '80ms' } as React.CSSProperties}>
         <div className="flex flex-col gap-2">
-          <label className="text-[11px] font-semibold uppercase tracking-[1.5px] text-muted-foreground/70">Modelo A</label>
+          <label className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground/70">Modelo A</label>
           <Select value={modelAId ?? ''} onValueChange={(v) => setModelAId(v || null)}>
             <SelectTrigger className="w-full glass-card border-white/[0.06] h-11">
               <SelectValue placeholder="Seleccioná un modelo" />
@@ -64,7 +64,7 @@ export function ComparatorView({ products }: ComparatorViewProps) {
           </Select>
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-[11px] font-semibold uppercase tracking-[1.5px] text-muted-foreground/70">Modelo B</label>
+          <label className="text-xs font-semibold uppercase tracking-[1.5px] text-muted-foreground/70">Modelo B</label>
           <Select value={modelBId ?? ''} onValueChange={(v) => setModelBId(v || null)}>
             <SelectTrigger className="w-full glass-card border-white/[0.06] h-11">
               <SelectValue placeholder="Seleccioná un modelo" />
@@ -88,7 +88,7 @@ export function ComparatorView({ products }: ComparatorViewProps) {
               <TabsTrigger
                 key={angle}
                 value={angle}
-                className="flex-1 py-2 text-[11px] font-medium data-[state=active]:bg-brand data-[state=active]:text-brand-foreground data-[state=active]:font-bold data-[state=active]:shadow-none"
+                className="flex-1 py-2 text-xs font-medium data-[state=active]:bg-brand data-[state=active]:text-brand-foreground data-[state=active]:font-bold data-[state=active]:shadow-none"
               >
                 {CAMERA_POSITION_LABELS[angle]}
               </TabsTrigger>

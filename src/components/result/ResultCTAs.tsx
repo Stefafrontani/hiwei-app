@@ -24,7 +24,7 @@ export function ResultCTAs({ onRestart, answers, productName }: ResultCTAsProps)
         <Button
           onClick={() => setShowContact(true)}
           variant="brand"
-          className="flex h-12 w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
+          className="flex h-12 w-full items-center gap-2 rounded-xl text-sm font-semibold"
         >
           <Headphones className="h-4 w-4" />
           Consultanos
@@ -33,7 +33,7 @@ export function ResultCTAs({ onRestart, answers, productName }: ResultCTAsProps)
         <Button
           onClick={() => setShowSend(true)}
           variant="outline"
-          className="flex h-12 w-full items-center gap-2 rounded-xl text-[14px] font-semibold"
+          className="flex h-12 w-full items-center gap-2 rounded-xl text-sm font-semibold"
         >
           <Send className="h-4 w-4" />
           Enviarme la recomendación
@@ -42,7 +42,7 @@ export function ResultCTAs({ onRestart, answers, productName }: ResultCTAsProps)
         {onRestart && (
           <button
             onClick={onRestart}
-            className="flex cursor-pointer items-center justify-center gap-1.5 text-[12px] text-muted-foreground transition-colors hover:text-foreground"
+            className="flex cursor-pointer items-center justify-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             Empezar de nuevo

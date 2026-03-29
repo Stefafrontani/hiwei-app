@@ -96,10 +96,10 @@ export default function QuizPage() {
                   glass-card border-brand/20 hover:border-brand/40 hover:shadow-[0_0_20px_2px_oklch(0.8339_0.1432_93.43/0.12)]"
               >
                 <div className="flex flex-col">
-                  <span className="text-[11px] text-muted-foreground">{PREVIOUS_RECOMMENDATION.label}</span>
-                  <span className="text-[14px] font-semibold text-foreground">{previousProductName}</span>
+                  <span className="text-xs text-muted-foreground">{PREVIOUS_RECOMMENDATION.label}</span>
+                  <span className="text-sm font-semibold text-foreground">{previousProductName}</span>
                 </div>
-                <div className="flex items-center gap-1 text-[13px] font-semibold text-brand">
+                <div className="flex items-center gap-1 text-sm font-semibold text-brand">
                   {PREVIOUS_RECOMMENDATION.cta}
                   <ArrowRight className="h-3.5 w-3.5" />
                 </div>
