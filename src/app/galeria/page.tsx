@@ -3,6 +3,7 @@ import { SiteHeader } from '@/components/layout/SiteHeader'
 import { GalleryFeed } from '@/components/gallery/GalleryFeed'
 
 export default async function GaleriaPage() {
+  // TODO: Migrar de InMemoryDashcamRepository a SupabaseDashcamRepository.
   const repo = new InMemoryDashcamRepository()
   const products = await repo.getAll()
 
