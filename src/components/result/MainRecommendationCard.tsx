@@ -68,7 +68,7 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
           rel="noopener noreferrer"
           className="inline-flex flex-1 items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-sm font-bold text-brand-foreground transition-colors hover:bg-brand/90 md:text-base"
         >
-          Comprar
+          Ver más información
         </a>
       </div>
     </div>
