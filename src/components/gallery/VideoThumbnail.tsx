@@ -6,6 +6,7 @@ import { Play } from 'lucide-react'
 import type { DashcamVideo } from '@/domain/value-objects/DashcamVideo'
 import { useYouTubePlayer } from '@/hooks/useYouTubePlayer'
 import { useFullscreen } from '@/hooks/useFullscreen'
+import { useSwipeNavigation } from '@/hooks/useSwipeNavigation'
 import { PlayerControls } from './PlayerControls'
 
 function formatDuration(seconds: number): string {
@@ -22,15 +23,25 @@ interface VideoThumbnailProps {
   onEnded?: () => void
   replayToken?: number
   isAdvancing?: boolean
+  onSwipeNext?: () => void
+  onSwipePrev?: () => void
 }
 
-function ActivePlayer({ video, size, onEnded, replayToken, isAdvancing }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm'; onEnded?: () => void; replayToken?: number; isAdvancing?: boolean }) {
+function ActivePlayer({ video, size, onEnded, replayToken, isAdvancing, onSwipeNext, onSwipePrev }: { video: DashcamVideo; size: 'lg' | 'md' | 'sm'; onEnded?: () => void; replayToken?: number; isAdvancing?: boolean; onSwipeNext?: () => void; onSwipePrev?: () => void }) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const transitionRef = useRef<HTMLDivElement>(null)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
 
   const player = useYouTubePlayer({ videoId: video.youtubeId, autoplay: true })
   const { isFullscreen, toggleFullscreen } = useFullscreen({ targetRef: wrapperRef })
+
+  // Mobile swipe navigation (horizontal) — attached to the actual touch target
+  useSwipeNavigation({
+    targetRef: wrapperRef,
+    onNext: onSwipeNext ?? (() => {}),
+    onPrev: onSwipePrev ?? (() => {}),
+    enabled: !!(onSwipeNext || onSwipePrev),
+  })
 
   // Use ref for onEnded to prevent double-firing when callback identity changes
   const onEndedRef = useRef(onEnded)
@@ -130,7 +141,7 @@ function ActivePlayer({ video, size, onEnded, replayToken, isAdvancing }: { vide
   )
 }
 
-export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay = false, onEnded, replayToken, isAdvancing }: VideoThumbnailProps) {
+export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay = false, onEnded, replayToken, isAdvancing, onSwipeNext, onSwipePrev }: VideoThumbnailProps) {
   const [playing, setPlaying] = useState(autoplay)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
   const playSize = size === 'sm' ? 'h-8 w-8' : size === 'md' ? 'h-10 w-10' : 'h-16 w-16'
@@ -138,7 +149,7 @@ export function VideoThumbnail({ video, size = 'lg', showLabel = true, autoplay 
   const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`
 
   if (playing) {
-    return <ActivePlayer video={video} size={size} onEnded={onEnded} replayToken={replayToken} isAdvancing={isAdvancing} />
+    return <ActivePlayer video={video} size={size} onEnded={onEnded} replayToken={replayToken} isAdvancing={isAdvancing} onSwipeNext={onSwipeNext} onSwipePrev={onSwipePrev} />
   }
 
   return (

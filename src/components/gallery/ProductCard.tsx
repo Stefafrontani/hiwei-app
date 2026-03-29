@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { DotIndicator } from '@/components/ui/dot-indicator'
@@ -24,6 +24,19 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
 
   const slideRef = useRef<HTMLDivElement>(null)
   const slideClass = slideDirection === 'right' ? 'slide-in-right' : slideDirection === 'left' ? 'slide-in-left' : ''
+
+  // Mobile swipe callbacks for horizontal navigation between angle videos
+  const swipeNext = useCallback(() => {
+    if (angleVideos.length <= 1) return
+    const next = (videoIndex + 1) % angleVideos.length
+    setVideoIndex(next)
+  }, [angleVideos.length, videoIndex, setVideoIndex])
+
+  const swipePrev = useCallback(() => {
+    if (angleVideos.length <= 1) return
+    const prev = (videoIndex - 1 + angleVideos.length) % angleVideos.length
+    setVideoIndex(prev)
+  }, [angleVideos.length, videoIndex, setVideoIndex])
   const [descOpen, setDescOpen] = useState(false)
   const [descOverflows, setDescOverflows] = useState(false)
   const descWrapRef = useRef<HTMLDivElement>(null)
@@ -49,7 +62,7 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
       <div className="overflow-hidden rounded-xl">
         {activeVideo && (
           <div ref={slideRef}>
-            <VideoThumbnail video={activeVideo} size="lg" onEnded={handleVideoEnded} autoplay={shouldAutoplay} replayToken={replayToken} isAdvancing={isAdvancing} />
+            <VideoThumbnail video={activeVideo} size="lg" onEnded={handleVideoEnded} autoplay={shouldAutoplay} replayToken={replayToken} isAdvancing={isAdvancing} onSwipeNext={angleVideos.length > 1 ? swipeNext : undefined} onSwipePrev={angleVideos.length > 1 ? swipePrev : undefined} />
           </div>
         )}
       </div>

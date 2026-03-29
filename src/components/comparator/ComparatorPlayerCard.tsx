@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { VideoOff } from 'lucide-react'
 import { DotIndicator } from '@/components/ui/dot-indicator'
 import { VideoThumbnail } from '@/components/gallery/VideoThumbnail'
@@ -31,6 +31,18 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
   const slideRef = useRef<HTMLDivElement>(null)
   const slideClass = slideDirection === 'right' ? 'slide-in-right' : slideDirection === 'left' ? 'slide-in-left' : ''
 
+  const swipeNext = useCallback(() => {
+    if (angleVideos.length <= 1) return
+    const next = (videoIndex + 1) % angleVideos.length
+    setVideoIndex(next)
+  }, [angleVideos.length, videoIndex, setVideoIndex])
+
+  const swipePrev = useCallback(() => {
+    if (angleVideos.length <= 1) return
+    const prev = (videoIndex - 1 + angleVideos.length) % angleVideos.length
+    setVideoIndex(prev)
+  }, [angleVideos.length, videoIndex, setVideoIndex])
+
   // Re-trigger slide animation imperatively (no key-based remount)
   useEffect(() => {
     const el = slideRef.current
@@ -58,7 +70,7 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
       <div className="overflow-hidden rounded-xl">
         {activeVideo ? (
           <div ref={slideRef}>
-            <VideoThumbnail video={activeVideo} size="md" showLabel autoplay={autoplay || shouldAutoplay} onEnded={handleVideoEnded} replayToken={replayToken} isAdvancing={isAdvancing} />
+            <VideoThumbnail video={activeVideo} size="md" showLabel autoplay={autoplay || shouldAutoplay} onEnded={handleVideoEnded} replayToken={replayToken} isAdvancing={isAdvancing} onSwipeNext={angleVideos.length > 1 ? swipeNext : undefined} onSwipePrev={angleVideos.length > 1 ? swipePrev : undefined} />
           </div>
         ) : (
           <div className="flex aspect-[16/10] flex-col items-center justify-center gap-3 rounded-xl bg-white/[0.03] px-8 text-center">
