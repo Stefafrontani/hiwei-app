@@ -100,14 +100,13 @@ export function VideoThumbnail({
       return
     }
 
-    // Fade out
-    el.style.opacity = '0'
+    // Subtle fade: dim slightly, swap, restore
+    el.style.opacity = '0.4'
 
     const fadeOutTimer = setTimeout(() => {
       replay()
-      // Fade in
       el.style.opacity = '1'
-    }, 200)
+    }, 150)
 
     return () => clearTimeout(fadeOutTimer)
   }, [replayToken, replay])
