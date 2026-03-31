@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Pause, Play, Volume2, VolumeX, Maximize2, Minimize2, SkipBack, SkipForward } from 'lucide-react'
 import { useTouchSeek } from '@/hooks/useTouchSeek'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60)
@@ -55,7 +56,9 @@ export function PlayerControls({
   const volumeRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
 
+  const isMobile = useIsMobile()
   const isCompact = size === 'sm'
+  const muteOnly = isCompact || isMobile
   const iconClass = isCompact ? 'h-4 w-4' : 'h-5 w-5'
 
   // Touch seeking
@@ -231,7 +234,7 @@ export function PlayerControls({
 
             {/* Volume + Fullscreen */}
             <div className="flex items-center rounded-full bg-black/30">
-              {isCompact ? (
+              {muteOnly ? (
                 <button
                   type="button"
                   onClick={(e) => { e.stopPropagation(); onToggleMute(); resetHideTimer() }}
