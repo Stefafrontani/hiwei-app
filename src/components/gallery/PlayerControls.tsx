@@ -162,12 +162,12 @@ export function PlayerControls({
         <div className={`h-16 bg-gradient-to-b from-black/30 to-transparent transition-opacity duration-200 ${isSeeking ? 'opacity-0' : 'opacity-100'}`} data-overlay />
 
         {/* Center: play/pause + prev/next — hides during seeking */}
-        <div className={`flex items-center justify-center gap-6 transition-opacity duration-200 ${isSeeking ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} data-overlay>
+        <div className={`flex items-center justify-center gap-6 transition-opacity duration-300 ${isSeeking ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} data-overlay>
           {onPrev && (
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); onPrev(); resetHideTimer() }}
-              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-all duration-200 hover:bg-black/55 hover:scale-105 active:scale-90"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-black/50 text-white transition-[transform,background-color] duration-200 hover:bg-black/65 hover:scale-105 active:scale-90"
             >
               <SkipBack className="h-5 w-5 fill-white" />
             </button>
@@ -176,17 +176,17 @@ export function PlayerControls({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onTogglePlay(); resetHideTimer() }}
-            className="relative flex h-14 w-14 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-all duration-200 hover:bg-black/55 hover:scale-105 active:scale-90"
+            className="relative flex h-14 w-14 items-center justify-center rounded-full bg-black/50 text-white transition-[transform,background-color] duration-200 hover:bg-black/65 hover:scale-105 active:scale-90"
           >
-            <Play className={`absolute h-7 w-7 fill-white ml-0.5 transition-all duration-200 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
-            <Pause className={`absolute h-7 w-7 fill-white transition-all duration-200 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
+            <Play className={`absolute h-7 w-7 fill-white ml-0.5 transition-[opacity,transform] duration-200 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
+            <Pause className={`absolute h-7 w-7 fill-white transition-[opacity,transform] duration-200 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
           </button>
 
           {onNext && (
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); onNext(); resetHideTimer() }}
-              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-all duration-200 hover:bg-black/55 hover:scale-105 active:scale-90"
+              className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-black/50 text-white transition-[transform,background-color] duration-200 hover:bg-black/65 hover:scale-105 active:scale-90"
             >
               <SkipForward className="h-5 w-5 fill-white" />
             </button>
@@ -194,7 +194,7 @@ export function PlayerControls({
         </div>
 
         {/* Bottom: progress bar + controls */}
-        <div className={`flex flex-col pt-8 transition-all duration-200 ${isSeeking ? 'bg-transparent' : 'bg-gradient-to-t from-black/60 via-black/30 to-transparent'}`}>
+        <div className={`flex flex-col pt-8 ${isSeeking ? 'bg-transparent' : 'bg-gradient-to-t from-black/60 via-black/30 to-transparent'}`}>
           {/* Progress bar */}
           <div
             ref={progressRef}
