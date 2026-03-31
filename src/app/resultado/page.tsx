@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { Camera, Headphones, RotateCcw, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SiteHeader } from '@/components/layout/SiteHeader'
-import { ResultSummaryBanner } from '@/components/result/ResultSummaryBanner'
 import { MainRecommendationCard } from '@/components/result/MainRecommendationCard'
 import { BudgetBreakdown } from '@/components/result/BudgetBreakdown'
 import { ResultDesktopSidebar } from '@/components/result/ResultDesktopSidebar'
@@ -113,8 +112,6 @@ export default function ResultadoPage() {
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 overflow-hidden">
         {/* Main scrollable column */}
         <main className="flex flex-1 flex-col overflow-y-auto no-scrollbar">
-          {/* Summary Banner */}
-          {result && !loading && <ResultSummaryBanner answers={answers} />}
 
           {/* Loading */}
           {loading && (

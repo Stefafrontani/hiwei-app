@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
 import { Send } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardAction, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Collapsible, CollapsibleTrigger } from '@/components/ui/collapsible'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 
 interface MainRecommendationCardProps {
@@ -14,8 +14,6 @@ interface MainRecommendationCardProps {
 }
 
 export function MainRecommendationCard({ product, matchScore, onSendRecommendation }: MainRecommendationCardProps) {
-  const [expanded, setExpanded] = useState(false)
-
   return (
     <div className="shimmer-border">
       <Card className="gap-3 overflow-hidden rounded-[inherit] border-0 bg-background py-4 shadow-none md:gap-3.5 md:py-5">
@@ -32,23 +30,8 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
           </CardAction>
         </CardHeader>
 
-        {/* Description + Spec chips */}
+        {/* Spec chips + Description */}
         <CardContent className="flex flex-col gap-3 px-4 md:px-5">
-          {/* Description — expandable */}
-          <div>
-            <p className={`text-xs leading-relaxed text-muted-foreground md:text-sm ${expanded ? '' : 'line-clamp-2'}`}>
-              {product.description}
-            </p>
-            <Button
-              variant="link"
-              onClick={() => setExpanded((v) => !v)}
-              aria-expanded={expanded}
-              className="mt-1 h-auto p-0 text-xs font-semibold text-brand"
-            >
-              {expanded ? 'Ver menos' : 'Ver más'}
-            </Button>
-          </div>
-
           {/* Spec chips — first 3 only */}
           <div className="flex flex-wrap gap-1.5">
             {product.specs.slice(0, 3).map((spec) => (
@@ -59,20 +42,34 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
               </Badge>
             ))}
           </div>
+
+          {/* Description — expandable via Collapsible */}
+          <Collapsible className="group/desc">
+            <p className="text-xs leading-relaxed text-muted-foreground group-data-[state=closed]/desc:line-clamp-2 md:text-sm">
+              {product.description}
+            </p>
+            <CollapsibleTrigger asChild>
+              <Button variant="link" className="mt-1 h-auto p-0 text-xs font-semibold text-brand">
+                <span className="group-data-[state=open]/desc:hidden">Ver más</span>
+                <span className="group-data-[state=closed]/desc:hidden">Ver menos</span>
+              </Button>
+            </CollapsibleTrigger>
+          </Collapsible>
         </CardContent>
 
         {/* CTAs */}
-        <CardFooter className="mt-1 gap-2 px-4 md:px-5">
+        <CardFooter className="mt-1 flex-col gap-2 px-4 md:flex-row md:justify-end md:px-5">
           {onSendRecommendation && (
             <Button
               variant="outline"
               onClick={onSendRecommendation}
+              className="w-full md:w-auto"
             >
               <Send className="h-4 w-4" />
               Enviar por mail
             </Button>
           )}
-          <Button variant="brand" asChild className="flex-1">
+          <Button variant="brand" asChild className="w-full md:w-auto md:px-12">
             <a
               href={product.ecommerceUrl}
               target="_blank"
