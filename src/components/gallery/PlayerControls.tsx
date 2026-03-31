@@ -178,13 +178,10 @@ export function PlayerControls({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onTogglePlay(); resetHideTimer() }}
-            className="flex h-14 w-14 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-all duration-200 hover:bg-black/55 hover:scale-105 active:scale-90"
+            className="relative flex h-14 w-14 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white transition-all duration-200 hover:bg-black/55 hover:scale-105 active:scale-90"
           >
-            {isPlaying ? (
-              <Pause className="h-7 w-7 fill-white" />
-            ) : (
-              <Play className="h-7 w-7 fill-white ml-0.5" />
-            )}
+            <Play className={`absolute h-7 w-7 fill-white ml-0.5 transition-all duration-200 ${isPlaying ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
+            <Pause className={`absolute h-7 w-7 fill-white transition-all duration-200 ${isPlaying ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
           </button>
 
           {onNext && (
