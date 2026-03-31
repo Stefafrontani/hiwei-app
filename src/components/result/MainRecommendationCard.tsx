@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect, useRef } from 'react'
 import { Send } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardAction, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -14,6 +15,16 @@ interface MainRecommendationCardProps {
 }
 
 export function MainRecommendationCard({ product, matchScore, onSendRecommendation }: MainRecommendationCardProps) {
+  const [descOpen, setDescOpen] = useState(false)
+  const [descOverflows, setDescOverflows] = useState(false)
+  const descWrapRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = descWrapRef.current
+    if (!el) return
+    setDescOverflows(el.scrollHeight > el.clientHeight + 1)
+  }, [product.description])
+
   return (
     <div className="shimmer-border">
       <Card className="gap-3 overflow-hidden rounded-[inherit] border-0 bg-background py-4 shadow-none md:gap-3.5 md:py-5">
@@ -24,7 +35,7 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
             {product.name}
           </CardTitle>
           <CardAction>
-            <Badge variant="brand" className="rounded-lg px-3 py-1.5 text-sm font-bold">
+            <Badge variant="brand">
               {matchScore}%
             </Badge>
           </CardAction>
@@ -35,30 +46,35 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
           {/* Spec chips — first 3 only */}
           <div className="flex flex-wrap gap-1.5">
             {product.specs.slice(0, 3).map((spec) => (
-              <Badge
-                key={spec}
-              >
+              <Badge key={spec} variant="secondary" className="text-xs">
                 {spec}
               </Badge>
             ))}
           </div>
 
-          {/* Description — expandable via Collapsible */}
-          <Collapsible className="group/desc">
-            <p className="text-xs leading-relaxed text-muted-foreground group-data-[state=closed]/desc:line-clamp-2 md:text-sm">
-              {product.description}
-            </p>
-            <CollapsibleTrigger asChild>
-              <Button variant="link" className="mt-1 h-auto p-0 text-xs font-semibold text-brand">
-                <span className="group-data-[state=open]/desc:hidden">Ver más</span>
-                <span className="group-data-[state=closed]/desc:hidden">Ver menos</span>
-              </Button>
-            </CollapsibleTrigger>
+          {/* Description — expandable with animated height (same pattern as gallery ProductCard) */}
+          <Collapsible open={descOpen} onOpenChange={setDescOpen}>
+            <div
+              ref={descWrapRef}
+              className="overflow-hidden transition-[max-height] duration-300 ease-out"
+              style={{ maxHeight: descOpen ? `${descWrapRef.current?.scrollHeight ?? 200}px` : '3.4rem' }}
+            >
+              <p className="text-xs leading-relaxed text-muted-foreground md:text-sm">
+                {product.description}
+              </p>
+            </div>
+            {descOverflows && (
+              <CollapsibleTrigger asChild>
+                <Button variant="link" className="mt-1 h-auto p-0 text-xs font-semibold text-brand">
+                  {descOpen ? 'Ver menos' : 'Ver más'}
+                </Button>
+              </CollapsibleTrigger>
+            )}
           </Collapsible>
         </CardContent>
 
-        {/* CTAs */}
-        <CardFooter className="mt-1 flex-col gap-2 px-4 md:flex-row md:justify-end md:px-5">
+        {/* CTAs — primary (brand) first, secondary (outline) below on mobile */}
+        <CardFooter className="mt-1 flex-col-reverse gap-2 px-4 md:flex-row md:justify-end md:px-5">
           {onSendRecommendation && (
             <Button
               variant="outline"
