@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 
 const VEHICLE_LABELS: Record<string, string> = {
@@ -38,12 +39,12 @@ export function ResultSummaryBanner({ answers }: ResultSummaryBannerProps) {
       {chips.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1.5">
           {chips.map((chip, i) => (
-            <span
+            <Badge
               key={i}
-              className="rounded-md bg-success/10 px-2 py-1 text-xs font-medium text-success/80"
+              className="border-success/30 bg-success/10 text-success/80 rounded-md px-2 py-1 text-xs font-medium"
             >
               {chip}
-            </span>
+            </Badge>
           ))}
         </div>
       )}
