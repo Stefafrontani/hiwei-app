@@ -104,12 +104,6 @@ export function useVideoPlayer({
       setIsMuted(video.muted)
     }
 
-    const onTimeUpdate = () => {
-      if (!seekingRef.current) {
-        setCurrentTime(video.currentTime)
-      }
-    }
-
     video.addEventListener('loadedmetadata', onLoadedMetadata)
     video.addEventListener('play', onPlay)
     video.addEventListener('pause', onPause)
@@ -118,7 +112,6 @@ export function useVideoPlayer({
     video.addEventListener('ended', onEnded)
     video.addEventListener('error', onError)
     video.addEventListener('volumechange', onVolumeChange)
-    video.addEventListener('timeupdate', onTimeUpdate)
 
     // Load the video
     if (videoUrl) {
@@ -135,9 +128,26 @@ export function useVideoPlayer({
       video.removeEventListener('ended', onEnded)
       video.removeEventListener('error', onError)
       video.removeEventListener('volumechange', onVolumeChange)
-      video.removeEventListener('timeupdate', onTimeUpdate)
     }
   }, [videoUrl, loop])
+
+  // Smooth progress bar: RAF loop reads currentTime at 60fps while playing
+  useEffect(() => {
+    if (!isPlaying) return
+
+    let rafId: number
+    const tick = () => {
+      const video = videoRef.current
+      if (!video) return
+      if (!seekingRef.current) {
+        setCurrentTime(video.currentTime)
+      }
+      rafId = requestAnimationFrame(tick)
+    }
+    rafId = requestAnimationFrame(tick)
+
+    return () => cancelAnimationFrame(rafId)
+  }, [isPlaying])
 
   const play = useCallback(() => {
     videoRef.current?.play().catch(() => {})
