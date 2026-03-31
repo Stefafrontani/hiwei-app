@@ -16,8 +16,8 @@ const PRODUCTS: DashcamProduct[] = [
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/anti-radares-full-hd-preventa-exclusiva/',
     includedMemoryCardSize: null,
     videos: [
-      { youtubeId: 'eqgYzVkllG0', label: 'Ruta de día', cameraPosition: 'frontal' },
-      { youtubeId: 'eqgYzVkllG0', label: 'Vista trasera urbana', cameraPosition: 'trasera' },
+      { videoUrl: '/videos/1.mp4', label: 'Ruta de día', cameraPosition: 'frontal' },
+      { videoUrl: '/videos/2.mp4', label: 'Vista trasera urbana', cameraPosition: 'trasera' },
     ],
   },
   {
@@ -34,8 +34,8 @@ const PRODUCTS: DashcamProduct[] = [
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/f7np/',
     includedMemoryCardSize: 128,
     videos: [
-      { youtubeId: 'eqgYzVkllG0', label: 'Autopista nocturna 4K', cameraPosition: 'frontal' },
-      { youtubeId: 'eqgYzVkllG0', label: 'Estacionamiento trasero', cameraPosition: 'trasera' },
+      { videoUrl: '/videos/placeholder.mp4', label: 'Autopista nocturna 4K', cameraPosition: 'frontal' },
+      { videoUrl: '/videos/placeholder.mp4', label: 'Estacionamiento trasero', cameraPosition: 'trasera' },
     ],
   },
   {
@@ -52,8 +52,8 @@ const PRODUCTS: DashcamProduct[] = [
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/discreto1/',
     includedMemoryCardSize: 32,
     videos: [
-      { youtubeId: 'eqgYzVkllG0', label: 'Manejo urbano 2K', cameraPosition: 'frontal' },
-      { youtubeId: 'eASjGtNAaE8', label: 'Visión nocturna', cameraPosition: 'frontal' },
+      { videoUrl: '/videos/1.mp4', label: 'Manejo urbano 2K', cameraPosition: 'frontal' },
+      { videoUrl: '/videos/1.mp4', label: 'Visión nocturna', cameraPosition: 'frontal' },
     ],
   },
   {
@@ -70,8 +70,8 @@ const PRODUCTS: DashcamProduct[] = [
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/anti-radares-4k/',
     includedMemoryCardSize: null,
     videos: [
-      { youtubeId: 'eqgYzVkllG0', label: 'Detalle patentes 4K', cameraPosition: 'frontal' },
-      { youtubeId: 'eqgYzVkllG0', label: 'Seguimiento trasero 4K', cameraPosition: 'trasera' },
+      { videoUrl: '/videos/placeholder.mp4', label: 'Detalle patentes 4K', cameraPosition: 'frontal' },
+      { videoUrl: '/videos/placeholder.mp4', label: 'Seguimiento trasero 4K', cameraPosition: 'trasera' },
     ],
   },
   {
@@ -88,9 +88,9 @@ const PRODUCTS: DashcamProduct[] = [
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/triple-cobertura/',
     includedMemoryCardSize: 128,
     videos: [
-      { youtubeId: 'eqgYzVkllG0', label: 'Ciudad nocturna 4K', cameraPosition: 'frontal' },
-      { youtubeId: 'eqgYzVkllG0', label: 'Autopista trasera 2.5K', cameraPosition: 'trasera' },
-      { youtubeId: 'eqgYzVkllG0', label: 'Monitoreo interior', cameraPosition: 'interior' },
+      { videoUrl: '/videos/placeholder.mp4', label: 'Ciudad nocturna 4K', cameraPosition: 'frontal' },
+      { videoUrl: '/videos/placeholder.mp4', label: 'Autopista trasera 2.5K', cameraPosition: 'trasera' },
+      { videoUrl: '/videos/placeholder.mp4', label: 'Monitoreo interior', cameraPosition: 'interior' },
     ],
   }
 ]

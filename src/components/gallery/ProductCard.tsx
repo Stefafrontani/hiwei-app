@@ -62,7 +62,7 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
       <div className="-mx-4 overflow-hidden md:mx-0 md:rounded-xl">
         {activeVideo && (
           <div ref={slideRef}>
-            <VideoThumbnail video={activeVideo} size="lg" onEnded={handleVideoEnded} autoplay={shouldAutoplay} replayToken={replayToken} advanceDirection={advanceDirection} onSwipeNext={angleVideos.length > 1 ? swipeNext : undefined} onSwipePrev={angleVideos.length > 1 ? swipePrev : undefined} />
+            <VideoThumbnail video={activeVideo} maxQuality={product.maxQuality} size="lg" onEnded={handleVideoEnded} autoplay={shouldAutoplay} replayToken={replayToken} advanceDirection={advanceDirection} onSwipeNext={angleVideos.length > 1 ? swipeNext : undefined} onSwipePrev={angleVideos.length > 1 ? swipePrev : undefined} />
           </div>
         )}
       </div>

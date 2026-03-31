@@ -70,7 +70,7 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
       <div className="overflow-hidden rounded-xl">
         {activeVideo ? (
           <div ref={slideRef}>
-            <VideoThumbnail video={activeVideo} size="md" showLabel autoplay={autoplay || shouldAutoplay} onEnded={handleVideoEnded} replayToken={replayToken} advanceDirection={advanceDirection} onSwipeNext={angleVideos.length > 1 ? swipeNext : undefined} onSwipePrev={angleVideos.length > 1 ? swipePrev : undefined} />
+            <VideoThumbnail video={activeVideo} maxQuality={product.maxQuality} size="md" autoplay={autoplay || shouldAutoplay} onEnded={handleVideoEnded} replayToken={replayToken} advanceDirection={advanceDirection} onSwipeNext={angleVideos.length > 1 ? swipeNext : undefined} onSwipePrev={angleVideos.length > 1 ? swipePrev : undefined} />
           </div>
         ) : (
           <div className="flex aspect-[16/10] flex-col items-center justify-center gap-3 rounded-xl bg-white/[0.03] px-8 text-center">

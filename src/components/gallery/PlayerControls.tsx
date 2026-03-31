@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { Pause, Play, Volume2, VolumeX, Maximize2, Minimize2 } from 'lucide-react'
 import { useTouchSeek } from '@/hooks/useTouchSeek'
 
@@ -43,9 +43,7 @@ export function PlayerControls({
   onToggleFullscreen,
   onSeek,
 }: PlayerControlsProps) {
-  const [visible, setVisible] = useState(true)
   const [showVolume, setShowVolume] = useState(false)
-  const hideTimer = useRef<ReturnType<typeof setTimeout>>(null)
   const volumeRef = useRef<HTMLDivElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
 
@@ -60,27 +58,6 @@ export function PlayerControls({
     onSeek,
     enabled: isReady && duration > 0,
   })
-
-  // Auto-hide controls after 3s of inactivity
-  const resetHideTimer = useCallback(() => {
-    setVisible(true)
-    if (hideTimer.current) clearTimeout(hideTimer.current)
-    if (isPlaying && !isSeeking) {
-      hideTimer.current = setTimeout(() => setVisible(false), 3000)
-    }
-  }, [isPlaying, isSeeking])
-
-  useEffect(() => {
-    if (isPlaying && !isSeeking) {
-      hideTimer.current = setTimeout(() => setVisible(false), 3000)
-    } else {
-      setVisible(true)
-      if (hideTimer.current) clearTimeout(hideTimer.current)
-    }
-    return () => {
-      if (hideTimer.current) clearTimeout(hideTimer.current)
-    }
-  }, [isPlaying, isSeeking])
 
   // Volume slider
   const handleVolumeInteraction = useCallback(
@@ -113,25 +90,19 @@ export function PlayerControls({
   const progress = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0
   const displayProgress = seekPreview ?? progress
 
-  // No spinner — the thumbnail stays visible behind the iframe until video plays
-
   if (!isReady) return null
 
   return (
     <div
       data-player-controls
       className="absolute inset-0 z-10 flex flex-col justify-end"
-      onMouseMove={resetHideTimer}
-      onMouseEnter={resetHideTimer}
-      onTouchStart={resetHideTimer}
       onClick={(e) => {
         if (e.target === e.currentTarget || (e.target as HTMLElement).hasAttribute('data-overlay')) {
           onTogglePlay()
-          resetHideTimer()
         }
       }}
     >
-      {/* Center play button — only when paused (not buffering), subtle tap target */}
+      {/* Center play button — only when paused (not buffering) */}
       {!isPlaying && !isBuffering && (
         <div className="absolute inset-0 flex items-center justify-center" data-overlay>
           <button
@@ -139,19 +110,16 @@ export function PlayerControls({
             onClick={(e) => {
               e.stopPropagation()
               onTogglePlay()
-              resetHideTimer()
             }}
-            className="pointer-events-auto rounded-full bg-black/40 p-3.5 text-white backdrop-blur-sm transition-all duration-200 hover:bg-black/55 hover:scale-105 active:scale-95"
+            className="pointer-events-auto min-h-[44px] min-w-[44px] rounded-full bg-black/40 p-3.5 text-white backdrop-blur-sm transition-all duration-200 hover:bg-black/55 hover:scale-105 active:scale-95"
           >
             <Play className="h-6 w-6 fill-white" />
           </button>
         </div>
       )}
 
-      {/* Bottom controls */}
-      <div
-        className={`flex flex-col transition-opacity duration-300 bg-gradient-to-t from-black/70 via-black/40 to-transparent ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-      >
+      {/* Bottom controls — always visible */}
+      <div className="flex flex-col bg-gradient-to-t from-black/70 via-black/40 to-transparent">
         {/* Progress bar */}
         <div
           ref={progressRef}
@@ -162,14 +130,12 @@ export function PlayerControls({
           {/* Enlarged touch target */}
           <div className="absolute -inset-y-4 inset-x-0" />
 
-          {/* Track + scrubber dot — same container so % coordinates align */}
           <div className="relative h-[3px] w-full group-hover/progress:h-[5px] transition-[height] duration-150">
             <div className="absolute inset-0 rounded-full bg-white/25" />
             <div
               className="absolute inset-y-0 left-0 rounded-full bg-brand"
               style={{ width: `${displayProgress}%` }}
             />
-            {/* Scrubber dot — always visible, grows on drag */}
             <div
               className={`absolute top-1/2 rounded-full bg-brand shadow-md transition-[width,height] duration-150 ${isSeeking ? 'h-4 w-4' : 'h-3 w-3'}`}
               style={{ left: `${displayProgress}%`, transform: 'translate(-50%, -50%)' }}
@@ -189,12 +155,8 @@ export function PlayerControls({
               onClick={(e) => {
                 e.stopPropagation()
                 onTogglePlay()
-                resetHideTimer()
               }}
-              className={isCompact
-                ? 'p-1.5 rounded-full text-white hover:bg-white/10 transition-colors'
-                : 'p-2 rounded-full text-white hover:bg-white/10 transition-colors'
-              }
+              className={`min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-white hover:bg-white/10 transition-colors ${isCompact ? 'p-1.5' : 'p-2'}`}
             >
               {isPlaying ? (
                 <Pause className={iconClass} />
@@ -202,7 +164,7 @@ export function PlayerControls({
                 <Play className={`${iconClass} fill-white`} />
               )}
             </button>
-            <span className={`text-white select-none tabular-nums text-xs`}>
+            <span className="text-white select-none tabular-nums text-xs">
               {formatTime(currentTime)} / {formatTime(duration)}
             </span>
           </div>
@@ -217,9 +179,8 @@ export function PlayerControls({
                 onClick={(e) => {
                   e.stopPropagation()
                   onToggleMute()
-                  resetHideTimer()
                 }}
-                className="p-1.5 rounded-full text-white hover:bg-white/10 transition-colors"
+                className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-white hover:bg-white/10 transition-colors"
               >
                 {isMuted || volume === 0 ? (
                   <VolumeX className={iconClass} />
@@ -238,9 +199,8 @@ export function PlayerControls({
                   onClick={(e) => {
                     e.stopPropagation()
                     onToggleMute()
-                    resetHideTimer()
                   }}
-                  className="p-2 rounded-full text-white hover:bg-white/10 transition-colors"
+                  className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-white hover:bg-white/10 transition-colors"
                 >
                   {isMuted || volume === 0 ? (
                     <VolumeX className={iconClass} />
@@ -275,12 +235,8 @@ export function PlayerControls({
               onClick={(e) => {
                 e.stopPropagation()
                 onToggleFullscreen()
-                resetHideTimer()
               }}
-              className={isCompact
-                ? 'p-1.5 rounded-full text-white hover:bg-white/10 transition-colors'
-                : 'p-2 rounded-full text-white hover:bg-white/10 transition-colors'
-              }
+              className={`min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-white hover:bg-white/10 transition-colors ${isCompact ? 'p-1.5' : 'p-2'}`}
             >
               {isFullscreen
                 ? <Minimize2 className={iconClass} />
