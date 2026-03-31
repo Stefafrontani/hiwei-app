@@ -6,7 +6,6 @@ import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
 import { useVideoPlayer } from '@/hooks/useVideoPlayer'
 import { useVideoZoom } from '@/hooks/useVideoZoom'
 import { useFullscreen } from '@/hooks/useFullscreen'
-import { useSwipeNavigation } from '@/hooks/useSwipeNavigation'
 import { PlayerControls } from './PlayerControls'
 import { VideoBadges } from './VideoBadges'
 import { VideoSkeleton } from './VideoSkeleton'
@@ -16,13 +15,11 @@ interface VideoThumbnailProps {
   video: DashcamVideo
   maxQuality: VideoQuality
   size?: 'lg' | 'md' | 'sm'
-  showLabel?: boolean
   autoplay?: boolean
   onEnded?: () => void
   replayToken?: number
-  advanceDirection?: 'next' | 'prev' | null
-  onSwipeNext?: () => void
-  onSwipePrev?: () => void
+  onPrev?: () => void
+  onNext?: () => void
 }
 
 export function VideoThumbnail({
@@ -32,9 +29,8 @@ export function VideoThumbnail({
   autoplay = true,
   onEnded,
   replayToken,
-  advanceDirection,
-  onSwipeNext,
-  onSwipePrev,
+  onPrev,
+  onNext,
 }: VideoThumbnailProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const transitionRef = useRef<HTMLDivElement>(null)
@@ -74,14 +70,6 @@ export function VideoThumbnail({
     isRotated,
   })
 
-  // Disable swipe when zoomed in
-  useSwipeNavigation({
-    targetRef: wrapperRef,
-    onNext: onSwipeNext ?? (() => {}),
-    onPrev: onSwipePrev ?? (() => {}),
-    enabled: !!(onSwipeNext || onSwipePrev) && scale <= 1,
-  })
-
   // Notify parent when video ends (for playlist)
   const onEndedRef = useRef(onEnded)
   useEffect(() => { onEndedRef.current = onEnded })
@@ -99,45 +87,30 @@ export function VideoThumbnail({
     }
   }, [video.videoUrl, resetZoom])
 
-  // Playlist advancement / replay with slide transition
+  // Crossfade transition on video change
   const prevReplayRef = useRef(replayToken)
-  const directionRef = useRef(advanceDirection)
-  useEffect(() => { directionRef.current = advanceDirection })
-
-  const allTransitionClasses = 'video-transition-exit-next video-transition-enter-next video-transition-exit-prev video-transition-enter-prev'
 
   useEffect(() => {
     if (replayToken === undefined || replayToken === prevReplayRef.current) return
     prevReplayRef.current = replayToken
 
     const el = transitionRef.current
-    const dir = directionRef.current
-    if (!el || !dir) {
+    if (!el) {
       replay()
       return
     }
 
-    const exitClass = `video-transition-exit-${dir}`
-    const enterClass = `video-transition-enter-${dir}`
+    // Fade out
+    el.style.opacity = '0'
 
-    el.classList.remove(...allTransitionClasses.split(' '))
-    el.classList.add(exitClass)
-
-    const exitTimer = setTimeout(() => {
+    const fadeOutTimer = setTimeout(() => {
       replay()
+      // Fade in
+      el.style.opacity = '1'
+    }, 200)
 
-      el.classList.remove(exitClass)
-      el.classList.add(enterClass)
-
-      const enterTimer = setTimeout(() => {
-        el.classList.remove(enterClass)
-      }, 280)
-
-      return () => clearTimeout(enterTimer)
-    }, 120)
-
-    return () => clearTimeout(exitTimer)
-  }, [replayToken, replay, allTransitionClasses])
+    return () => clearTimeout(fadeOutTimer)
+  }, [replayToken, replay])
 
   return (
     <div
@@ -149,9 +122,9 @@ export function VideoThumbnail({
       {/* Badges — always visible, above zoom layer */}
       <VideoBadges cameraPosition={video.cameraPosition} maxQuality={maxQuality} />
 
-      {/* Transition wrapper */}
-      <div ref={transitionRef} className="absolute inset-0">
-        {/* Video element — always in DOM for ref/listeners */}
+      {/* Transition wrapper — crossfade on video change */}
+      <div ref={transitionRef} className="absolute inset-0 transition-opacity duration-200 ease-out">
+        {/* Video element */}
         <video
           ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
@@ -167,7 +140,7 @@ export function VideoThumbnail({
         {/* Error overlay */}
         {isError && <VideoError onRetry={retry} />}
 
-        {/* Custom controls overlay — above zoom (not inside zoomStyle) */}
+        {/* Controls overlay */}
         <PlayerControls
           size={isFullscreen ? 'lg' : size}
           isPlaying={isPlaying}
@@ -184,8 +157,8 @@ export function VideoThumbnail({
           onToggleMute={toggleMute}
           onToggleFullscreen={toggleFullscreen}
           onSeek={seekTo}
-          onPrev={onSwipePrev}
-          onNext={onSwipeNext}
+          onPrev={onPrev}
+          onNext={onNext}
         />
       </div>
     </div>
