@@ -183,6 +183,8 @@ export function VideoThumbnail({
           onToggleMute={toggleMute}
           onToggleFullscreen={toggleFullscreen}
           onSeek={seekTo}
+          onPrev={onSwipePrev}
+          onNext={onSwipeNext}
         />
       </div>
     </div>
