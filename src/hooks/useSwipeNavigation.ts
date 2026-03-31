@@ -37,6 +37,9 @@ export function useSwipeNavigation({
     const el = targetRef.current
     if (!el || !enabled) return
 
+    // Track whether the gesture has been identified as horizontal
+    let isHorizontal = false
+
     const handleTouchStart = (e: TouchEvent) => {
       // Ignore pinch-zoom (2+ fingers)
       if (e.touches.length > 1) { tracking.current = false; return }
@@ -44,11 +47,32 @@ export function useSwipeNavigation({
       startX.current = touch.clientX
       startY.current = touch.clientY
       tracking.current = true
+      isHorizontal = false
     }
 
-    // Cancel if a second finger joins mid-gesture (pinch-zoom started)
+    // Cancel if a second finger joins mid-gesture (pinch-zoom started).
+    // Once a horizontal swipe is detected, preventDefault to stop the
+    // browser from scrolling/overscrolling the page sideways.
     const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 1) tracking.current = false
+      if (e.touches.length > 1) { tracking.current = false; return }
+      if (!tracking.current) return
+
+      if (!isHorizontal) {
+        const dx = e.touches[0].clientX - startX.current
+        const dy = e.touches[0].clientY - startY.current
+        // Determine direction once movement exceeds a small dead zone
+        if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+          isHorizontal = Math.abs(dx) > Math.abs(dy)
+          if (!isHorizontal) {
+            // Vertical gesture — stop tracking, let page scroll normally
+            tracking.current = false
+          }
+        }
+      }
+
+      if (isHorizontal) {
+        e.preventDefault()
+      }
     }
 
     const handleTouchEnd = (e: TouchEvent) => {
@@ -74,7 +98,7 @@ export function useSwipeNavigation({
     }
 
     el.addEventListener('touchstart', handleTouchStart, { passive: true })
-    el.addEventListener('touchmove', handleTouchMove, { passive: true })
+    el.addEventListener('touchmove', handleTouchMove, { passive: false })
     el.addEventListener('touchend', handleTouchEnd, { passive: true })
 
     return () => {

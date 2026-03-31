@@ -8,34 +8,54 @@ const BODY_CLASS = 'video-fullscreen-active'
 
 interface UseFullscreenOptions {
   targetRef: React.RefObject<HTMLElement | null>
+  onExitFullscreen?: () => void
 }
 
 interface UseFullscreenReturn {
   isFullscreen: boolean
+  isRotated: boolean
   enterFullscreen: () => void
   exitFullscreen: () => void
   toggleFullscreen: () => void
 }
 
-export function useFullscreen({ targetRef }: UseFullscreenOptions): UseFullscreenReturn {
+export function useFullscreen({ targetRef, onExitFullscreen }: UseFullscreenOptions): UseFullscreenReturn {
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [isRotated, setIsRotated] = useState(false)
   const scrollYRef = useRef(0)
+  const orientationLockedRef = useRef(false)
 
-  const enterFullscreen = useCallback(() => {
+  const enterFullscreen = useCallback(async () => {
     const el = targetRef.current
     if (!el) return
 
     // Promote to browser's top layer via Popover API
-    // Escapes ALL stacking contexts without moving the DOM (iframe stays intact)
     try {
       el.showPopover()
     } catch {
-      // Fallback for browsers without Popover API — apply class anyway
+      // Fallback for browsers without Popover API
     }
 
-    // Apply fullscreen CSS
-    const isPortrait = window.innerHeight > window.innerWidth
-    el.classList.add(isPortrait ? FS_ROTATED_CLASS : FS_CLASS)
+    // Try native orientation lock first (Android Chrome, etc.)
+    // The lock() method exists on some browsers but is not in all TS lib types
+    const orientation = screen.orientation as ScreenOrientation & {
+      lock?: (orientation: string) => Promise<void>
+    }
+    try {
+      if (orientation.lock) {
+        await orientation.lock('landscape')
+        orientationLockedRef.current = true
+        el.classList.add(FS_CLASS)
+        setIsRotated(false)
+      } else {
+        throw new Error('lock not supported')
+      }
+    } catch {
+      // Fallback: CSS rotation for iOS Safari and unsupported browsers
+      const isPortrait = window.innerHeight > window.innerWidth
+      el.classList.add(isPortrait ? FS_ROTATED_CLASS : FS_CLASS)
+      setIsRotated(isPortrait)
+    }
 
     // Lock body scroll
     scrollYRef.current = window.scrollY
@@ -48,9 +68,24 @@ export function useFullscreen({ targetRef }: UseFullscreenOptions): UseFullscree
     setIsFullscreen(true)
   }, [targetRef])
 
-  const exitFullscreen = useCallback(() => {
+  const exitingRef = useRef(false)
+
+  const doExit = useCallback((fromPopstate: boolean) => {
+    if (exitingRef.current) return
+    exitingRef.current = true
+
     const el = targetRef.current
-    if (!el) return
+    if (!el) { exitingRef.current = false; return }
+
+    // Unlock orientation if we locked it
+    if (orientationLockedRef.current) {
+      try {
+        screen.orientation.unlock()
+      } catch {
+        // ignore
+      }
+      orientationLockedRef.current = false
+    }
 
     // Remove fullscreen CSS
     el.classList.remove(FS_CLASS, FS_ROTATED_CLASS)
@@ -67,13 +102,20 @@ export function useFullscreen({ targetRef }: UseFullscreenOptions): UseFullscree
     document.body.style.top = ''
     window.scrollTo(0, scrollYRef.current)
 
-    // Pop the history entry we pushed on enter (if it's still there)
-    if (window.history.state?.videoFullscreen) {
+    // Pop the history entry — skip if already navigating via back button
+    if (!fromPopstate && window.history.state?.videoFullscreen) {
       window.history.back()
     }
 
+    // Notify caller (e.g. to reset zoom)
+    onExitFullscreen?.()
+
+    setIsRotated(false)
     setIsFullscreen(false)
-  }, [targetRef])
+    exitingRef.current = false
+  }, [targetRef, onExitFullscreen])
+
+  const exitFullscreen = useCallback(() => doExit(false), [doExit])
 
   const toggleFullscreen = useCallback(() => {
     if (isFullscreen) {
@@ -101,10 +143,10 @@ export function useFullscreen({ targetRef }: UseFullscreenOptions): UseFullscree
   useEffect(() => {
     if (!isFullscreen) return
 
-    const handlePopState = () => exitFullscreen()
+    const handlePopState = () => doExit(true)
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
-  }, [isFullscreen, exitFullscreen])
+  }, [isFullscreen, doExit])
 
   // Handle device rotation while in fullscreen
   useEffect(() => {
@@ -114,11 +156,15 @@ export function useFullscreen({ targetRef }: UseFullscreenOptions): UseFullscree
       const el = targetRef.current
       if (!el) return
 
+      // Skip if orientation was locked natively — no CSS rotation needed
+      if (orientationLockedRef.current) return
+
       const isPortrait = window.innerHeight > window.innerWidth
       const currentlyRotated = el.classList.contains(FS_ROTATED_CLASS)
       if (isPortrait !== currentlyRotated) {
         el.classList.remove(FS_CLASS, FS_ROTATED_CLASS)
         el.classList.add(isPortrait ? FS_ROTATED_CLASS : FS_CLASS)
+        setIsRotated(isPortrait)
       }
     }
 
@@ -141,5 +187,5 @@ export function useFullscreen({ targetRef }: UseFullscreenOptions): UseFullscree
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return { isFullscreen, enterFullscreen, exitFullscreen, toggleFullscreen }
+  return { isFullscreen, isRotated, enterFullscreen, exitFullscreen, toggleFullscreen }
 }

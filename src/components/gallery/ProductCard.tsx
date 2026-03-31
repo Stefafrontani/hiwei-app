@@ -17,38 +17,26 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, activeAngle, onAngleChange }: ProductCardProps) {
-  const { angleVideos, activeVideo, videoIndex, setVideoIndex, handleVideoEnded, slideDirection, shouldAutoplay, replayToken, advanceDirection } = useVideoPlaylist({
+  const { angleVideos, activeVideo, videoIndex, setVideoIndex, handleVideoEnded, shouldAutoplay, replayToken } = useVideoPlaylist({
     videos: product.videos,
     activeAngle,
   })
 
-  const slideRef = useRef<HTMLDivElement>(null)
-  const slideClass = slideDirection === 'right' ? 'slide-in-right' : slideDirection === 'left' ? 'slide-in-left' : ''
-
-  // Mobile swipe callbacks for horizontal navigation between angle videos
-  const swipeNext = useCallback(() => {
+  const goNext = useCallback(() => {
     if (angleVideos.length <= 1) return
     const next = (videoIndex + 1) % angleVideos.length
     setVideoIndex(next)
   }, [angleVideos.length, videoIndex, setVideoIndex])
 
-  const swipePrev = useCallback(() => {
+  const goPrev = useCallback(() => {
     if (angleVideos.length <= 1) return
     const prev = (videoIndex - 1 + angleVideos.length) % angleVideos.length
     setVideoIndex(prev)
   }, [angleVideos.length, videoIndex, setVideoIndex])
+
   const [descOpen, setDescOpen] = useState(false)
   const [descOverflows, setDescOverflows] = useState(false)
   const descWrapRef = useRef<HTMLDivElement>(null)
-
-  // Re-trigger slide animation imperatively (no key-based remount)
-  useEffect(() => {
-    const el = slideRef.current
-    if (!el || !slideClass) return
-    el.classList.remove('slide-in-right', 'slide-in-left')
-    void el.offsetWidth // force reflow
-    el.classList.add(slideClass)
-  }, [videoIndex, slideClass])
 
   useEffect(() => {
     const el = descWrapRef.current
@@ -58,12 +46,19 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
 
   return (
     <div className="flex flex-col gap-3 md:gap-4 md:rounded-2xl md:glass-card md:border-white/[0.06] md:p-4">
-      {/* Video area — full-width on mobile (breaks out of page padding), contained on desktop */}
+      {/* Video area */}
       <div className="-mx-4 overflow-hidden md:mx-0 md:rounded-xl">
         {activeVideo && (
-          <div ref={slideRef}>
-            <VideoThumbnail video={activeVideo} size="lg" onEnded={handleVideoEnded} autoplay={shouldAutoplay} replayToken={replayToken} advanceDirection={advanceDirection} onSwipeNext={angleVideos.length > 1 ? swipeNext : undefined} onSwipePrev={angleVideos.length > 1 ? swipePrev : undefined} />
-          </div>
+          <VideoThumbnail
+            video={activeVideo}
+            maxQuality={product.maxQuality}
+            size="lg"
+            onEnded={handleVideoEnded}
+            autoplay={shouldAutoplay}
+            replayToken={replayToken}
+            onPrev={angleVideos.length > 1 ? goPrev : undefined}
+            onNext={angleVideos.length > 1 ? goNext : undefined}
+          />
         )}
       </div>
 

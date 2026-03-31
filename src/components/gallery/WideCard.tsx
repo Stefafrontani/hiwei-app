@@ -24,7 +24,7 @@ export function WideCard({ product }: WideCardProps) {
       <CardContent>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {product.videos.map((video) => (
-            <VideoThumbnail key={video.label} video={video} size="lg" showLabel />
+            <VideoThumbnail key={video.label} video={video} maxQuality={product.maxQuality} size="lg" />
           ))}
         </div>
       </CardContent>

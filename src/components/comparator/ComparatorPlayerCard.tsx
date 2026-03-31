@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback } from 'react'
 import { VideoOff } from 'lucide-react'
 import { DotIndicator } from '@/components/ui/dot-indicator'
 import { VideoThumbnail } from '@/components/gallery/VideoThumbnail'
@@ -22,35 +22,23 @@ interface ComparatorPlayerCardProps {
 }
 
 export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackKey }: ComparatorPlayerCardProps) {
-  const { angleVideos, activeVideo, videoIndex, setVideoIndex, handleVideoEnded, slideDirection, shouldAutoplay, replayToken, advanceDirection } = useVideoPlaylist({
+  const { angleVideos, activeVideo, videoIndex, setVideoIndex, handleVideoEnded, shouldAutoplay, replayToken } = useVideoPlaylist({
     videos: product?.videos ?? [],
     activeAngle,
     resetKey: playbackKey,
   })
 
-  const slideRef = useRef<HTMLDivElement>(null)
-  const slideClass = slideDirection === 'right' ? 'slide-in-right' : slideDirection === 'left' ? 'slide-in-left' : ''
-
-  const swipeNext = useCallback(() => {
+  const goNext = useCallback(() => {
     if (angleVideos.length <= 1) return
     const next = (videoIndex + 1) % angleVideos.length
     setVideoIndex(next)
   }, [angleVideos.length, videoIndex, setVideoIndex])
 
-  const swipePrev = useCallback(() => {
+  const goPrev = useCallback(() => {
     if (angleVideos.length <= 1) return
     const prev = (videoIndex - 1 + angleVideos.length) % angleVideos.length
     setVideoIndex(prev)
   }, [angleVideos.length, videoIndex, setVideoIndex])
-
-  // Re-trigger slide animation imperatively (no key-based remount)
-  useEffect(() => {
-    const el = slideRef.current
-    if (!el || !slideClass) return
-    el.classList.remove('slide-in-right', 'slide-in-left')
-    void el.offsetWidth // force reflow
-    el.classList.add(slideClass)
-  }, [videoIndex, slideClass])
 
   if (!product) {
     return (
@@ -69,9 +57,16 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
       <h3 className="text-base font-bold text-foreground px-1">{product.name}</h3>
       <div className="overflow-hidden rounded-xl">
         {activeVideo ? (
-          <div ref={slideRef}>
-            <VideoThumbnail video={activeVideo} size="md" showLabel autoplay={autoplay || shouldAutoplay} onEnded={handleVideoEnded} replayToken={replayToken} advanceDirection={advanceDirection} onSwipeNext={angleVideos.length > 1 ? swipeNext : undefined} onSwipePrev={angleVideos.length > 1 ? swipePrev : undefined} />
-          </div>
+          <VideoThumbnail
+            video={activeVideo}
+            maxQuality={product.maxQuality}
+            size="md"
+            autoplay={autoplay || shouldAutoplay}
+            onEnded={handleVideoEnded}
+            replayToken={replayToken}
+            onPrev={angleVideos.length > 1 ? goPrev : undefined}
+            onNext={angleVideos.length > 1 ? goNext : undefined}
+          />
         ) : (
           <div className="flex aspect-[16/10] flex-col items-center justify-center gap-3 rounded-xl bg-white/[0.03] px-8 text-center">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.05]">
