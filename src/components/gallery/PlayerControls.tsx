@@ -20,6 +20,7 @@ interface PlayerControlsProps {
   volume: number
   isMuted: boolean
   isFullscreen: boolean
+  isZoomed?: boolean
   onTogglePlay: () => void
   onVolumeChange: (volume: number) => void
   onToggleMute: () => void
@@ -39,6 +40,7 @@ export function PlayerControls({
   volume,
   isMuted,
   isFullscreen,
+  isZoomed = false,
   onTogglePlay,
   onVolumeChange,
   onToggleMute,
@@ -61,7 +63,7 @@ export function PlayerControls({
     progressRef,
     duration,
     onSeek,
-    enabled: isReady && duration > 0,
+    enabled: isReady && duration > 0 && visible,
   })
 
   // Auto-hide after 3s (YouTube-style)
@@ -85,22 +87,27 @@ export function PlayerControls({
     }
   }, [isPlaying, isSeeking])
 
+  // Hide controls during zoom (YouTube-style)
+  useEffect(() => {
+    if (isZoomed) {
+      setVisible(false)
+      if (hideTimer.current) clearTimeout(hideTimer.current)
+    }
+  }, [isZoomed])
+
   // Toggle controls visibility on tap/click
   const handleOverlayClick = useCallback((e: React.MouseEvent) => {
-    // Only handle clicks on the overlay itself, not on buttons
     if (e.target !== e.currentTarget && !(e.target as HTMLElement).hasAttribute('data-overlay')) return
 
     if (visible && isPlaying) {
-      // If visible and playing, hide immediately
       if (hideTimer.current) clearTimeout(hideTimer.current)
       setVisible(false)
     } else {
-      // Show and start hide timer
       resetHideTimer()
     }
   }, [visible, isPlaying, resetHideTimer])
 
-  // Volume slider
+  // Volume slider — use native event listeners for drag to avoid pointer-events-none issues
   const handleVolumeInteraction = useCallback(
     (clientX: number) => {
       const bar = volumeRef.current
@@ -115,6 +122,7 @@ export function PlayerControls({
   const handleVolumeMouseDown = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault()
+      e.stopPropagation()
       handleVolumeInteraction(e.clientX)
 
       const onMove = (ev: MouseEvent) => handleVolumeInteraction(ev.clientX)
@@ -133,18 +141,21 @@ export function PlayerControls({
 
   if (!isReady) return null
 
+  // Don't render controls at all during zoom
+  const shouldShow = !isZoomed
+
   return (
     <div
       data-player-controls
       className="absolute inset-0 z-10 flex flex-col"
-      onMouseMove={resetHideTimer}
-      onMouseEnter={resetHideTimer}
-      onTouchStart={resetHideTimer}
-      onClick={handleOverlayClick}
+      onMouseMove={shouldShow ? resetHideTimer : undefined}
+      onMouseEnter={shouldShow ? resetHideTimer : undefined}
+      onTouchStart={shouldShow ? resetHideTimer : undefined}
+      onClick={shouldShow ? handleOverlayClick : undefined}
     >
       {/* Full overlay — fade in/out */}
       <div
-        className={`absolute inset-0 flex flex-col justify-between transition-opacity duration-300 ease-out ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`absolute inset-0 flex flex-col justify-between transition-opacity duration-300 ease-out ${visible && shouldShow ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       >
         {/* Top gradient (subtle) */}
         <div className="h-16 bg-gradient-to-b from-black/30 to-transparent" data-overlay />
@@ -245,7 +256,7 @@ export function PlayerControls({
                     <div
                       ref={volumeRef}
                       className="h-1 w-20 cursor-pointer rounded-full bg-white/20"
-                      onMouseDown={(e) => { e.stopPropagation(); handleVolumeMouseDown(e) }}
+                      onMouseDown={handleVolumeMouseDown}
                     >
                       <div className="h-full rounded-full bg-white" style={{ width: `${isMuted ? 0 : volume}%` }} />
                     </div>

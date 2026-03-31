@@ -68,7 +68,7 @@ export function VideoThumbnail({
     onExitFullscreen: () => resetZoom(),
   })
 
-  const { scale, resetZoom, zoomStyle, zoomHandlers } = useVideoZoom({
+  const { scale, isGesturing, resetZoom, zoomStyle, zoomHandlers } = useVideoZoom({
     containerRef: wrapperRef,
     maxScale: 1.5,
     isRotated,
@@ -178,6 +178,7 @@ export function VideoThumbnail({
           volume={volume}
           isMuted={isMuted}
           isFullscreen={isFullscreen}
+          isZoomed={isGesturing}
           onTogglePlay={togglePlay}
           onVolumeChange={setVolume}
           onToggleMute={toggleMute}

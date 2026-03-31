@@ -12,6 +12,7 @@ interface UseVideoZoomOptions {
 
 interface UseVideoZoomReturn {
   scale: number
+  isGesturing: boolean
   resetZoom: () => void
   zoomStyle: React.CSSProperties
   zoomHandlers: {
@@ -38,6 +39,7 @@ export function useVideoZoom({
   const [scale, setScale] = useState(1)
   const [translateX, setTranslateX] = useState(0)
   const [translateY, setTranslateY] = useState(0)
+  const [isGesturing, setIsGesturing] = useState(false)
 
   // Track rotation in a ref so gesture callbacks always see the latest value
   const isRotatedRef = useRef(isRotated)
@@ -166,6 +168,7 @@ export function useVideoZoom({
       // Start pinch
       isPinchingRef.current = true
       isPanningRef.current = false
+      setIsGesturing(true)
       initialDistRef.current = getDistance(e.touches[0], e.touches[1])
       baseScaleRef.current = scaleRef.current
       initialMidRef.current = {
@@ -175,6 +178,7 @@ export function useVideoZoom({
     } else if (e.touches.length === 1 && scaleRef.current > 1) {
       // Start panning (only when zoomed)
       isPanningRef.current = true
+      setIsGesturing(true)
       panStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
       panBaseTxRef.current = txRef.current
       panBaseTyRef.current = tyRef.current
@@ -236,6 +240,7 @@ export function useVideoZoom({
       }
     }
     isPanningRef.current = false
+    setIsGesturing(false)
   }, [resetZoom])
 
   // Prevent default touch behavior when zoomed to avoid browser scroll/zoom
@@ -263,6 +268,7 @@ export function useVideoZoom({
 
   return {
     scale,
+    isGesturing,
     resetZoom,
     zoomStyle,
     zoomHandlers: {
