@@ -53,7 +53,7 @@ const PRODUCTS: DashcamProduct[] = [
     includedMemoryCardSize: 32,
     videos: [
       { videoUrl: '/videos/1.mp4', label: 'Manejo urbano 2K', cameraPosition: 'frontal' },
-      { videoUrl: '/videos/1.mp4', label: 'Visión nocturna', cameraPosition: 'frontal' },
+      { videoUrl: '/videos/2.mp4', label: 'Visión nocturna', cameraPosition: 'frontal' },
     ],
   },
   {

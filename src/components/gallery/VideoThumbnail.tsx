@@ -63,14 +63,15 @@ export function VideoThumbnail({
     loop: !onEnded,
   })
 
+  const { isFullscreen, isRotated, toggleFullscreen } = useFullscreen({
+    targetRef: wrapperRef,
+    onExitFullscreen: () => resetZoom(),
+  })
+
   const { scale, resetZoom, zoomStyle, zoomHandlers } = useVideoZoom({
     containerRef: wrapperRef,
     maxScale: 1.5,
-  })
-
-  const { isFullscreen, toggleFullscreen } = useFullscreen({
-    targetRef: wrapperRef,
-    onExitFullscreen: resetZoom,
+    isRotated,
   })
 
   // Disable swipe when zoomed in

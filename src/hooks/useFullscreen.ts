@@ -13,6 +13,7 @@ interface UseFullscreenOptions {
 
 interface UseFullscreenReturn {
   isFullscreen: boolean
+  isRotated: boolean
   enterFullscreen: () => void
   exitFullscreen: () => void
   toggleFullscreen: () => void
@@ -20,6 +21,7 @@ interface UseFullscreenReturn {
 
 export function useFullscreen({ targetRef, onExitFullscreen }: UseFullscreenOptions): UseFullscreenReturn {
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [isRotated, setIsRotated] = useState(false)
   const scrollYRef = useRef(0)
   const orientationLockedRef = useRef(false)
 
@@ -44,6 +46,7 @@ export function useFullscreen({ targetRef, onExitFullscreen }: UseFullscreenOpti
         await orientation.lock('landscape')
         orientationLockedRef.current = true
         el.classList.add(FS_CLASS)
+        setIsRotated(false)
       } else {
         throw new Error('lock not supported')
       }
@@ -51,6 +54,7 @@ export function useFullscreen({ targetRef, onExitFullscreen }: UseFullscreenOpti
       // Fallback: CSS rotation for iOS Safari and unsupported browsers
       const isPortrait = window.innerHeight > window.innerWidth
       el.classList.add(isPortrait ? FS_ROTATED_CLASS : FS_CLASS)
+      setIsRotated(isPortrait)
     }
 
     // Lock body scroll
@@ -106,6 +110,7 @@ export function useFullscreen({ targetRef, onExitFullscreen }: UseFullscreenOpti
     // Notify caller (e.g. to reset zoom)
     onExitFullscreen?.()
 
+    setIsRotated(false)
     setIsFullscreen(false)
     exitingRef.current = false
   }, [targetRef, onExitFullscreen])
@@ -151,11 +156,15 @@ export function useFullscreen({ targetRef, onExitFullscreen }: UseFullscreenOpti
       const el = targetRef.current
       if (!el) return
 
+      // Skip if orientation was locked natively — no CSS rotation needed
+      if (orientationLockedRef.current) return
+
       const isPortrait = window.innerHeight > window.innerWidth
       const currentlyRotated = el.classList.contains(FS_ROTATED_CLASS)
       if (isPortrait !== currentlyRotated) {
         el.classList.remove(FS_CLASS, FS_ROTATED_CLASS)
         el.classList.add(isPortrait ? FS_ROTATED_CLASS : FS_CLASS)
+        setIsRotated(isPortrait)
       }
     }
 
@@ -178,5 +187,5 @@ export function useFullscreen({ targetRef, onExitFullscreen }: UseFullscreenOpti
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return { isFullscreen, enterFullscreen, exitFullscreen, toggleFullscreen }
+  return { isFullscreen, isRotated, enterFullscreen, exitFullscreen, toggleFullscreen }
 }

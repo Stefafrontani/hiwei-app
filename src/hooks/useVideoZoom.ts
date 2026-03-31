@@ -6,6 +6,8 @@ interface UseVideoZoomOptions {
   containerRef: React.RefObject<HTMLElement | null>
   enabled?: boolean
   maxScale?: number
+  /** Whether the container is CSS-rotated 90deg CW (fullscreen on portrait mobile) */
+  isRotated?: boolean
 }
 
 interface UseVideoZoomReturn {
@@ -31,10 +33,51 @@ export function useVideoZoom({
   containerRef,
   enabled = true,
   maxScale = 1.5,
+  isRotated = false,
 }: UseVideoZoomOptions): UseVideoZoomReturn {
   const [scale, setScale] = useState(1)
   const [translateX, setTranslateX] = useState(0)
   const [translateY, setTranslateY] = useState(0)
+
+  // Track rotation in a ref so gesture callbacks always see the latest value
+  const isRotatedRef = useRef(isRotated)
+  isRotatedRef.current = isRotated
+
+  /**
+   * Convert a screen-space delta (dx, dy) to element-local space.
+   * When the container is rotated 90deg CW via CSS:
+   *   screen +X (right) → element -Y
+   *   screen +Y (down)  → element +X
+   */
+  const toLocal = useCallback((screenDx: number, screenDy: number) => {
+    if (!isRotatedRef.current) return { dx: screenDx, dy: screenDy }
+    return { dx: screenDy, dy: -screenDx }
+  }, [])
+
+  /**
+   * Convert a screen-space point relative to the element's bounding rect
+   * into element-local coordinates (relative to element center).
+   */
+  const screenToLocal = useCallback((screenX: number, screenY: number, rect: DOMRect) => {
+    if (!isRotatedRef.current) {
+      return { x: screenX - rect.left, y: screenY - rect.top }
+    }
+    // For 90deg CW rotation, the bounding rect's width/height are swapped vs element local
+    // Element local X = distance from visual top (screenY - rect.top)
+    // Element local Y = distance from visual right (rect.right - screenX)
+    return {
+      x: screenY - rect.top,
+      y: rect.right - screenX,
+    }
+  }, [])
+
+  /**
+   * Get the element's local dimensions (accounting for rotation swap).
+   */
+  const getLocalDimensions = useCallback((rect: DOMRect) => {
+    if (!isRotatedRef.current) return { width: rect.width, height: rect.height }
+    return { width: rect.height, height: rect.width }
+  }, [])
 
   // Refs for gesture tracking (avoid state updates during gestures)
   const scaleRef = useRef(1)
@@ -73,14 +116,15 @@ export function useVideoZoom({
     if (!el || s <= 1) return { tx: 0, ty: 0 }
 
     const rect = el.getBoundingClientRect()
-    const maxTx = (rect.width * (s - 1)) / 2
-    const maxTy = (rect.height * (s - 1)) / 2
+    const { width, height } = getLocalDimensions(rect)
+    const maxTx = (width * (s - 1)) / 2
+    const maxTy = (height * (s - 1)) / 2
 
     return {
       tx: clamp(tx, -maxTx, maxTx),
       ty: clamp(ty, -maxTy, maxTy),
     }
-  }, [containerRef])
+  }, [containerRef, getLocalDimensions])
 
   // Native wheel listener with { passive: false } to allow preventDefault
   useEffect(() => {
@@ -89,8 +133,7 @@ export function useVideoZoom({
 
     const handleWheel = (e: WheelEvent) => {
       const rect = el.getBoundingClientRect()
-      const cursorX = e.clientX - rect.left
-      const cursorY = e.clientY - rect.top
+      const cursor = screenToLocal(e.clientX, e.clientY, rect)
 
       const prevScale = scaleRef.current
       const delta = -e.deltaY * 0.002
@@ -100,10 +143,10 @@ export function useVideoZoom({
 
       e.preventDefault()
 
-      // Zoom centered on cursor
+      // Zoom centered on cursor (in element-local coordinates)
       const ratio = newScale / prevScale
-      const newTx = cursorX - (cursorX - txRef.current) * ratio
-      const newTy = cursorY - (cursorY - tyRef.current) * ratio
+      const newTx = cursor.x - (cursor.x - txRef.current) * ratio
+      const newTy = cursor.y - (cursor.y - tyRef.current) * ratio
 
       const clamped = clampTranslation(newTx, newTy, newScale)
       scaleRef.current = newScale
@@ -153,13 +196,14 @@ export function useVideoZoom({
       if (!el) return
 
       const rect = el.getBoundingClientRect()
-      const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left
-      const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top
+      const screenMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2
+      const screenMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2
+      const mid = screenToLocal(screenMidX, screenMidY, rect)
 
-      // Zoom centered on midpoint
+      // Zoom centered on midpoint (in element-local coordinates)
       const ratio = newScale / scaleRef.current
-      const newTx = midX - (midX - txRef.current) * ratio
-      const newTy = midY - (midY - tyRef.current) * ratio
+      const newTx = mid.x - (mid.x - txRef.current) * ratio
+      const newTy = mid.y - (mid.y - tyRef.current) * ratio
 
       const clamped = clampTranslation(newTx, newTy, newScale)
       scaleRef.current = newScale
@@ -167,8 +211,9 @@ export function useVideoZoom({
       tyRef.current = clamped.ty
       commitState()
     } else if (isPanningRef.current && e.touches.length === 1) {
-      const dx = e.touches[0].clientX - panStartRef.current.x
-      const dy = e.touches[0].clientY - panStartRef.current.y
+      const screenDx = e.touches[0].clientX - panStartRef.current.x
+      const screenDy = e.touches[0].clientY - panStartRef.current.y
+      const { dx, dy } = toLocal(screenDx, screenDy)
 
       const clamped = clampTranslation(
         panBaseTxRef.current + dx,
