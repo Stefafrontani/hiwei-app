@@ -66,7 +66,7 @@ export function PlayerControls({
     progressRef,
     duration,
     onSeek,
-    enabled: isReady && duration > 0 && visible,
+    enabled: isReady && duration > 0,
   })
 
   // Auto-hide after 3s (YouTube-style)
@@ -160,11 +160,11 @@ export function PlayerControls({
       <div
         className={`absolute inset-0 flex flex-col justify-between transition-opacity duration-300 ease-out ${visible && shouldShow ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       >
-        {/* Top gradient (subtle) */}
-        <div className="h-16 bg-gradient-to-b from-black/30 to-transparent" data-overlay />
+        {/* Top gradient (subtle) — hides during seeking */}
+        <div className={`h-16 bg-gradient-to-b from-black/30 to-transparent transition-opacity duration-200 ${isSeeking ? 'opacity-0' : 'opacity-100'}`} data-overlay />
 
-        {/* Center: play/pause + prev/next */}
-        <div className="flex items-center justify-center gap-6" data-overlay>
+        {/* Center: play/pause + prev/next — hides during seeking */}
+        <div className={`flex items-center justify-center gap-6 transition-opacity duration-200 ${isSeeking ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} data-overlay>
           {onPrev && (
             <button
               type="button"
@@ -196,11 +196,11 @@ export function PlayerControls({
         </div>
 
         {/* Bottom: progress bar + controls */}
-        <div className="flex flex-col bg-gradient-to-t from-black/60 via-black/30 to-transparent pt-8">
+        <div className={`flex flex-col pt-8 transition-all duration-200 ${isSeeking ? 'bg-transparent' : 'bg-gradient-to-t from-black/60 via-black/30 to-transparent'}`}>
           {/* Progress bar */}
           <div
             ref={progressRef}
-            className="group/progress relative cursor-pointer px-3"
+            className="group/progress relative cursor-pointer px-3 touch-none"
             {...touchHandlers}
             {...mouseHandlers}
           >
@@ -229,8 +229,8 @@ export function PlayerControls({
 
             <div className="flex-1" />
 
-            {/* Volume + Fullscreen */}
-            <div className="flex items-center rounded-full bg-black/30">
+            {/* Volume + Fullscreen — hides during seeking */}
+            <div className={`flex items-center rounded-full bg-black/30 transition-opacity duration-200 ${isSeeking ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
               {muteOnly ? (
                 <button
                   type="button"
