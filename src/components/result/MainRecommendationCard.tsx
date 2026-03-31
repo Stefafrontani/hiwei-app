@@ -54,7 +54,6 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
             {product.specs.slice(0, 3).map((spec) => (
               <Badge
                 key={spec}
-                className="rounded-full border-0 bg-brand/15 px-3 py-1 text-xs font-semibold text-brand"
               >
                 {spec}
               </Badge>
@@ -73,7 +72,7 @@ export function MainRecommendationCard({ product, matchScore, onSendRecommendati
               Enviar por mail
             </Button>
           )}
-          <Button variant="brand" className="flex-1">
+          <Button variant="brand" asChild className="flex-1">
             <a
               href={product.ecommerceUrl}
               target="_blank"
