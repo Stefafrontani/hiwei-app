@@ -69,26 +69,24 @@ export function PlayerControls({
     enabled: isReady && duration > 0,
   })
 
-  // Auto-hide after 3s (YouTube-style)
+  // Auto-hide after 3s — always hides regardless of play/pause state
   const resetHideTimer = useCallback(() => {
     setVisible(true)
     if (hideTimer.current) clearTimeout(hideTimer.current)
-    if (isPlaying && !isSeeking) {
+    if (!isSeeking) {
       hideTimer.current = setTimeout(() => setVisible(false), 3000)
     }
-  }, [isPlaying, isSeeking])
+  }, [isSeeking])
 
   useEffect(() => {
-    if (isPlaying && !isSeeking) {
-      hideTimer.current = setTimeout(() => setVisible(false), 3000)
-    } else {
-      setVisible(true)
+    if (!isSeeking) {
       if (hideTimer.current) clearTimeout(hideTimer.current)
+      hideTimer.current = setTimeout(() => setVisible(false), 3000)
     }
     return () => {
       if (hideTimer.current) clearTimeout(hideTimer.current)
     }
-  }, [isPlaying, isSeeking])
+  }, [isSeeking])
 
   // Hide controls during zoom (YouTube-style)
   useEffect(() => {
