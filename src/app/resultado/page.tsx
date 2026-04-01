@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Camera, Headphones, RotateCcw, Clock } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Headphones, RotateCcw, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { MainRecommendationCard } from '@/components/result/MainRecommendationCard'
@@ -10,17 +11,22 @@ import { BudgetBreakdown } from '@/components/result/BudgetBreakdown'
 import { ResultDesktopSidebar } from '@/components/result/ResultDesktopSidebar'
 import { ContactMethodOverlay } from '@/components/overlays/ContactMethodOverlay'
 import { SendRecommendationOverlay } from '@/components/overlays/SendRecommendationOverlay'
+import { LoadingScreen } from '@/components/result/LoadingScreen'
+import { MatchReveal } from '@/components/result/MatchReveal'
+import { ErrorScreen } from '@/components/result/ErrorScreen'
 import { createEmptyAnswers } from '@/domain/entities/QuizAnswers'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import type { RecommendationResult } from '@/application/use-cases/dashcam/GetRecommendation/GetRecommendation.dto'
 import type { MemoryCard } from '@/domain/entities/MemoryCard'
+
+type Phase = 'loading' | 'reveal' | 'results'
 
 /* Flow: Recommendation - (1): UI */
 export default function ResultadoPage() {
   const router = useRouter()
   const [answers, setAnswers] = useState<QuizAnswers>(createEmptyAnswers)
   const [result, setResult] = useState<RecommendationResult | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [phase, setPhase] = useState<Phase>('loading')
   const [error, setError] = useState<string | null>(null)
   const [memoryCards, setMemoryCards] = useState<MemoryCard[]>([])
   const [recommendationId, setRecommendationId] = useState<string | null>(null)
@@ -29,53 +35,18 @@ export default function ResultadoPage() {
   const [showEmailForm, setShowEmailForm] = useState(false)
   const [showSend, setShowSend] = useState(false)
 
-  useEffect(() => {
-    const raw = localStorage.getItem('hiwei-quiz')
-    if (!raw) {
-      // No quiz answers — try loading from cached recommendation
-      const cached = localStorage.getItem('hiwei-recommendation')
-      if (cached) {
-        try {
-          const cachedData = JSON.parse(cached)
-          setAnswers({ ...createEmptyAnswers(), ...JSON.parse(cachedData.answers) })
-          setResult(cachedData.result)
-          setRecommendationId(cachedData.recommendationId)
-          setExpiresAt(cachedData.expiresAt)
-          setMemoryCards(cachedData.memoryCards ?? [])
-          setLoading(false)
-          return
-        } catch { /* fall through to redirect */ }
-      }
-      router.replace('/cotiza-tu-dashcam')
-      return
-    }
+  const answersRef = useRef<QuizAnswers>(createEmptyAnswers())
 
-    const parsed = { ...createEmptyAnswers(), ...JSON.parse(raw) }
-    setAnswers(parsed)
-
-    // Check localStorage cache — skip API if answers haven't changed
-    const cached = localStorage.getItem('hiwei-recommendation')
-    if (cached) {
-      try {
-        const cachedData = JSON.parse(cached)
-        if (cachedData.answers === raw) {
-          setResult(cachedData.result)
-          setRecommendationId(cachedData.recommendationId)
-          setExpiresAt(cachedData.expiresAt)
-          setMemoryCards(cachedData.memoryCards ?? [])
-          setLoading(false)
-          return
-        }
-      } catch {
-        localStorage.removeItem('hiwei-recommendation')
-      }
-    }
+  const fetchRecommendation = useCallback((parsed: QuizAnswers) => {
+    const raw = JSON.stringify(parsed)
+    setError(null)
+    setPhase('loading')
 
     Promise.all([
       fetch('/api/recommendation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(parsed),
+        body: raw,
       }).then((r) => r.json()),
       fetch('/api/memory-cards').then((r) => r.json()),
     ])
@@ -94,9 +65,59 @@ export default function ResultadoPage() {
           memoryCards: cardsData.data ?? [],
         }))
       })
+      .then(() => setPhase('reveal'))
       .catch((e) => setError(e.message))
-      .finally(() => setLoading(false))
-  }, [router])
+  }, [])
+
+  const handleRetry = useCallback(() => {
+    fetchRecommendation(answersRef.current)
+  }, [fetchRecommendation])
+
+  useEffect(() => {
+    const raw = localStorage.getItem('hiwei-quiz')
+    if (!raw) {
+      // No quiz answers — try loading from cached recommendation
+      const cached = localStorage.getItem('hiwei-recommendation')
+      if (cached) {
+        try {
+          const cachedData = JSON.parse(cached)
+          setAnswers({ ...createEmptyAnswers(), ...JSON.parse(cachedData.answers) })
+          setResult(cachedData.result)
+          setRecommendationId(cachedData.recommendationId)
+          setExpiresAt(cachedData.expiresAt)
+          setMemoryCards(cachedData.memoryCards ?? [])
+          setPhase('results')
+          return
+        } catch { /* fall through to redirect */ }
+      }
+      router.replace('/cotiza-tu-dashcam')
+      return
+    }
+
+    const parsed = { ...createEmptyAnswers(), ...JSON.parse(raw) }
+    setAnswers(parsed)
+    answersRef.current = parsed
+
+    // Check localStorage cache — skip API if answers haven't changed
+    const cached = localStorage.getItem('hiwei-recommendation')
+    if (cached) {
+      try {
+        const cachedData = JSON.parse(cached)
+        if (cachedData.answers === raw) {
+          setResult(cachedData.result)
+          setRecommendationId(cachedData.recommendationId)
+          setExpiresAt(cachedData.expiresAt)
+          setMemoryCards(cachedData.memoryCards ?? [])
+          setPhase('results')
+          return
+        }
+      } catch {
+        localStorage.removeItem('hiwei-recommendation')
+      }
+    }
+
+    fetchRecommendation(parsed)
+  }, [router, fetchRecommendation])
 
   const handleRestart = () => {
     localStorage.removeItem('hiwei-quiz')
@@ -104,6 +125,10 @@ export default function ResultadoPage() {
   }
 
   const productName = result?.main.product.name
+
+  const handleRevealComplete = useCallback(() => {
+    setPhase('results')
+  }, [])
 
   return (
     <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">
@@ -113,31 +138,26 @@ export default function ResultadoPage() {
         {/* Main scrollable column */}
         <main className="flex flex-1 flex-col overflow-y-auto no-scrollbar">
 
-          {/* Loading */}
-          {loading && (
-            <div className="flex flex-1 flex-col items-center justify-center gap-4 py-16 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand/10">
-                <Camera className="h-8 w-8 animate-pulse text-brand" />
-              </div>
-              <p className="text-base font-semibold text-foreground">Calculando tu recomendación...</p>
-              <p className="text-sm text-muted-foreground">Analizando tus respuestas</p>
-            </div>
-          )}
-
-          {/* Error */}
-          {error && (
-            <div className="m-4 flex flex-col items-center gap-3 rounded-xl bg-destructive/10 p-6 text-center">
-              <p className="text-base font-semibold text-destructive">Algo salió mal</p>
-              <p className="text-sm text-muted-foreground">{error}</p>
-              <Button variant="link" onClick={() => router.push('/cotiza-tu-dashcam')} className="text-brand">
-                Intentar de nuevo
-              </Button>
-            </div>
-          )}
+          <AnimatePresence mode="wait">
+            {error && (
+              <ErrorScreen onRetry={handleRetry} onRestart={handleRestart} />
+            )}
+            {!error && phase === 'loading' && <LoadingScreen />}
+            {!error && phase === 'reveal' && result && (
+              <MatchReveal
+                onComplete={handleRevealComplete}
+              />
+            )}
 
           {/* Content */}
-          {result && !loading && (
-            <div className="flex w-full flex-col gap-4 px-5 py-4 pb-20 md:px-8 md:py-8 md:pb-8">
+          {!error && phase === 'results' && result && (
+            <motion.div
+              key="results-screen"
+              className="flex w-full flex-col gap-4 px-5 py-4 pb-20 md:px-8 md:py-8 md:pb-8"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+            >
               <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} />
               <BudgetBreakdown product={result.main.product} answers={answers} memoryCards={memoryCards} onSendRecommendation={() => setShowSend(true)} />
 
@@ -159,12 +179,13 @@ export default function ResultadoPage() {
                   Empezar de nuevo
                 </Button>
               </div>
-            </div>
+            </motion.div>
           )}
+          </AnimatePresence>
         </main>
 
         {/* Desktop CTA Sidebar */}
-        {result && !loading && (
+        {!error && phase === 'results' && result && (
           <ResultDesktopSidebar
             onContactOpen={() => setShowContact(true)}
             onSendOpen={() => setShowSend(true)}
@@ -186,7 +207,7 @@ export default function ResultadoPage() {
       <SendRecommendationOverlay open={showSend} onClose={() => setShowSend(false)} recommendationId={recommendationId} />
 
       {/* Fixed bottom CTA — mobile only */}
-      {result && !loading && (
+      {!error && phase === 'results' && result && (
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.06] backdrop-blur-xl bg-background/60 px-4 py-3 md:hidden">
           <Button variant="brand" size="xl" className="w-full" onClick={() => setShowContact(true)}>
             <Headphones className="h-4 w-4" />
