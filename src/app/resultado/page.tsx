@@ -106,7 +106,7 @@ export default function ResultadoPage() {
   const productName = result?.main.product.name
 
   return (
-    <div className="quiz-gradient grain-overlay flex h-screen flex-col overflow-hidden">
+    <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">
       <SiteHeader activeNav="cotizador" />
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 overflow-hidden">
