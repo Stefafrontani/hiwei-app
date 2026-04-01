@@ -98,9 +98,9 @@ export function BudgetBreakdown({ product, answers, memoryCards, onSendRecommend
     <Card className="gap-0 overflow-hidden border-border py-0 shadow-sm">
 
       {/* ── Hero price block ── */}
-      <CardHeader className="flex-col items-stretch justify-items-center md:justify-items-start gap-3 bg-brand/5 px-4 py-4 md:px-5">
-        <div className="flex items-start justify-between">
-          <div className="flex flex-col gap-0.5">
+      <CardHeader className={`flex-col items-stretch gap-3 bg-brand/5 px-4 py-4 md:px-5 ${product.discount > 0 ? 'justify-items-start' : 'justify-items-center md:justify-items-start'}`}>
+        <div className={`flex w-full items-start ${product.discount > 0 ? 'justify-between' : 'justify-center md:justify-start'}`}>
+          <div className={`flex flex-col gap-0.5 ${product.discount > 0 ? '' : 'items-center md:items-start'}`}>
             <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tu presupuesto</span>
             <span className="text-2xl font-bold tracking-tight text-brand md:text-3xl">{formatARS(total)}</span>
           </div>
