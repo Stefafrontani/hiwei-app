@@ -26,10 +26,8 @@ export default function ResultadoPage() {
   const router = useRouter()
   const [answers, setAnswers] = useState<QuizAnswers>(createEmptyAnswers)
   const [result, setResult] = useState<RecommendationResult | null>(null)
-  // TODO: remove — force phase for visual debugging (set to null for normal flow)
-  const DEBUG_FORCE_PHASE = 'error' as Phase | null
-  const [phase, setPhase] = useState<Phase>(DEBUG_FORCE_PHASE ?? 'loading')
-  const [error, setError] = useState<string | null>(DEBUG_FORCE_PHASE === 'error' ? 'Debug error' : null)
+  const [phase, setPhase] = useState<Phase>('loading')
+  const [error, setError] = useState<string | null>(null)
   const [memoryCards, setMemoryCards] = useState<MemoryCard[]>([])
   const [recommendationId, setRecommendationId] = useState<string | null>(null)
   const [expiresAt, setExpiresAt] = useState('')
@@ -76,9 +74,6 @@ export default function ResultadoPage() {
   }, [fetchRecommendation])
 
   useEffect(() => {
-    // TODO: remove — skip data fetching when debugging a forced phase
-    if (DEBUG_FORCE_PHASE) return
-
     const raw = localStorage.getItem('hiwei-quiz')
     if (!raw) {
       // No quiz answers — try loading from cached recommendation
@@ -145,7 +140,7 @@ export default function ResultadoPage() {
 
           <AnimatePresence mode="wait">
             {phase === 'loading' && <LoadingScreen />}
-            {phase === 'reveal' && (result || DEBUG_FORCE_PHASE === 'reveal') && (
+            {phase === 'reveal' && result && (
               <MatchReveal
                 onComplete={handleRevealComplete}
               />
