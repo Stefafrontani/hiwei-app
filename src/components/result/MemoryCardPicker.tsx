@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { X, MemoryStick } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { MemoryStick } from 'lucide-react'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import { SelectionRow } from '@/components/ui/selection-row'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
@@ -19,18 +20,6 @@ interface MemoryCardPickerProps {
   cycleSize: number
   onSelect: (card: MemoryCard) => void
   includedSize?: number
-}
-
-function RadioCircle({ selected }: { selected: boolean }) {
-  return (
-    <div
-      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-        selected ? 'border-brand' : 'border-muted-foreground/40'
-      }`}
-    >
-      {selected && <div className="h-2.5 w-2.5 rounded-full bg-brand" />}
-    </div>
-  )
 }
 
 function PickerContent({
@@ -53,12 +42,6 @@ function PickerContent({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm leading-relaxed text-muted-foreground">
-        {isExpand
-          ? `Tu dashcam incluye memoria de ${includedSize} GB. Podés agregar una tarjeta adicional de mayor capacidad.`
-          : 'Elegí la capacidad de memoria que mejor se adapte a tu uso.'}
-      </p>
-
       <div className="flex flex-col gap-2">
         {memoryCards.map((card) => {
           const isSelected = card.id === tempSelectedId
@@ -66,23 +49,17 @@ function PickerContent({
           const isDisabled = isExpand && includedSize != null && card.size <= includedSize
 
           return (
-            <button
+            <SelectionRow
               key={card.id}
-              type="button"
+              isActive={isSelected && !isDisabled}
               onClick={() => !isDisabled && setTempSelectedId(card.id)}
               disabled={isDisabled}
-              className={`flex items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-colors ${
-                isDisabled
-                  ? 'cursor-not-allowed border-border bg-muted/30 opacity-40'
-                  : isSelected
-                    ? 'border-brand bg-brand/5'
-                    : 'border-border bg-card hover:border-muted-foreground/30'
-              }`}
             >
-              <RadioCircle selected={isSelected && !isDisabled} />
-              <div className="flex flex-1 flex-col">
+              <div className="flex flex-1 flex-col gap-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-foreground">{card.size} GB</span>
+                  <span className={`text-sm font-semibold transition-colors duration-200 ${isSelected && !isDisabled ? 'text-brand' : 'text-foreground'}`}>
+                    {card.size} GB
+                  </span>
                   {isRecommended && (
                     <Badge variant="brand" className="px-1.5 py-0 text-xs">
                       Recomendada
@@ -94,23 +71,19 @@ function PickerContent({
                     </span>
                   )}
                 </div>
-                <span className="text-xs text-muted-foreground">
+                <span className={`text-xs transition-colors duration-200 ${isSelected && !isDisabled ? 'text-brand/70' : 'text-muted-foreground'}`}>
                   {calculateRecordingHours(card.size, cycleSize)}+ hs de grabación
                 </span>
               </div>
-              <span className="shrink-0 text-sm font-semibold text-foreground">
+              <span className={`shrink-0 text-sm font-semibold transition-colors duration-200 ${isSelected && !isDisabled ? 'text-brand' : 'text-foreground'}`}>
                 {`$${card.basePrice.toLocaleString('es-AR')} ARS`}
               </span>
-            </button>
+            </SelectionRow>
           )
         })}
       </div>
 
-      <Button
-        onClick={handleConfirm}
-        variant="brand"
-        className="flex h-[50px] w-full items-center gap-2 rounded-xl text-sm font-semibold"
-      >
+      <Button onClick={handleConfirm} variant="brand" size="xl" className="w-full">
         <MemoryStick className="h-4 w-4" />
         {isExpand ? 'Agregar expansión' : 'Confirmar selección'}
       </Button>
@@ -130,24 +103,23 @@ export function MemoryCardPicker({
 }: MemoryCardPickerProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
-  const title = includedSize != null ? 'Expandir capacidad' : 'Tarjeta de memoria'
+  const isExpand = includedSize != null
+  const title = isExpand ? 'Expandir capacidad' : 'Tarjeta de memoria'
+  const description = isExpand
+    ? `Tu dashcam incluye memoria de ${includedSize} GB. Podés agregar una tarjeta adicional de mayor capacidad.`
+    : 'Elegí la capacidad de memoria que mejor se adapte a tu uso.'
+
+  const pickerProps = { memoryCards, selectedId, recommendedSize, cycleSize, onSelect, onClose, includedSize }
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-        <DialogContent className="max-w-[520px] rounded-2xl p-8">
+        <DialogContent showCloseButton={false} className="sm:max-w-[480px]">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-foreground">{title}</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <PickerContent
-            memoryCards={memoryCards}
-            selectedId={selectedId}
-            recommendedSize={recommendedSize}
-            cycleSize={cycleSize}
-            onSelect={onSelect}
-            onClose={onClose}
-            includedSize={includedSize}
-          />
+          <PickerContent {...pickerProps} />
         </DialogContent>
       </Dialog>
     )
@@ -155,31 +127,16 @@ export function MemoryCardPicker({
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="bottom" className="rounded-t-[20px] p-0">
-        <div className="flex flex-col gap-4 px-5 pb-8 pt-5">
-          <div className="flex justify-center">
-            <div className="h-1 w-10 rounded-full bg-border" />
-          </div>
-          <SheetHeader>
-            <div className="flex items-center justify-between">
-              <SheetTitle className="text-lg font-bold text-foreground">{title}</SheetTitle>
-              <button
-                onClick={onClose}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-muted"
-              >
-                <X className="h-4 w-4 text-muted-foreground" />
-              </button>
-            </div>
-          </SheetHeader>
-          <PickerContent
-            memoryCards={memoryCards}
-            selectedId={selectedId}
-            recommendedSize={recommendedSize}
-            cycleSize={cycleSize}
-            onSelect={onSelect}
-            onClose={onClose}
-            includedSize={includedSize}
-          />
+      <SheetContent side="bottom" showCloseButton={false} className="rounded-t-[20px] p-0">
+        <div className="flex justify-center pt-3">
+          <div className="h-1 w-10 rounded-full bg-border" />
+        </div>
+        <SheetHeader>
+          <SheetTitle>{title}</SheetTitle>
+          <SheetDescription>{description}</SheetDescription>
+        </SheetHeader>
+        <div className="px-4 pb-6">
+          <PickerContent {...pickerProps} />
         </div>
       </SheetContent>
     </Sheet>
