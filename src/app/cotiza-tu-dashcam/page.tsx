@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 
 import { StepIndicator } from '@/components/quiz/StepIndicator'
@@ -92,17 +93,16 @@ export default function QuizPage() {
             <div className="px-5 pt-2 pb-1 md:px-8 md:pt-4 md:pb-0">
               <Link
                 href="/resultado"
-                className="flex items-center justify-between gap-4 rounded-xl px-4 py-2.5 transition-all duration-200
-                  glass-card border-brand/20 hover:border-brand/40 hover:shadow-[0_0_20px_2px_oklch(0.8339_0.1432_93.43/0.12)]"
+                className="flex items-center gap-4 rounded-xl bg-info px-4 py-3 transition-colors hover:bg-info/90"
               >
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground">{PREVIOUS_RECOMMENDATION.label}</span>
-                  <span className="text-sm font-semibold text-foreground">{previousProductName}</span>
+                <div className="flex flex-1 flex-col gap-0.5">
+                  <span className="text-xs text-info-foreground/70">{PREVIOUS_RECOMMENDATION.label}</span>
+                  <span className="text-sm font-semibold text-info-foreground">{previousProductName}</span>
                 </div>
-                <div className="flex items-center gap-1 text-sm font-semibold text-brand">
-                  {PREVIOUS_RECOMMENDATION.cta}
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </div>
+                <Button variant="outline" size="sm" className="shrink-0 pointer-events-none">
+                  Ver
+                  <ArrowRight className="h-3 w-3" />
+                </Button>
               </Link>
             </div>
           )}
