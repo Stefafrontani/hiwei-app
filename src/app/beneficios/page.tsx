@@ -214,6 +214,8 @@ export default function BeneficiosPage() {
                               <Input
                                 {...field}
                                 id="benefit-name"
+                                autoComplete="name"
+                                enterKeyHint="next"
                                 placeholder="Ej: Juan Pérez"
                                 aria-invalid={fieldState.invalid}
                                 className="h-11 rounded-lg"
@@ -241,6 +243,9 @@ export default function BeneficiosPage() {
                                 {...field}
                                 id="benefit-email"
                                 type="email"
+                                inputMode="email"
+                                autoComplete="email"
+                                enterKeyHint="next"
                                 placeholder="tu@email.com"
                                 aria-invalid={fieldState.invalid}
                                 className="h-11 rounded-lg"
@@ -268,6 +273,9 @@ export default function BeneficiosPage() {
                                 {...field}
                                 id="benefit-phone"
                                 type="tel"
+                                inputMode="tel"
+                                autoComplete="tel"
+                                enterKeyHint="done"
                                 placeholder="+54 11 1234-5678"
                                 aria-invalid={fieldState.invalid}
                                 className="h-11 rounded-lg"

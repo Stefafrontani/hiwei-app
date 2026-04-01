@@ -110,9 +110,12 @@ function ContactForm({ onClose, className, onStatusChange }: {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Nombre y apellido</FieldLabel>
+              <FieldLabel htmlFor="contact-name">Nombre y apellido</FieldLabel>
               <Input
                 {...field}
+                id="contact-name"
+                autoComplete="name"
+                enterKeyHint="next"
                 placeholder="Ej: Juan Pérez"
                 aria-invalid={fieldState.invalid}
               />
@@ -126,10 +129,14 @@ function ContactForm({ onClose, className, onStatusChange }: {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Email</FieldLabel>
+              <FieldLabel htmlFor="contact-email">Email</FieldLabel>
               <Input
                 {...field}
+                id="contact-email"
                 type="email"
+                inputMode="email"
+                autoComplete="email"
+                enterKeyHint="next"
                 placeholder="tu@email.com"
                 aria-invalid={fieldState.invalid}
               />
@@ -143,12 +150,16 @@ function ContactForm({ onClose, className, onStatusChange }: {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel className="text-muted-foreground">
+              <FieldLabel htmlFor="contact-phone" className="text-muted-foreground">
                 Teléfono (opcional)
               </FieldLabel>
               <Input
                 {...field}
+                id="contact-phone"
                 type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                enterKeyHint="next"
                 placeholder="+54 11 1234-5678"
                 aria-invalid={fieldState.invalid}
               />

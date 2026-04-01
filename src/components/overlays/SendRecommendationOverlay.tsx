@@ -107,9 +107,12 @@ function SendForm({ onClose, recommendationId, className, onStatusChange }: {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Nombre y apellido</FieldLabel>
+              <FieldLabel htmlFor="send-name">Nombre y apellido</FieldLabel>
               <Input
                 {...field}
+                id="send-name"
+                autoComplete="name"
+                enterKeyHint="next"
                 placeholder="Ej: Juan Pérez"
                 aria-invalid={fieldState.invalid}
               />
@@ -123,10 +126,14 @@ function SendForm({ onClose, recommendationId, className, onStatusChange }: {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Email</FieldLabel>
+              <FieldLabel htmlFor="send-email">Email</FieldLabel>
               <Input
                 {...field}
+                id="send-email"
                 type="email"
+                inputMode="email"
+                autoComplete="email"
+                enterKeyHint="next"
                 placeholder="tu@email.com"
                 aria-invalid={fieldState.invalid}
               />
@@ -140,12 +147,16 @@ function SendForm({ onClose, recommendationId, className, onStatusChange }: {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel className="text-muted-foreground">
+              <FieldLabel htmlFor="send-phone" className="text-muted-foreground">
                 Teléfono (opcional)
               </FieldLabel>
               <Input
                 {...field}
+                id="send-phone"
                 type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                enterKeyHint="done"
                 placeholder="+54 11 1234-5678"
                 aria-invalid={fieldState.invalid}
               />
