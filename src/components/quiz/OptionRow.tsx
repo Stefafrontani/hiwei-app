@@ -59,12 +59,17 @@ export function OptionRow({
             </Badge>
           )}
         </div>
-        <span
-          className={`text-xs transition-colors duration-200
-            ${isActive ? tc!.desc : 'text-muted-foreground'}`}
+        <div
+          className="grid transition-all duration-300 ease-out"
+          style={{ gridTemplateRows: isActive ? '1fr' : '0fr' }}
         >
-          {description}
-        </span>
+          <span
+            className={`overflow-hidden text-xs transition-colors duration-200
+              ${isActive ? tc!.desc : 'text-muted-foreground'}`}
+          >
+            {description}
+          </span>
+        </div>
       </div>
     </SelectionRow>
   )
