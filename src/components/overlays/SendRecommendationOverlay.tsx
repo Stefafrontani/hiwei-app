@@ -4,13 +4,14 @@ import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Send, MailCheck, AlertCircle } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from '@/components/ui/drawer'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { FeedbackState } from './FeedbackState'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { cn } from '@/lib/utils'
 import {
   sendRecommendationFormSchema,
   type SendRecommendationFormValues,
@@ -24,7 +25,7 @@ interface SendRecommendationOverlayProps {
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
-function SendForm({ onClose, recommendationId }: { onClose: () => void; recommendationId?: string | null }) {
+function SendForm({ onClose, recommendationId, className }: { onClose: () => void; recommendationId?: string | null; className?: string }) {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -89,14 +90,7 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
-      <div className="grid gap-1">
-        <p className="text-lg font-semibold leading-none">Recibí tu recomendación</p>
-        <p className="text-sm text-muted-foreground">
-          Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.
-        </p>
-      </div>
-
+    <form onSubmit={form.handleSubmit(onSubmit)} className={cn('grid gap-4', className)}>
       <div className="grid gap-3">
         <Controller
           name="name"
@@ -183,7 +177,7 @@ export function SendRecommendationOverlay({ open, onClose, recommendationId }: S
     return (
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
         <DialogContent showCloseButton={false} className="sm:max-w-[480px]">
-          <DialogHeader className="sr-only">
+          <DialogHeader>
             <DialogTitle>Recibí tu recomendación</DialogTitle>
             <DialogDescription>Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.</DialogDescription>
           </DialogHeader>
@@ -194,19 +188,15 @@ export function SendRecommendationOverlay({ open, onClose, recommendationId }: S
   }
 
   return (
-    <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="bottom" showCloseButton={false} className="rounded-t-[20px] p-0">
-        <div className="flex justify-center pt-3">
-          <div className="h-1 w-10 rounded-full bg-border" />
-        </div>
-        <SheetHeader className="sr-only">
-          <SheetTitle>Recibí tu recomendación</SheetTitle>
-          <SheetDescription>Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.</SheetDescription>
-        </SheetHeader>
-        <div className="px-4 pb-6">
-          <SendForm onClose={onClose} recommendationId={recommendationId} />
-        </div>
-      </SheetContent>
-    </Sheet>
+    <Drawer open={open} onOpenChange={(v) => !v && onClose()} repositionInputs={false}>
+      <DrawerContent>
+        <DrawerHeader className="text-left">
+          <DrawerTitle>Recibí tu recomendación</DrawerTitle>
+          <DrawerDescription>Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.</DrawerDescription>
+        </DrawerHeader>
+        <SendForm onClose={onClose} recommendationId={recommendationId} className="px-4" />
+        <DrawerFooter className="pt-2" />
+      </DrawerContent>
+    </Drawer>
   )
 }

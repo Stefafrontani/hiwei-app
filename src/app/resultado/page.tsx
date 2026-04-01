@@ -166,24 +166,15 @@ export default function ResultadoPage() {
         {/* Desktop CTA Sidebar */}
         {result && !loading && (
           <ResultDesktopSidebar
-            showContact={showContact}
-            showSend={showSend}
-            showEmailForm={showEmailForm}
             onContactOpen={() => setShowContact(true)}
-            onContactClose={() => setShowContact(false)}
-            onEmailFormOpen={() => setShowEmailForm(true)}
-            onEmailFormClose={() => setShowEmailForm(false)}
             onSendOpen={() => setShowSend(true)}
-            onSendClose={() => setShowSend(false)}
             onRestart={handleRestart}
-            recommendationId={recommendationId}
             answers={answers}
-            productName={productName}
           />
         )}
       </div>
 
-      {/* Mobile overlays */}
+      {/* Overlays (Drawer on mobile, Dialog on desktop) */}
       <ContactMethodOverlay
         open={showContact}
         onClose={() => setShowContact(false)}

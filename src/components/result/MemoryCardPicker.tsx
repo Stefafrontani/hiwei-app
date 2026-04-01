@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { MemoryStick } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { SelectionRow } from '@/components/ui/selection-row'
 import { Button } from '@/components/ui/button'
@@ -126,19 +126,16 @@ export function MemoryCardPicker({
   }
 
   return (
-    <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="bottom" showCloseButton={false} className="rounded-t-[20px] p-0">
-        <div className="flex justify-center pt-3">
-          <div className="h-1 w-10 rounded-full bg-border" />
-        </div>
-        <SheetHeader>
-          <SheetTitle>{title}</SheetTitle>
-          <SheetDescription>{description}</SheetDescription>
-        </SheetHeader>
+    <Drawer open={open} onOpenChange={(v) => !v && onClose()}>
+      <DrawerContent>
+        <DrawerHeader className="text-left">
+          <DrawerTitle>{title}</DrawerTitle>
+          <DrawerDescription>{description}</DrawerDescription>
+        </DrawerHeader>
         <div className="px-4 pb-6">
           <PickerContent {...pickerProps} />
         </div>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   )
 }

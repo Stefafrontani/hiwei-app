@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Send, CircleCheck, AlertCircle } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from '@/components/ui/drawer'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { FeedbackState } from './FeedbackState'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { cn } from '@/lib/utils'
 import {
   contactFormSchema,
   type ContactFormValues,
@@ -26,7 +27,7 @@ type Status = 'idle' | 'loading' | 'success' | 'error'
 
 const QUERY_MAX = 500
 
-function ContactForm({ onClose }: { onClose: () => void }) {
+function ContactForm({ onClose, className }: { onClose: () => void; className?: string }) {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -93,14 +94,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
   const queryLength = form.watch('query')?.length ?? 0
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
-      <div className="grid gap-1">
-        <p className="text-lg font-semibold leading-none">Dejanos tu consulta</p>
-        <p className="text-sm text-muted-foreground">
-          Completá el formulario y un asesor te contactará a la brevedad.
-        </p>
-      </div>
-
+    <form onSubmit={form.handleSubmit(onSubmit)} className={cn('grid gap-4', className)}>
       <div className="grid gap-3">
         <Controller
           name="name"
@@ -210,7 +204,7 @@ export function ContactAdvisorOverlay({ open, onClose }: ContactAdvisorOverlayPr
     return (
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
         <DialogContent showCloseButton={false} className="sm:max-w-[480px]">
-          <DialogHeader className="sr-only">
+          <DialogHeader>
             <DialogTitle>Dejanos tu consulta</DialogTitle>
             <DialogDescription>Completá el formulario y un asesor te contactará a la brevedad.</DialogDescription>
           </DialogHeader>
@@ -221,19 +215,15 @@ export function ContactAdvisorOverlay({ open, onClose }: ContactAdvisorOverlayPr
   }
 
   return (
-    <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="bottom" showCloseButton={false} className="rounded-t-[20px] p-0">
-        <div className="flex justify-center pt-3">
-          <div className="h-1 w-10 rounded-full bg-border" />
-        </div>
-        <SheetHeader className="sr-only">
-          <SheetTitle>Dejanos tu consulta</SheetTitle>
-          <SheetDescription>Completá el formulario y un asesor te contactará a la brevedad.</SheetDescription>
-        </SheetHeader>
-        <div className="px-4 pb-6">
-          <ContactForm onClose={onClose} />
-        </div>
-      </SheetContent>
-    </Sheet>
+    <Drawer open={open} onOpenChange={(v) => !v && onClose()} repositionInputs={false}>
+      <DrawerContent>
+        <DrawerHeader className="text-left">
+          <DrawerTitle>Dejanos tu consulta</DrawerTitle>
+          <DrawerDescription>Completá el formulario y un asesor te contactará a la brevedad.</DrawerDescription>
+        </DrawerHeader>
+        <ContactForm onClose={onClose} className="px-4" />
+        <DrawerFooter className="pt-2" />
+      </DrawerContent>
+    </Drawer>
   )
 }
