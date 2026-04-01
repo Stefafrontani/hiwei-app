@@ -154,7 +154,7 @@ export function ComparatorView({ products }: ComparatorViewProps) {
               variant="ghost"
               size="sm"
               onClick={enterImmersive}
-              className="shrink-0 h-10 w-10 p-0 text-muted-foreground hover:text-foreground"
+              className="shrink-0 h-10 w-10 p-0 text-muted-foreground hover:text-foreground md:hidden"
               title="Ver en grande"
             >
               <Maximize2 className="h-5 w-5" />
@@ -162,11 +162,19 @@ export function ComparatorView({ products }: ComparatorViewProps) {
           </div>
         </div>
 
-        {/* Video Comparison Cards */}
-        <section className="animate-fade-in-up grid grid-cols-1 gap-4 md:grid-cols-2" style={{ '--delay': '160ms' } as React.CSSProperties}>
+        {/* Video Comparison Cards — mobile (always) / desktop (only when not both selected) */}
+        <section className={`animate-fade-in-up grid grid-cols-1 gap-4 ${bothSelected ? 'md:hidden' : 'md:grid-cols-2'}`} style={{ '--delay': '160ms' } as React.CSSProperties}>
           <ComparatorPlayerCard product={productA} activeAngle={activeAngle} autoplay={bothSelected} playbackKey={playbackKey} />
           <ComparatorPlayerCard product={productB} activeAngle={activeAngle} autoplay={bothSelected} playbackKey={playbackKey} />
         </section>
+
+        {/* Desktop inline immersive — full-bleed side by side when both selected */}
+        {bothSelected && (
+          <section className="animate-fade-in-up hidden md:flex flex-row items-center gap-1 relative -ml-[50vw] left-1/2 w-screen" style={{ '--delay': '160ms' } as React.CSSProperties}>
+            <ComparatorPlayerCard product={productA} activeAngle={activeAngle} autoplay={true} playbackKey={playbackKey} variant="immersive" />
+            <ComparatorPlayerCard product={productB} activeAngle={activeAngle} autoplay={true} playbackKey={playbackKey} variant="immersive" />
+          </section>
+        )}
 
         {/* Specs Comparison Table */}
         <div className="animate-fade-in-up" style={{ '--delay': '240ms' } as React.CSSProperties}>
@@ -184,7 +192,7 @@ export function ComparatorView({ products }: ComparatorViewProps) {
             onClose={exitImmersive}
             onDualFullscreen={() => setShowDualFullscreen(true)}
           />
-          <div className="flex flex-1 flex-col justify-center gap-1 px-1 pb-1">
+          <div className="flex flex-1 flex-col md:flex-row items-stretch gap-1 px-1 pb-1">
             <ComparatorPlayerCard
               product={productA}
               activeAngle={activeAngle}

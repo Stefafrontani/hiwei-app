@@ -85,7 +85,7 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
 
   if (isImmersive) {
     return (
-      <div className="relative w-full">
+      <div className="relative w-full md:flex-1 md:min-w-0">
         {/* Model name badge */}
         <div className="absolute top-2 left-2 z-20 rounded-md bg-black/60 px-2 py-0.5 text-xs font-semibold text-white backdrop-blur-sm">
           {product.name}

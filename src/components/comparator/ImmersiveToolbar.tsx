@@ -79,7 +79,7 @@ export function ImmersiveToolbar({
           <button
             type="button"
             onClick={onDualFullscreen}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white hover:bg-white/10 transition-colors"
+            className="flex md:hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-white hover:bg-white/10 transition-colors"
           >
             <Columns2 className="h-5 w-5" />
           </button>
