@@ -19,7 +19,7 @@ import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
 import type { RecommendationResult } from '@/application/use-cases/dashcam/GetRecommendation/GetRecommendation.dto'
 import type { MemoryCard } from '@/domain/entities/MemoryCard'
 
-type Phase = 'loading' | 'reveal' | 'results' | 'error'
+type Phase = 'loading' | 'reveal' | 'results'
 
 /* Flow: Recommendation - (1): UI */
 export default function ResultadoPage() {
@@ -66,7 +66,7 @@ export default function ResultadoPage() {
         }))
       })
       .then(() => setPhase('reveal'))
-      .catch((e) => { setError(e.message); setPhase('error') })
+      .catch((e) => setError(e.message))
   }, [])
 
   const handleRetry = useCallback(() => {
@@ -139,18 +139,18 @@ export default function ResultadoPage() {
         <main className="flex flex-1 flex-col overflow-y-auto no-scrollbar">
 
           <AnimatePresence mode="wait">
-            {phase === 'loading' && <LoadingScreen />}
-            {phase === 'reveal' && result && (
+            {error && (
+              <ErrorScreen onRetry={handleRetry} onRestart={handleRestart} />
+            )}
+            {!error && phase === 'loading' && <LoadingScreen />}
+            {!error && phase === 'reveal' && result && (
               <MatchReveal
                 onComplete={handleRevealComplete}
               />
             )}
-            {phase === 'error' && (
-              <ErrorScreen onRetry={handleRetry} onRestart={handleRestart} />
-            )}
 
           {/* Content */}
-          {phase === 'results' && result && (
+          {!error && phase === 'results' && result && (
             <motion.div
               key="results-screen"
               className="flex w-full flex-col gap-4 px-5 py-4 pb-20 md:px-8 md:py-8 md:pb-8"
@@ -185,7 +185,7 @@ export default function ResultadoPage() {
         </main>
 
         {/* Desktop CTA Sidebar */}
-        {phase === 'results' && result && (
+        {!error && phase === 'results' && result && (
           <ResultDesktopSidebar
             onContactOpen={() => setShowContact(true)}
             onSendOpen={() => setShowSend(true)}
@@ -207,7 +207,7 @@ export default function ResultadoPage() {
       <SendRecommendationOverlay open={showSend} onClose={() => setShowSend(false)} recommendationId={recommendationId} />
 
       {/* Fixed bottom CTA — mobile only */}
-      {phase === 'results' && result && (
+      {!error && phase === 'results' && result && (
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.06] backdrop-blur-xl bg-background/60 px-4 py-3 md:hidden">
           <Button variant="brand" size="xl" className="w-full" onClick={() => setShowContact(true)}>
             <Headphones className="h-4 w-4" />
