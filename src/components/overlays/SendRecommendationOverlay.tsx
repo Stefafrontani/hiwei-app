@@ -4,13 +4,14 @@ import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Send, MailCheck, AlertCircle } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from '@/components/ui/drawer'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { FeedbackState } from './FeedbackState'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { cn } from '@/lib/utils'
 import {
   sendRecommendationFormSchema,
   type SendRecommendationFormValues,
@@ -24,9 +25,19 @@ interface SendRecommendationOverlayProps {
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
-function SendForm({ onClose, recommendationId }: { onClose: () => void; recommendationId?: string | null }) {
+function SendForm({ onClose, recommendationId, className, onStatusChange }: {
+  onClose: () => void
+  recommendationId?: string | null
+  className?: string
+  onStatusChange?: (status: Status) => void
+}) {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+
+  const updateStatus = (newStatus: Status) => {
+    setStatus(newStatus)
+    onStatusChange?.(newStatus)
+  }
 
   const form = useForm<SendRecommendationFormValues>({
     resolver: zodResolver(sendRecommendationFormSchema),
@@ -35,7 +46,7 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
   })
 
   const onSubmit = async (values: SendRecommendationFormValues) => {
-    setStatus('loading')
+    updateStatus('loading')
     setErrorMsg('')
     try {
       const res = await fetch('/api/send-recommendation', {
@@ -51,10 +62,10 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Error al enviar')
-      setStatus('success')
+      updateStatus('success')
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : 'Error al enviar')
-      setStatus('error')
+      updateStatus('error')
     }
   }
 
@@ -80,7 +91,7 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
         iconColor="text-destructive"
         title="No pudimos enviar tu recomendación"
         message={errorMsg || 'Verificá tu conexión e intentá de nuevo. Tus datos no se perdieron.'}
-        onClose={() => setStatus('idle')}
+        onClose={() => updateStatus('idle')}
         buttonLabel="Reintentar"
         buttonVariant="default"
         glow
@@ -89,23 +100,19 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
-      <div className="grid gap-1">
-        <p className="text-lg font-semibold leading-none">Recibí tu recomendación</p>
-        <p className="text-sm text-muted-foreground">
-          Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.
-        </p>
-      </div>
-
+    <form onSubmit={form.handleSubmit(onSubmit)} className={cn('grid gap-4', className)}>
       <div className="grid gap-3">
         <Controller
           name="name"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Nombre y apellido</FieldLabel>
+              <FieldLabel htmlFor="send-name">Nombre y apellido</FieldLabel>
               <Input
                 {...field}
+                id="send-name"
+                autoComplete="name"
+                enterKeyHint="next"
                 placeholder="Ej: Juan Pérez"
                 aria-invalid={fieldState.invalid}
               />
@@ -119,10 +126,14 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Email</FieldLabel>
+              <FieldLabel htmlFor="send-email">Email</FieldLabel>
               <Input
                 {...field}
+                id="send-email"
                 type="email"
+                inputMode="email"
+                autoComplete="email"
+                enterKeyHint="next"
                 placeholder="tu@email.com"
                 aria-invalid={fieldState.invalid}
               />
@@ -136,12 +147,16 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel className="text-muted-foreground">
+              <FieldLabel htmlFor="send-phone" className="text-muted-foreground">
                 Teléfono (opcional)
               </FieldLabel>
               <Input
                 {...field}
+                id="send-phone"
                 type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                enterKeyHint="done"
                 placeholder="+54 11 1234-5678"
                 aria-invalid={fieldState.invalid}
               />
@@ -178,35 +193,33 @@ function SendForm({ onClose, recommendationId }: { onClose: () => void; recommen
 
 export function SendRecommendationOverlay({ open, onClose, recommendationId }: SendRecommendationOverlayProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
+  const [formStatus, setFormStatus] = useState<Status>('idle')
+  const showHeader = formStatus === 'idle' || formStatus === 'loading'
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
         <DialogContent showCloseButton={false} className="sm:max-w-[480px]">
-          <DialogHeader className="sr-only">
+          <DialogHeader className={showHeader ? '' : 'sr-only'}>
             <DialogTitle>Recibí tu recomendación</DialogTitle>
             <DialogDescription>Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.</DialogDescription>
           </DialogHeader>
-          <SendForm onClose={onClose} recommendationId={recommendationId} />
+          <SendForm onClose={onClose} recommendationId={recommendationId} onStatusChange={setFormStatus} />
         </DialogContent>
       </Dialog>
     )
   }
 
   return (
-    <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="bottom" showCloseButton={false} className="rounded-t-[20px] p-0">
-        <div className="flex justify-center pt-3">
-          <div className="h-1 w-10 rounded-full bg-border" />
-        </div>
-        <SheetHeader className="sr-only">
-          <SheetTitle>Recibí tu recomendación</SheetTitle>
-          <SheetDescription>Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.</SheetDescription>
-        </SheetHeader>
-        <div className="px-4 pb-6">
-          <SendForm onClose={onClose} recommendationId={recommendationId} />
-        </div>
-      </SheetContent>
-    </Sheet>
+    <Drawer open={open} onOpenChange={(v) => !v && onClose()} repositionInputs={false}>
+      <DrawerContent>
+        <DrawerHeader className={showHeader ? 'text-left' : 'sr-only'}>
+          <DrawerTitle>Recibí tu recomendación</DrawerTitle>
+          <DrawerDescription>Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.</DrawerDescription>
+        </DrawerHeader>
+        <SendForm onClose={onClose} recommendationId={recommendationId} className="px-4" onStatusChange={setFormStatus} />
+        <DrawerFooter className="pt-2" />
+      </DrawerContent>
+    </Drawer>
   )
 }

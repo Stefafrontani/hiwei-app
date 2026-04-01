@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { Camera, Headphones, RotateCcw, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SiteHeader } from '@/components/layout/SiteHeader'
-import { ResultSummaryBanner } from '@/components/result/ResultSummaryBanner'
 import { MainRecommendationCard } from '@/components/result/MainRecommendationCard'
 import { BudgetBreakdown } from '@/components/result/BudgetBreakdown'
 import { ResultDesktopSidebar } from '@/components/result/ResultDesktopSidebar'
@@ -107,14 +106,12 @@ export default function ResultadoPage() {
   const productName = result?.main.product.name
 
   return (
-    <div className="quiz-gradient grain-overlay flex h-screen flex-col overflow-hidden">
+    <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">
       <SiteHeader activeNav="cotizador" />
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 overflow-hidden">
         {/* Main scrollable column */}
         <main className="flex flex-1 flex-col overflow-y-auto no-scrollbar">
-          {/* Summary Banner */}
-          {result && !loading && <ResultSummaryBanner answers={answers} />}
 
           {/* Loading */}
           {loading && (
@@ -141,13 +138,13 @@ export default function ResultadoPage() {
           {/* Content */}
           {result && !loading && (
             <div className="flex w-full flex-col gap-4 px-5 py-4 pb-20 md:px-8 md:py-8 md:pb-8">
-              <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} onSendRecommendation={() => setShowSend(true)} />
-              <BudgetBreakdown product={result.main.product} answers={answers} memoryCards={memoryCards} />
+              <MainRecommendationCard product={result.main.product} matchScore={result.main.matchScore} />
+              <BudgetBreakdown product={result.main.product} answers={answers} memoryCards={memoryCards} onSendRecommendation={() => setShowSend(true)} />
 
               {expiresAt && (
-                <div className="flex items-center gap-1.5 rounded-lg bg-warning/15 px-3 py-2">
-                  <Clock className="h-3.5 w-3.5 shrink-0 text-warning" />
-                  <p className="text-xs font-semibold text-warning">
+                <div className="flex items-center gap-1.5 rounded-lg bg-info px-3 py-2">
+                  <Clock className="h-3.5 w-3.5 shrink-0 text-foreground" />
+                  <p className="text-xs font-semibold text-foreground">
                     Oferta válida hasta el {new Date(expiresAt).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })}
                   </p>
                 </div>
@@ -169,24 +166,15 @@ export default function ResultadoPage() {
         {/* Desktop CTA Sidebar */}
         {result && !loading && (
           <ResultDesktopSidebar
-            showContact={showContact}
-            showSend={showSend}
-            showEmailForm={showEmailForm}
             onContactOpen={() => setShowContact(true)}
-            onContactClose={() => setShowContact(false)}
-            onEmailFormOpen={() => setShowEmailForm(true)}
-            onEmailFormClose={() => setShowEmailForm(false)}
             onSendOpen={() => setShowSend(true)}
-            onSendClose={() => setShowSend(false)}
             onRestart={handleRestart}
-            recommendationId={recommendationId}
             answers={answers}
-            productName={productName}
           />
         )}
       </div>
 
-      {/* Mobile overlays */}
+      {/* Overlays (Drawer on mobile, Dialog on desktop) */}
       <ContactMethodOverlay
         open={showContact}
         onClose={() => setShowContact(false)}

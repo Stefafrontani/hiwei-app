@@ -30,12 +30,12 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from '@/components/ui/sheet'
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+} from '@/components/ui/drawer'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import {
   leadFormSchema,
@@ -214,6 +214,8 @@ export default function BeneficiosPage() {
                               <Input
                                 {...field}
                                 id="benefit-name"
+                                autoComplete="name"
+                                enterKeyHint="next"
                                 placeholder="Ej: Juan Pérez"
                                 aria-invalid={fieldState.invalid}
                                 className="h-11 rounded-lg"
@@ -241,6 +243,9 @@ export default function BeneficiosPage() {
                                 {...field}
                                 id="benefit-email"
                                 type="email"
+                                inputMode="email"
+                                autoComplete="email"
+                                enterKeyHint="next"
                                 placeholder="tu@email.com"
                                 aria-invalid={fieldState.invalid}
                                 className="h-11 rounded-lg"
@@ -268,6 +273,9 @@ export default function BeneficiosPage() {
                                 {...field}
                                 id="benefit-phone"
                                 type="tel"
+                                inputMode="tel"
+                                autoComplete="tel"
+                                enterKeyHint="done"
                                 placeholder="+54 11 1234-5678"
                                 aria-invalid={fieldState.invalid}
                                 className="h-11 rounded-lg"
@@ -344,27 +352,18 @@ export default function BeneficiosPage() {
           </DialogContent>
         </Dialog>
       ) : (
-        <Sheet open={view === 'success'} onOpenChange={() => {}}>
-          <SheetContent
-            side="bottom"
-            showCloseButton={false}
-            className="rounded-t-[20px] p-0"
-            onPointerDownOutside={(e) => e.preventDefault()}
-            onEscapeKeyDown={(e) => e.preventDefault()}
-          >
-            <div className="flex justify-center pt-3">
-              <div className="h-1 w-10 rounded-full bg-border" />
-            </div>
-            <SheetHeader className="text-center">
+        <Drawer open={view === 'success'} dismissible={false}>
+          <DrawerContent>
+            <DrawerHeader className="text-center">
               <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-success/10 animate-glow-pulse">
                 <CircleCheck className="h-8 w-8 text-success" />
               </div>
-              <SheetTitle className="text-xl font-bold">¡Ya sos parte!</SheetTitle>
-              <SheetDescription>
+              <DrawerTitle className="text-xl font-bold">¡Ya sos parte!</DrawerTitle>
+              <DrawerDescription>
                 Revisá tu email — te enviamos un resumen con todo lo que
                 activaste.
-              </SheetDescription>
-            </SheetHeader>
+              </DrawerDescription>
+            </DrawerHeader>
             <div className="grid gap-4 px-4 pb-6">
               <div className="grid gap-2">
                 {BENEFITS.map((b) => (
@@ -383,8 +382,8 @@ export default function BeneficiosPage() {
                 </Link>
               </Button>
             </div>
-          </SheetContent>
-        </Sheet>
+          </DrawerContent>
+        </Drawer>
       )}
 
       {/* ── Error overlay ────────────────────────────────────────────── */}
@@ -419,21 +418,18 @@ export default function BeneficiosPage() {
           </DialogContent>
         </Dialog>
       ) : (
-        <Sheet open={view === 'error'} onOpenChange={(open) => { if (!open) setView('form') }}>
-          <SheetContent side="bottom" className="rounded-t-[20px] p-0">
-            <div className="flex justify-center pt-3">
-              <div className="h-1 w-10 rounded-full bg-border" />
-            </div>
-            <SheetHeader className="text-center">
+        <Drawer open={view === 'error'} onOpenChange={(open) => { if (!open) setView('form') }}>
+          <DrawerContent>
+            <DrawerHeader className="text-center">
               <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
                 <TriangleAlert className="h-8 w-8 text-destructive" />
               </div>
-              <SheetTitle className="text-xl font-bold">No pudimos registrarte</SheetTitle>
-              <SheetDescription>
+              <DrawerTitle className="text-xl font-bold">No pudimos registrarte</DrawerTitle>
+              <DrawerDescription>
                 Hubo un problema con la conexión. Tus datos no se perdieron
                 — podés volver a intentar.
-              </SheetDescription>
-            </SheetHeader>
+              </DrawerDescription>
+            </DrawerHeader>
             <div className="grid gap-2 px-4 pb-6">
                 <Button
                   variant="default"
@@ -449,8 +445,8 @@ export default function BeneficiosPage() {
                   </Link>
                 </Button>
             </div>
-          </SheetContent>
-        </Sheet>
+          </DrawerContent>
+        </Drawer>
       )}
     </>
   )

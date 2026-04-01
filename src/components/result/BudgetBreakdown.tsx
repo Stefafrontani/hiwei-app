@@ -1,7 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Receipt, HardDrive, MemoryStick, CreditCard, Banknote, Pencil, Plus, Flame } from 'lucide-react'
+import { HardDrive, MemoryStick, CreditCard, Banknote, Pencil, Plus, Flame, Send } from 'lucide-react'
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 import type { MemoryCard } from '@/domain/entities/MemoryCard'
 import type { QuizAnswers } from '@/domain/entities/QuizAnswers'
@@ -11,7 +15,7 @@ import { MemoryCardPicker } from './MemoryCardPicker'
 import { HWK_PRICE, INSTALLATION_PRICE, CASH_DISCOUNT } from '@/lib/constants'
 
 function formatARS(amount: number): string {
-  return `$${amount.toLocaleString('es-AR')} ARS`
+  return `$${amount.toLocaleString('es-AR')}`
 }
 
 function MiniCheckbox({ checked, onChange }: { checked: boolean; onChange: () => void }) {
@@ -53,9 +57,10 @@ interface BudgetBreakdownProps {
   product: DashcamProduct
   answers: QuizAnswers
   memoryCards: MemoryCard[]
+  onSendRecommendation?: () => void
 }
 
-export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdownProps) {
+export function BudgetBreakdown({ product, answers, memoryCards, onSendRecommendation }: BudgetBreakdownProps) {
   const dashcamPrice = Math.round(product.basePrice * (1 - product.discount))
   const hasIncludedCard = product.includedMemoryCardSize != null
   const recommendedSize = getRecommendedMemoryCardSize(answers.vehicleUsage)
@@ -64,9 +69,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
   const discount = product.discount
   const applyDiscount = (price: number) => Math.round(price * (1 - discount))
 
-  // Scenario 1: selected card (replaceable)
   const [selectedCard, setSelectedCard] = useState<MemoryCard | null>(hasIncludedCard ? null : (defaultCard ?? null))
-  // Scenario 2: expansion card (additional)
   const [expansionCard, setExpansionCard] = useState<MemoryCard | null>(null)
   const [includeExpansion, setIncludeExpansion] = useState(false)
 
@@ -92,200 +95,210 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 shadow-sm md:p-5">
-      {/* Header */}
-      <div className="flex items-center gap-2">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand/10">
-          <Receipt className="h-3.5 w-3.5 text-brand" />
-        </div>
-        <span className="text-sm font-bold text-foreground">Presupuesto</span>
-        {product.discount > 0 && (
-          <span className="ml-auto inline-flex items-center flex-end gap-1 rounded-md bg-warning/20 px-2.5 py-1 text-xs font-bold text-warning">
-            <Flame className="h-3.5 w-3.5" />
-            {Math.round(product.discount * 100)} % OFF
-          </span>
-        )}
-      </div>
+    <Card className="gap-0 overflow-hidden border-border py-0 shadow-sm">
 
-      <div className="h-px bg-border" />
-
-      {/* === INCLUIDO section === */}
-      <p className="text-xs font-semibold uppercase tracking-[1px] text-muted-foreground">
-        Incluido
-      </p>
-
-      <div className="flex flex-col gap-3">
-        {/* Dashcam */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-start gap-2.5">
-            <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-brand/10">
-              <HardDrive className="h-3 w-3 text-brand" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold text-foreground">
-                {product.name.length > 20 ? `${product.name.slice(0, 20)}…` : product.name}
-              </span>
-              <span className="text-xs text-muted-foreground">Cámara seleccionada</span>
-            </div>
+      {/* ── Hero price block ── */}
+      <CardHeader className={`flex-col items-stretch gap-3 bg-brand/5 px-4 py-4 md:px-5 ${product.discount > 0 ? 'justify-items-start' : 'justify-items-center md:justify-items-start'}`}>
+        <div className={`flex w-full items-start ${product.discount > 0 ? 'justify-between' : 'justify-center md:justify-start'}`}>
+          <div className={`flex flex-col gap-0.5 ${product.discount > 0 ? '' : 'items-center md:items-start'}`}>
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tu presupuesto</span>
+            <span className="text-2xl font-bold tracking-tight text-brand md:text-3xl">{formatARS(total)}</span>
           </div>
-          <PriceWithDiscount original={product.basePrice} discounted={dashcamPrice} />
+          {product.discount > 0 && (
+            <Badge variant="warning" className="gap-1">
+              <Flame className="h-3 w-3" />
+              {Math.round(product.discount * 100)}% OFF
+            </Badge>
+          )}
         </div>
 
-        {/* Memory card — Scenario 1: separate card */}
-        {!hasIncludedCard && (
+        {/* Payment options — prominent */}
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-1.5">
+            <CreditCard className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            <span className="text-xs font-medium text-muted-foreground">
+              <span className="font-bold text-foreground">6</span> cuotas <span className="font-bold text-foreground">sin interés</span> de <span className="font-bold text-foreground">{formatARS(Math.round(total / 6))}</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Banknote className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            <span className="text-xs font-medium text-muted-foreground">
+              <span className="font-bold text-foreground">{Math.round(CASH_DISCOUNT * 100)}% off</span> en <span className="font-bold text-foreground">efectivo o transferencia</span>
+            </span>
+          </div>
+        </div>
+      </CardHeader>
+
+      {/* ── Breakdown details ── */}
+      <CardContent className="flex flex-col gap-3 px-4 py-4 md:px-5">
+
+        {/* Incluido */}
+        <p className="text-xs font-semibold uppercase tracking-[1px] text-muted-foreground">
+          Incluido
+        </p>
+
+        <div className="flex flex-col gap-3">
+          {/* Dashcam */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-2.5">
               <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-brand/10">
-                <MemoryStick className="h-3 w-3 text-brand" />
+                <HardDrive className="h-3 w-3 text-brand" />
               </div>
               <div className="flex flex-col">
                 <span className="text-sm font-semibold text-foreground">
-                  {selectedCard ? `Tarjeta ${selectedCard.name}` : 'Tarjeta de memoria'}
+                  {product.name.length > 20 ? `${product.name.slice(0, 20)}…` : product.name}
                 </span>
-                <div className="flex items-center gap-1">
-                  <span className="text-xs text-muted-foreground">
-                    {selectedCard ? `${calculateRecordingHours(selectedCard.size, product.cycleSize)}+ hs de grabación` : 'Sin tarjetas disponibles'}
-                  </span>
-                  {memoryCards.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => setShowCardPicker(true)}
-                      className="flex cursor-pointer items-center gap-0.5 text-xs font-medium text-brand/70 transition-colors hover:text-brand"
-                    >
-                      <Pencil className="h-2.5 w-2.5" />
-                      editar
-                    </button>
-                  )}
-                </div>
+                <span className="text-xs text-muted-foreground">Cámara seleccionada</span>
               </div>
             </div>
-            {selectedCard ? (
-              <PriceWithDiscount original={memoryCardRaw} discounted={memoryCardPrice} />
-            ) : (
-              <span className="shrink-0 text-sm font-semibold text-foreground">—</span>
-            )}
+            <PriceWithDiscount original={product.basePrice} discounted={dashcamPrice} />
           </div>
-        )}
 
-        {/* Memory card — Scenario 2: included card */}
-        {hasIncludedCard && (
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-start gap-2.5">
-              <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-success/10">
-                <MemoryStick className="h-3 w-3 text-success" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-semibold text-foreground">
-                  Memoria incluida ({product.includedMemoryCardSize} GB)
-                </span>
-                <div className="flex items-center gap-1">
-                  <span className="text-xs text-muted-foreground">
-                    {calculateRecordingHours(product.includedMemoryCardSize!, product.cycleSize)}+ hs de grabación
+          {/* Memory card — Scenario 1: separate card */}
+          {!hasIncludedCard && (
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-2.5">
+                <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-brand/10">
+                  <MemoryStick className="h-3 w-3 text-brand" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-foreground">
+                    {selectedCard ? `Tarjeta ${selectedCard.name}` : 'Tarjeta de memoria'}
                   </span>
-                  {memoryCards.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => setShowCardPicker(true)}
-                      className="flex cursor-pointer items-center gap-0.5 text-xs font-medium text-brand/70 transition-colors hover:text-brand"
-                    >
-                      <Plus className="h-2.5 w-2.5" />
-                      expandir
-                    </button>
-                  )}
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-muted-foreground">
+                      {selectedCard ? `${calculateRecordingHours(selectedCard.size, product.cycleSize)}+ hs de grabación` : 'Sin tarjetas disponibles'}
+                    </span>
+                    {memoryCards.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setShowCardPicker(true)}
+                        className="flex cursor-pointer items-center gap-0.5 text-xs font-medium text-brand/70 transition-colors hover:text-brand"
+                      >
+                        <Pencil className="h-2.5 w-2.5" />
+                        editar
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
+              {selectedCard ? (
+                <PriceWithDiscount original={memoryCardRaw} discounted={memoryCardPrice} />
+              ) : (
+                <span className="shrink-0 text-sm font-semibold text-foreground">—</span>
+              )}
             </div>
-            <span className="shrink-0 text-xs font-semibold text-success">
-              Incluida
-            </span>
-          </div>
-        )}
-      </div>
+          )}
 
-      {/* === EXTRAS section === */}
-      <div className="h-px bg-border" />
+          {/* Memory card — Scenario 2: included card */}
+          {hasIncludedCard && (
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-2.5">
+                <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-info/20">
+                  <MemoryStick className="h-3 w-3 text-info" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-foreground">
+                    Memoria incluida ({product.includedMemoryCardSize} GB)
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-muted-foreground">
+                      {calculateRecordingHours(product.includedMemoryCardSize!, product.cycleSize)}+ hs de grabación
+                    </span>
+                    {memoryCards.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setShowCardPicker(true)}
+                        className="flex cursor-pointer items-center gap-0.5 text-xs font-medium text-brand/70 transition-colors hover:text-brand"
+                      >
+                        <Plus className="h-2.5 w-2.5" />
+                        expandir
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <Badge variant="info" className="text-xs">
+                Incluida
+              </Badge>
+            </div>
+          )}
+        </div>
 
-      <div className="flex flex-col gap-0.5">
-        <p className="text-xs font-semibold uppercase tracking-[1px] text-muted-foreground">
-          Extras opcionales
-        </p>
-        <p className="text-xs text-muted-foreground">
-          Podes incluir o quitar extras de tu presupuesto
-        </p>
-      </div>
+        {/* Extras */}
+        <Separator />
 
-      <div className="flex flex-col gap-3">
-        {/* Expansion card (Scenario 2 only) */}
-        {hasIncludedCard && expansionCard && (
-          <div className={`flex items-start justify-between gap-3 transition-opacity ${includeExpansion ? '' : 'opacity-50'}`}>
+        <div className="flex flex-col gap-0.5">
+          <p className="text-xs font-semibold uppercase tracking-[1px] text-muted-foreground">
+            Extras opcionales
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Podés incluir o quitar extras de tu presupuesto
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {/* Expansion card (Scenario 2 only) */}
+          {hasIncludedCard && expansionCard && (
+            <div className={`flex items-start justify-between gap-3 transition-opacity ${includeExpansion ? '' : 'opacity-50'}`}>
+              <div className="flex items-start gap-2.5">
+                <div className="mt-0.5 shrink-0">
+                  <MiniCheckbox checked={includeExpansion} onChange={() => setIncludeExpansion((v) => !v)} />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-foreground">Expansión a {expansionCard.size} GB</span>
+                  <span className="text-xs text-muted-foreground">
+                    Tarjeta adicional — {calculateRecordingHours(expansionCard.size, product.cycleSize)}+ hs extra
+                  </span>
+                </div>
+              </div>
+              <PriceWithDiscount original={expansionRaw} discounted={expansionPrice} active={includeExpansion} />
+            </div>
+          )}
+
+          {/* HWK */}
+          <div className={`flex items-start justify-between gap-3 transition-opacity ${includeHWK ? '' : 'opacity-50'}`}>
             <div className="flex items-start gap-2.5">
               <div className="mt-0.5 shrink-0">
-                <MiniCheckbox checked={includeExpansion} onChange={() => setIncludeExpansion((v) => !v)} />
+                <MiniCheckbox checked={includeHWK} onChange={() => setIncludeHWK((v) => !v)} />
               </div>
               <div className="flex flex-col">
-                <span className="text-sm font-semibold text-foreground">Expansión a {expansionCard.size} GB</span>
-                <span className="text-xs text-muted-foreground">
-                  Tarjeta adicional — {calculateRecordingHours(expansionCard.size, product.cycleSize)}+ hs extra
-                </span>
+                <span className="text-sm font-semibold text-foreground">Kit de vigilancia 24hs</span>
+                <span className="text-xs text-muted-foreground">Graba incluso con el auto apagado</span>
               </div>
             </div>
-            <PriceWithDiscount original={expansionRaw} discounted={expansionPrice} active={includeExpansion} />
+            <PriceWithDiscount original={HWK_PRICE} discounted={applyDiscount(HWK_PRICE)} active={includeHWK} />
           </div>
-        )}
 
-        {/* HWK */}
-        <div className={`flex items-start justify-between gap-3 transition-opacity ${includeHWK ? '' : 'opacity-50'}`}>
-          <div className="flex items-start gap-2.5">
-            <div className="mt-0.5 shrink-0">
-              <MiniCheckbox checked={includeHWK} onChange={() => setIncludeHWK((v) => !v)} />
+          {/* Installation */}
+          <div className={`flex items-start justify-between gap-3 transition-opacity ${includeInstallation ? '' : 'opacity-50'}`}>
+            <div className="flex items-start gap-2.5">
+              <div className="mt-0.5 shrink-0">
+                <MiniCheckbox checked={includeInstallation} onChange={() => setIncludeInstallation((v) => !v)} />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold text-foreground">Instalación profesional</span>
+                <span className="text-xs text-muted-foreground">Sin cables a la vista, lista para usar</span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold text-foreground">Hardwire Kit (HWK)</span>
-              <span className="text-xs text-muted-foreground">Modo estacionamiento — conexión a fusilera</span>
-            </div>
+            <PriceWithDiscount original={INSTALLATION_PRICE} discounted={applyDiscount(INSTALLATION_PRICE)} active={includeInstallation} />
           </div>
-          <PriceWithDiscount original={HWK_PRICE} discounted={applyDiscount(HWK_PRICE)} active={includeHWK} />
         </div>
+      </CardContent>
 
-        {/* Installation */}
-        <div className={`flex items-start justify-between gap-3 transition-opacity ${includeInstallation ? '' : 'opacity-50'}`}>
-          <div className="flex items-start gap-2.5">
-            <div className="mt-0.5 shrink-0">
-              <MiniCheckbox checked={includeInstallation} onChange={() => setIncludeInstallation((v) => !v)} />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold text-foreground">Instalación profesional</span>
-              <span className="text-xs text-muted-foreground">Técnico certificado — en taller</span>
-            </div>
-          </div>
-          <PriceWithDiscount original={INSTALLATION_PRICE} discounted={applyDiscount(INSTALLATION_PRICE)} active={includeInstallation} />
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div className="h-px bg-border" />
-
-      {/* Total */}
-      <div className="-mx-4 flex items-center justify-between bg-brand/5 px-4 py-2.5 md:-mx-5 md:px-5">
-        <span className="text-sm font-bold text-foreground md:text-base">Total</span>
-        <span className="text-base font-bold text-brand md:text-lg">{formatARS(total)}</span>
-      </div>
-
-      {/* Payment options */}
-      <div className="flex flex-col gap-1.5 rounded-lg bg-muted/50 px-3 py-2.5">
-        <div className="flex items-center gap-1.5">
-          <CreditCard className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-xs font-medium text-muted-foreground">
-            <span className="font-bold text-foreground">6</span> cuotas <span className="font-bold text-foreground">sin interes</span> de <span className="font-bold text-foreground">{formatARS(Math.round(total / 6))}</span>
-          </span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <Banknote className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-xs font-medium text-muted-foreground">
-            <span className="font-bold text-foreground">{Math.round(CASH_DISCOUNT * 100)}% off</span> en <span className="font-bold text-foreground">efectivo o transferencia</span>
-          </span>
-        </div>
-      </div>
+      {/* Send quote */}
+      {onSendRecommendation && (
+        <CardFooter className="px-4 pb-4 pt-0 md:justify-end md:px-5">
+          <Button
+            variant="outline"
+            onClick={onSendRecommendation}
+            className="w-full md:w-auto md:px-12"
+          >
+            <Send className="h-4 w-4" />
+            Enviar presupuesto por mail
+          </Button>
+        </CardFooter>
+      )}
 
       {/* Memory Card Picker Modal */}
       {memoryCards.length > 0 && (
@@ -300,6 +313,6 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
           includedSize={product.includedMemoryCardSize ?? undefined}
         />
       )}
-    </div>
+    </Card>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { MessageCircle, Mail } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { ContactAdvisorOverlay } from './ContactAdvisorOverlay'
 import { buildWhatsAppUrl } from '@/lib/buildWhatsAppUrl'
@@ -96,22 +96,19 @@ export function ContactMethodOverlay({
           </DialogContent>
         </Dialog>
       ) : (
-        <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-          <SheetContent side="bottom" showCloseButton={false} className="rounded-t-[20px] p-0">
-            <div className="flex justify-center pt-3">
-              <div className="h-1 w-10 rounded-full bg-border" />
-            </div>
-            <SheetHeader>
-              <SheetTitle>Consultanos</SheetTitle>
-              <SheetDescription>
+        <Drawer open={open} onOpenChange={(v) => !v && onClose()}>
+          <DrawerContent>
+            <DrawerHeader className="text-left">
+              <DrawerTitle>Consultanos</DrawerTitle>
+              <DrawerDescription>
                 Elegí cómo preferís contactarnos.
-              </SheetDescription>
-            </SheetHeader>
+              </DrawerDescription>
+            </DrawerHeader>
             <div className="px-4 pb-6">
               <MethodOptions onClose={onClose} onEmailFormOpen={handleEmailClick} whatsAppProps={whatsAppProps} />
             </div>
-          </SheetContent>
-        </Sheet>
+          </DrawerContent>
+        </Drawer>
       )}
 
       <ContactAdvisorOverlay open={showEmailForm} onClose={onEmailFormClose} />

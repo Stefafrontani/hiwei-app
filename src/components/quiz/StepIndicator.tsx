@@ -23,12 +23,12 @@ export function StepIndicator({ currentStep, totalSteps = 6 }: StepIndicatorProp
   const isLastStep = currentStep === totalSteps
 
   const completedCircle = isLastStep
-    ? 'bg-success text-success-foreground'
+    ? 'bg-info text-info-foreground'
     : 'bg-brand text-brand-foreground'
   const currentCircle = isLastStep
-    ? 'border-2 border-success bg-background text-success animate-glow-pulse'
+    ? 'border-2 border-info bg-background text-info animate-glow-pulse'
     : 'border-2 border-brand bg-background text-brand animate-glow-pulse'
-  const currentLabel = isLastStep ? 'text-success font-semibold' : 'text-brand font-semibold'
+  const currentLabel = isLastStep ? 'text-info font-semibold' : 'text-brand font-semibold'
 
   return (
     <div className="flex flex-col gap-3 px-5 pt-4 pb-2 overflow-hidden">
@@ -41,7 +41,7 @@ export function StepIndicator({ currentStep, totalSteps = 6 }: StepIndicatorProp
           className="absolute top-4 left-4 right-4 h-[2px] origin-left rounded-full transition-all duration-500 ease-out"
           style={{
             transform: `scaleX(${currentStep === 1 ? 0 : (currentStep - 1) / (totalSteps - 1)})`,
-            background: isLastStep ? 'var(--success)' : 'var(--brand)',
+            background: isLastStep ? 'var(--info)' : 'var(--brand)',
           }}
         />
 

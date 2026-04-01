@@ -25,12 +25,6 @@ export function NavigationFooter({
   const isMobile = variant === 'mobile'
   const isDisabled = !canGoNext || isLoading
 
-  const nextShadow = isDisabled
-    ? 'shadow-none'
-    : isLast
-      ? 'shadow-[0_0_20px_2px] shadow-success/15'
-      : 'shadow-[0_0_20px_2px] shadow-brand/15'
-
   return (
     <footer className={isMobile
       ? 'flex items-center gap-4 px-5 py-4'
@@ -50,11 +44,11 @@ export function NavigationFooter({
 
       {/* Next / Finish */}
       <Button
-        variant={isLast ? 'success' : 'brand'}
+        variant={isLast ? 'info' : 'brand'}
         size="lg"
         onClick={onNext}
         disabled={isDisabled}
-        className={`${isMobile ? 'flex-1' : ''} ${nextShadow} transition-shadow duration-200`}
+        className={isMobile ? 'flex-1' : ''}
       >
         {isLoading ? (
           <span className="loading-dots flex gap-1">

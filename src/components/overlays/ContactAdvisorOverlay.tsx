@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Send, CircleCheck, AlertCircle } from 'lucide-react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter } from '@/components/ui/drawer'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { FeedbackState } from './FeedbackState'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { cn } from '@/lib/utils'
 import {
   contactFormSchema,
   type ContactFormValues,
@@ -26,9 +27,18 @@ type Status = 'idle' | 'loading' | 'success' | 'error'
 
 const QUERY_MAX = 500
 
-function ContactForm({ onClose }: { onClose: () => void }) {
+function ContactForm({ onClose, className, onStatusChange }: {
+  onClose: () => void
+  className?: string
+  onStatusChange?: (status: Status) => void
+}) {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+
+  const updateStatus = (newStatus: Status) => {
+    setStatus(newStatus)
+    onStatusChange?.(newStatus)
+  }
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -37,7 +47,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
   })
 
   const onSubmit = async (values: ContactFormValues) => {
-    setStatus('loading')
+    updateStatus('loading')
     setErrorMsg('')
     try {
       const res = await fetch('/api/contact', {
@@ -53,10 +63,10 @@ function ContactForm({ onClose }: { onClose: () => void }) {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Error al enviar')
-      setStatus('success')
+      updateStatus('success')
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : 'Error al enviar')
-      setStatus('error')
+      updateStatus('error')
     }
   }
 
@@ -82,7 +92,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         iconColor="text-destructive"
         title="No pudimos enviar tu consulta"
         message={errorMsg || 'Verificá tu conexión e intentá de nuevo. Tus datos no se perdieron.'}
-        onClose={() => setStatus('idle')}
+        onClose={() => updateStatus('idle')}
         buttonLabel="Reintentar"
         buttonVariant="default"
         glow
@@ -93,23 +103,19 @@ function ContactForm({ onClose }: { onClose: () => void }) {
   const queryLength = form.watch('query')?.length ?? 0
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
-      <div className="grid gap-1">
-        <p className="text-lg font-semibold leading-none">Dejanos tu consulta</p>
-        <p className="text-sm text-muted-foreground">
-          Completá el formulario y un asesor te contactará a la brevedad.
-        </p>
-      </div>
-
+    <form onSubmit={form.handleSubmit(onSubmit)} className={cn('grid gap-4', className)}>
       <div className="grid gap-3">
         <Controller
           name="name"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Nombre y apellido</FieldLabel>
+              <FieldLabel htmlFor="contact-name">Nombre y apellido</FieldLabel>
               <Input
                 {...field}
+                id="contact-name"
+                autoComplete="name"
+                enterKeyHint="next"
                 placeholder="Ej: Juan Pérez"
                 aria-invalid={fieldState.invalid}
               />
@@ -123,10 +129,14 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Email</FieldLabel>
+              <FieldLabel htmlFor="contact-email">Email</FieldLabel>
               <Input
                 {...field}
+                id="contact-email"
                 type="email"
+                inputMode="email"
+                autoComplete="email"
+                enterKeyHint="next"
                 placeholder="tu@email.com"
                 aria-invalid={fieldState.invalid}
               />
@@ -140,12 +150,16 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel className="text-muted-foreground">
+              <FieldLabel htmlFor="contact-phone" className="text-muted-foreground">
                 Teléfono (opcional)
               </FieldLabel>
               <Input
                 {...field}
+                id="contact-phone"
                 type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                enterKeyHint="next"
                 placeholder="+54 11 1234-5678"
                 aria-invalid={fieldState.invalid}
               />
@@ -205,35 +219,33 @@ function ContactForm({ onClose }: { onClose: () => void }) {
 
 export function ContactAdvisorOverlay({ open, onClose }: ContactAdvisorOverlayProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
+  const [formStatus, setFormStatus] = useState<Status>('idle')
+  const showHeader = formStatus === 'idle' || formStatus === 'loading'
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
         <DialogContent showCloseButton={false} className="sm:max-w-[480px]">
-          <DialogHeader className="sr-only">
+          <DialogHeader className={showHeader ? '' : 'sr-only'}>
             <DialogTitle>Dejanos tu consulta</DialogTitle>
             <DialogDescription>Completá el formulario y un asesor te contactará a la brevedad.</DialogDescription>
           </DialogHeader>
-          <ContactForm onClose={onClose} />
+          <ContactForm onClose={onClose} onStatusChange={setFormStatus} />
         </DialogContent>
       </Dialog>
     )
   }
 
   return (
-    <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent side="bottom" showCloseButton={false} className="rounded-t-[20px] p-0">
-        <div className="flex justify-center pt-3">
-          <div className="h-1 w-10 rounded-full bg-border" />
-        </div>
-        <SheetHeader className="sr-only">
-          <SheetTitle>Dejanos tu consulta</SheetTitle>
-          <SheetDescription>Completá el formulario y un asesor te contactará a la brevedad.</SheetDescription>
-        </SheetHeader>
-        <div className="px-4 pb-6">
-          <ContactForm onClose={onClose} />
-        </div>
-      </SheetContent>
-    </Sheet>
+    <Drawer open={open} onOpenChange={(v) => !v && onClose()} repositionInputs={false}>
+      <DrawerContent>
+        <DrawerHeader className={showHeader ? 'text-left' : 'sr-only'}>
+          <DrawerTitle>Dejanos tu consulta</DrawerTitle>
+          <DrawerDescription>Completá el formulario y un asesor te contactará a la brevedad.</DrawerDescription>
+        </DrawerHeader>
+        <ContactForm onClose={onClose} className="px-4" onStatusChange={setFormStatus} />
+        <DrawerFooter className="pt-2" />
+      </DrawerContent>
+    </Drawer>
   )
 }

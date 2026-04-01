@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { DotIndicator } from '@/components/ui/dot-indicator'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -104,12 +105,9 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
           </div>
           {descOverflows && (
             <CollapsibleTrigger asChild>
-              <button
-                type="button"
-                className="mt-1 text-xs font-semibold text-brand hover:underline"
-              >
+              <Button variant="link" className="mt-1 h-auto p-0 text-xs font-semibold text-brand">
                 {descOpen ? 'Ver menos' : 'Ver más'}
-              </button>
+              </Button>
             </CollapsibleTrigger>
           )}
         </Collapsible>

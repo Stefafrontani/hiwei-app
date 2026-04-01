@@ -15,10 +15,10 @@ interface ProgressBarProps {
 export function ProgressBar({ currentStep, totalSteps = 6 }: ProgressBarProps) {
   const percent = Math.round(((currentStep - 1) / (totalSteps - 1)) * 100)
   const isLastStep = currentStep === totalSteps
-  const barColor = isLastStep ? 'bg-success' : 'bg-brand'
-  const barBg = isLastStep ? 'bg-success/30' : 'bg-muted'
-  const labelColor = isLastStep ? 'text-success' : 'text-brand'
-  const stepColor = isLastStep ? 'text-success' : 'text-muted-foreground'
+  const barColor = isLastStep ? 'bg-info' : 'bg-brand'
+  const barBg = isLastStep ? 'bg-info/30' : 'bg-muted'
+  const labelColor = isLastStep ? 'text-info' : 'text-brand'
+  const stepColor = isLastStep ? 'text-info' : 'text-muted-foreground'
 
   return (
     <div className="flex flex-col gap-2 px-5 pb-2 pt-4">
