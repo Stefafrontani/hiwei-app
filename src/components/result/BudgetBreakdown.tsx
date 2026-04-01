@@ -98,7 +98,7 @@ export function BudgetBreakdown({ product, answers, memoryCards, onSendRecommend
     <Card className="gap-0 overflow-hidden border-border py-0 shadow-sm">
 
       {/* ── Hero price block ── */}
-      <CardHeader className="flex-col items-stretch gap-3 bg-brand/5 px-4 py-4 md:px-5">
+      <CardHeader className="flex-col items-stretch justify-items-center md:justify-items-start gap-3 bg-brand/5 px-4 py-4 md:px-5">
         <div className="flex items-start justify-between">
           <div className="flex flex-col gap-0.5">
             <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tu presupuesto</span>
@@ -263,8 +263,8 @@ export function BudgetBreakdown({ product, answers, memoryCards, onSendRecommend
                 <MiniCheckbox checked={includeHWK} onChange={() => setIncludeHWK((v) => !v)} />
               </div>
               <div className="flex flex-col">
-                <span className="text-sm font-semibold text-foreground">Hardwire Kit (HWK)</span>
-                <span className="text-xs text-muted-foreground">Modo estacionamiento — conexión a fusilera</span>
+                <span className="text-sm font-semibold text-foreground">Kit de vigilancia 24hs</span>
+                <span className="text-xs text-muted-foreground">Graba incluso con el auto apagado</span>
               </div>
             </div>
             <PriceWithDiscount original={HWK_PRICE} discounted={applyDiscount(HWK_PRICE)} active={includeHWK} />
@@ -278,7 +278,7 @@ export function BudgetBreakdown({ product, answers, memoryCards, onSendRecommend
               </div>
               <div className="flex flex-col">
                 <span className="text-sm font-semibold text-foreground">Instalación profesional</span>
-                <span className="text-xs text-muted-foreground">Técnico certificado — en taller</span>
+                <span className="text-xs text-muted-foreground">Sin cables a la vista, lista para usar</span>
               </div>
             </div>
             <PriceWithDiscount original={INSTALLATION_PRICE} discounted={applyDiscount(INSTALLATION_PRICE)} active={includeInstallation} />
