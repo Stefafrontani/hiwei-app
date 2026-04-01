@@ -1,10 +1,10 @@
-import { SupabaseDashcamRepository } from '@/infrastructure/repositories/supabase/SupabaseDashcamRepository'
+import { InMemoryDashcamRepository } from '@/infrastructure/repositories/mock/InMemoryDashcamRepository'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { ComparatorView } from '@/components/comparator/ComparatorView'
 
 export default async function ComparatorPage() {
-  // TODO: Verificar compatibilidad general luego de modificar DashcamVideo. 
-  const repo = new SupabaseDashcamRepository()
+  // TODO: Switch back to SupabaseDashcamRepository after testing
+  const repo = new InMemoryDashcamRepository()
   const products = await repo.getAll()
 
   return (

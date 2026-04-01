@@ -22,6 +22,7 @@ interface PlayerControlsProps {
   isMuted: boolean
   isFullscreen: boolean
   isZoomed?: boolean
+  showFullscreen?: boolean
   onTogglePlay: () => void
   onVolumeChange: (volume: number) => void
   onToggleMute: () => void
@@ -42,6 +43,7 @@ export function PlayerControls({
   isMuted,
   isFullscreen,
   isZoomed = false,
+  showFullscreen = true,
   onTogglePlay,
   onVolumeChange,
   onToggleMute,
@@ -262,13 +264,15 @@ export function PlayerControls({
                 </div>
               )}
 
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); onToggleFullscreen(); resetHideTimer() }}
-                className={`min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-white hover:bg-white/10 transition-colors ${isCompact ? 'p-1.5' : 'p-2'}`}
-              >
-                {isFullscreen ? <Minimize2 className={iconClass} /> : <Maximize2 className={iconClass} />}
-              </button>
+              {showFullscreen && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); onToggleFullscreen(); resetHideTimer() }}
+                  className={`min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-white hover:bg-white/10 transition-colors ${isCompact ? 'p-1.5' : 'p-2'}`}
+                >
+                  {isFullscreen ? <Minimize2 className={iconClass} /> : <Maximize2 className={iconClass} />}
+                </button>
+              )}
             </div>
           </div>
         </div>

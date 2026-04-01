@@ -20,6 +20,7 @@ interface VideoThumbnailProps {
   replayToken?: number
   onPrev?: () => void
   onNext?: () => void
+  showFullscreen?: boolean
 }
 
 export function VideoThumbnail({
@@ -31,6 +32,7 @@ export function VideoThumbnail({
   replayToken,
   onPrev,
   onNext,
+  showFullscreen = true,
 }: VideoThumbnailProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const transitionRef = useRef<HTMLDivElement>(null)
@@ -151,6 +153,7 @@ export function VideoThumbnail({
           isMuted={isMuted}
           isFullscreen={isFullscreen}
           isZoomed={isGesturing}
+          showFullscreen={showFullscreen}
           onTogglePlay={togglePlay}
           onVolumeChange={setVolume}
           onToggleMute={toggleMute}
