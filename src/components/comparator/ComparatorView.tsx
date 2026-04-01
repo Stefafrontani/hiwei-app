@@ -162,15 +162,9 @@ export function ComparatorView({ products }: ComparatorViewProps) {
           </div>
         </div>
 
-        {/* Video Comparison Cards — mobile (always) / desktop (only when not both selected) */}
-        <section className={`animate-fade-in-up grid grid-cols-1 gap-4 ${bothSelected ? 'md:hidden' : 'md:grid-cols-2'}`} style={{ '--delay': '160ms' } as React.CSSProperties}>
-          <ComparatorPlayerCard product={productA} activeAngle={activeAngle} autoplay={bothSelected} playbackKey={playbackKey} />
-          <ComparatorPlayerCard product={productB} activeAngle={activeAngle} autoplay={bothSelected} playbackKey={playbackKey} />
-        </section>
-
-        {/* Desktop inline immersive — full-bleed side by side when both selected */}
+        {/* Video Comparison — stacked (mobile) / full-bleed side by side (desktop) */}
         {bothSelected && (
-          <section className="animate-fade-in-up hidden md:flex flex-row items-center gap-1 relative -ml-[50vw] left-1/2 w-screen" style={{ '--delay': '160ms' } as React.CSSProperties}>
+          <section className="animate-fade-in-up flex flex-col gap-1 md:flex-row md:items-center md:relative md:-ml-[50vw] md:left-1/2 md:w-screen" style={{ '--delay': '160ms' } as React.CSSProperties}>
             <ComparatorPlayerCard product={productA} activeAngle={activeAngle} autoplay={true} playbackKey={playbackKey} variant="immersive" />
             <ComparatorPlayerCard product={productB} activeAngle={activeAngle} autoplay={true} playbackKey={playbackKey} variant="immersive" />
           </section>
