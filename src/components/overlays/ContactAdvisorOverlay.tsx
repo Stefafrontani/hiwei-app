@@ -27,9 +27,18 @@ type Status = 'idle' | 'loading' | 'success' | 'error'
 
 const QUERY_MAX = 500
 
-function ContactForm({ onClose, className }: { onClose: () => void; className?: string }) {
+function ContactForm({ onClose, className, onStatusChange }: {
+  onClose: () => void
+  className?: string
+  onStatusChange?: (status: Status) => void
+}) {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+
+  const updateStatus = (newStatus: Status) => {
+    setStatus(newStatus)
+    onStatusChange?.(newStatus)
+  }
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -38,7 +47,7 @@ function ContactForm({ onClose, className }: { onClose: () => void; className?: 
   })
 
   const onSubmit = async (values: ContactFormValues) => {
-    setStatus('loading')
+    updateStatus('loading')
     setErrorMsg('')
     try {
       const res = await fetch('/api/contact', {
@@ -54,10 +63,10 @@ function ContactForm({ onClose, className }: { onClose: () => void; className?: 
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Error al enviar')
-      setStatus('success')
+      updateStatus('success')
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : 'Error al enviar')
-      setStatus('error')
+      updateStatus('error')
     }
   }
 
@@ -83,7 +92,7 @@ function ContactForm({ onClose, className }: { onClose: () => void; className?: 
         iconColor="text-destructive"
         title="No pudimos enviar tu consulta"
         message={errorMsg || 'Verificá tu conexión e intentá de nuevo. Tus datos no se perdieron.'}
-        onClose={() => setStatus('idle')}
+        onClose={() => updateStatus('idle')}
         buttonLabel="Reintentar"
         buttonVariant="default"
         glow
@@ -199,16 +208,18 @@ function ContactForm({ onClose, className }: { onClose: () => void; className?: 
 
 export function ContactAdvisorOverlay({ open, onClose }: ContactAdvisorOverlayProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
+  const [formStatus, setFormStatus] = useState<Status>('idle')
+  const showHeader = formStatus === 'idle' || formStatus === 'loading'
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
         <DialogContent showCloseButton={false} className="sm:max-w-[480px]">
-          <DialogHeader>
+          <DialogHeader className={showHeader ? '' : 'sr-only'}>
             <DialogTitle>Dejanos tu consulta</DialogTitle>
             <DialogDescription>Completá el formulario y un asesor te contactará a la brevedad.</DialogDescription>
           </DialogHeader>
-          <ContactForm onClose={onClose} />
+          <ContactForm onClose={onClose} onStatusChange={setFormStatus} />
         </DialogContent>
       </Dialog>
     )
@@ -217,11 +228,11 @@ export function ContactAdvisorOverlay({ open, onClose }: ContactAdvisorOverlayPr
   return (
     <Drawer open={open} onOpenChange={(v) => !v && onClose()} repositionInputs={false}>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader className={showHeader ? 'text-left' : 'sr-only'}>
           <DrawerTitle>Dejanos tu consulta</DrawerTitle>
           <DrawerDescription>Completá el formulario y un asesor te contactará a la brevedad.</DrawerDescription>
         </DrawerHeader>
-        <ContactForm onClose={onClose} className="px-4" />
+        <ContactForm onClose={onClose} className="px-4" onStatusChange={setFormStatus} />
         <DrawerFooter className="pt-2" />
       </DrawerContent>
     </Drawer>

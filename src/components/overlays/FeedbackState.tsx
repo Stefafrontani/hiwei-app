@@ -26,7 +26,7 @@ export function FeedbackState({
   glow = false,
 }: FeedbackStateProps) {
   return (
-    <div className="flex flex-col items-center gap-4 text-center">
+    <div className="flex flex-col items-center gap-4 px-4 py-6 text-center">
       <div
         className={`flex h-16 w-16 items-center justify-center rounded-full ${iconBg} ${glow ? 'animate-glow-pulse' : ''}`}
       >

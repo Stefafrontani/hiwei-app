@@ -25,9 +25,19 @@ interface SendRecommendationOverlayProps {
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
-function SendForm({ onClose, recommendationId, className }: { onClose: () => void; recommendationId?: string | null; className?: string }) {
+function SendForm({ onClose, recommendationId, className, onStatusChange }: {
+  onClose: () => void
+  recommendationId?: string | null
+  className?: string
+  onStatusChange?: (status: Status) => void
+}) {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+
+  const updateStatus = (newStatus: Status) => {
+    setStatus(newStatus)
+    onStatusChange?.(newStatus)
+  }
 
   const form = useForm<SendRecommendationFormValues>({
     resolver: zodResolver(sendRecommendationFormSchema),
@@ -36,7 +46,7 @@ function SendForm({ onClose, recommendationId, className }: { onClose: () => voi
   })
 
   const onSubmit = async (values: SendRecommendationFormValues) => {
-    setStatus('loading')
+    updateStatus('loading')
     setErrorMsg('')
     try {
       const res = await fetch('/api/send-recommendation', {
@@ -52,10 +62,10 @@ function SendForm({ onClose, recommendationId, className }: { onClose: () => voi
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Error al enviar')
-      setStatus('success')
+      updateStatus('success')
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : 'Error al enviar')
-      setStatus('error')
+      updateStatus('error')
     }
   }
 
@@ -81,7 +91,7 @@ function SendForm({ onClose, recommendationId, className }: { onClose: () => voi
         iconColor="text-destructive"
         title="No pudimos enviar tu recomendación"
         message={errorMsg || 'Verificá tu conexión e intentá de nuevo. Tus datos no se perdieron.'}
-        onClose={() => setStatus('idle')}
+        onClose={() => updateStatus('idle')}
         buttonLabel="Reintentar"
         buttonVariant="default"
         glow
@@ -172,16 +182,18 @@ function SendForm({ onClose, recommendationId, className }: { onClose: () => voi
 
 export function SendRecommendationOverlay({ open, onClose, recommendationId }: SendRecommendationOverlayProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)')
+  const [formStatus, setFormStatus] = useState<Status>('idle')
+  const showHeader = formStatus === 'idle' || formStatus === 'loading'
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
         <DialogContent showCloseButton={false} className="sm:max-w-[480px]">
-          <DialogHeader>
+          <DialogHeader className={showHeader ? '' : 'sr-only'}>
             <DialogTitle>Recibí tu recomendación</DialogTitle>
             <DialogDescription>Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.</DialogDescription>
           </DialogHeader>
-          <SendForm onClose={onClose} recommendationId={recommendationId} />
+          <SendForm onClose={onClose} recommendationId={recommendationId} onStatusChange={setFormStatus} />
         </DialogContent>
       </Dialog>
     )
@@ -190,11 +202,11 @@ export function SendRecommendationOverlay({ open, onClose, recommendationId }: S
   return (
     <Drawer open={open} onOpenChange={(v) => !v && onClose()} repositionInputs={false}>
       <DrawerContent>
-        <DrawerHeader className="text-left">
+        <DrawerHeader className={showHeader ? 'text-left' : 'sr-only'}>
           <DrawerTitle>Recibí tu recomendación</DrawerTitle>
           <DrawerDescription>Te enviamos un resumen personalizado para que puedas revisarlo cuando quieras.</DrawerDescription>
         </DrawerHeader>
-        <SendForm onClose={onClose} recommendationId={recommendationId} className="px-4" />
+        <SendForm onClose={onClose} recommendationId={recommendationId} className="px-4" onStatusChange={setFormStatus} />
         <DrawerFooter className="pt-2" />
       </DrawerContent>
     </Drawer>
