@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { HardDrive, MemoryStick, CreditCard, Banknote, Pencil, Plus, Flame } from 'lucide-react'
-import { Card, CardHeader, CardContent } from '@/components/ui/card'
+import { HardDrive, MemoryStick, CreditCard, Banknote, Pencil, Plus, Flame, Send } from 'lucide-react'
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
@@ -56,9 +57,10 @@ interface BudgetBreakdownProps {
   product: DashcamProduct
   answers: QuizAnswers
   memoryCards: MemoryCard[]
+  onSendRecommendation?: () => void
 }
 
-export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdownProps) {
+export function BudgetBreakdown({ product, answers, memoryCards, onSendRecommendation }: BudgetBreakdownProps) {
   const dashcamPrice = Math.round(product.basePrice * (1 - product.discount))
   const hasIncludedCard = product.includedMemoryCardSize != null
   const recommendedSize = getRecommendedMemoryCardSize(answers.vehicleUsage)
@@ -111,7 +113,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
         </div>
 
         {/* Payment options — prominent */}
-        <div className="flex flex-col gap-1 rounded-lg border border-border bg-card/50 px-3 py-2.5">
+        <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1.5">
             <CreditCard className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
             <span className="text-xs font-medium text-muted-foreground">
@@ -192,8 +194,8 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
           {hasIncludedCard && (
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-start gap-2.5">
-                <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-success/10">
-                  <MemoryStick className="h-3 w-3 text-success" />
+                <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-info/20">
+                  <MemoryStick className="h-3 w-3 text-info" />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-sm font-semibold text-foreground">
@@ -216,7 +218,7 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
                   </div>
                 </div>
               </div>
-              <Badge variant="success" className="text-xs">
+              <Badge variant="info" className="text-xs">
                 Incluida
               </Badge>
             </div>
@@ -283,6 +285,20 @@ export function BudgetBreakdown({ product, answers, memoryCards }: BudgetBreakdo
           </div>
         </div>
       </CardContent>
+
+      {/* Send quote */}
+      {onSendRecommendation && (
+        <CardFooter className="px-4 pb-4 pt-0 md:justify-end md:px-5">
+          <Button
+            variant="outline"
+            onClick={onSendRecommendation}
+            className="w-full md:w-auto md:px-12"
+          >
+            <Send className="h-4 w-4" />
+            Enviar presupuesto por mail
+          </Button>
+        </CardFooter>
+      )}
 
       {/* Memory Card Picker Modal */}
       {memoryCards.length > 0 && (
