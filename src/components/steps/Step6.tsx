@@ -15,8 +15,8 @@ export function Step6({ installation, onChange }: Step6Props) {
     <div className="flex flex-col gap-6">
       {/* Step title */}
       <div className="animate-fade-in-up flex items-start gap-3">
-        <div className="hidden md:flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-success/10">
-          <Wrench className="h-5 w-5 text-success" />
+        <div className="hidden md:flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-info/10">
+          <Wrench className="h-5 w-5 text-info" />
         </div>
         <div className="flex flex-col gap-1">
           <p className="text-lg font-bold text-foreground md:text-2xl md:tracking-tight">
@@ -38,7 +38,7 @@ export function Step6({ installation, onChange }: Step6Props) {
               description={opt.description}
               isActive={installation === opt.value}
               onClick={() => onChange(opt.value)}
-              accentColor="green"
+              accentColor="info"
             />
           </div>
         ))}

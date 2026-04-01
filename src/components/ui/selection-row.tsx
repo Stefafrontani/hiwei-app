@@ -4,7 +4,7 @@ interface SelectionRowProps {
   isActive: boolean
   onClick: () => void
   disabled?: boolean
-  accentColor?: 'brand' | 'green'
+  accentColor?: 'brand' | 'green' | 'info'
   children: React.ReactNode
   className?: string
 }
@@ -22,6 +22,13 @@ const COLORS = {
     leftAccent: 'before:bg-success',
     bg: 'bg-success/10',
     ring: 'border-success bg-success',
+    glow: 'glow-brand',
+  },
+  info: {
+    border: 'border-info/50',
+    leftAccent: 'before:bg-info',
+    bg: 'bg-info/10',
+    ring: 'border-info bg-info',
     glow: 'glow-brand',
   },
 }

@@ -28,7 +28,7 @@ export function NavigationFooter({
   const nextShadow = isDisabled
     ? 'shadow-none'
     : isLast
-      ? 'shadow-[0_0_20px_2px] shadow-success/15'
+      ? 'shadow-[0_0_20px_2px] shadow-info/15'
       : 'shadow-[0_0_20px_2px] shadow-brand/15'
 
   return (
@@ -50,7 +50,7 @@ export function NavigationFooter({
 
       {/* Next / Finish */}
       <Button
-        variant={isLast ? 'success' : 'brand'}
+        variant={isLast ? 'info' : 'brand'}
         size="lg"
         onClick={onNext}
         disabled={isDisabled}

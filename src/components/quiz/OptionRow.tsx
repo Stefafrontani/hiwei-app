@@ -9,17 +9,19 @@ interface OptionRowProps {
   isActive: boolean
   onClick: () => void
   badge?: string
-  accentColor?: 'brand' | 'green'
+  accentColor?: 'brand' | 'green' | 'info'
 }
 
 const ICON_COLORS = {
   brand: { bg: 'bg-brand/15', text: 'text-brand' },
   green: { bg: 'bg-success/15', text: 'text-success' },
+  info: { bg: 'bg-info/15', text: 'text-info' },
 }
 
 const TEXT_COLORS = {
   brand: { title: 'text-brand', desc: 'text-brand/70' },
   green: { title: 'text-foreground', desc: 'text-muted-foreground' },
+  info: { title: 'text-foreground', desc: 'text-muted-foreground' },
 }
 
 export function OptionRow({
