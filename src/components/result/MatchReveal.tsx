@@ -1,146 +1,105 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion'
+import { useEffect, useRef, useCallback } from 'react'
+import { motion } from 'framer-motion'
+import { CircleCheck } from 'lucide-react'
+import confetti from 'canvas-confetti'
 
 interface MatchRevealProps {
-  matchScore: number
-  productName: string
   onComplete: () => void
 }
 
-const RING_SIZE = 148
-const STROKE_WIDTH = 4
-const RADIUS = (RING_SIZE - STROKE_WIDTH) / 2
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS
+const CONFETTI_COLORS = ['#e5c761', '#dbd6d1', '#c4a83b', '#f0e0a0']
 
-export function MatchReveal({ matchScore, productName, onComplete }: MatchRevealProps) {
+function fireConfetti() {
+  const defaults = {
+    colors: CONFETTI_COLORS,
+    ticks: 200,
+    gravity: 0.8,
+    scalar: 1.1,
+    disableForReducedMotion: true,
+  }
+
+  // Left burst
+  confetti({ ...defaults, particleCount: 40, spread: 55, angle: 60, origin: { x: 0.15, y: 0.55 } })
+  // Right burst
+  confetti({ ...defaults, particleCount: 40, spread: 55, angle: 120, origin: { x: 0.85, y: 0.55 } })
+
+  // Center burst with delay
+  setTimeout(() => {
+    confetti({ ...defaults, particleCount: 50, spread: 80, origin: { x: 0.5, y: 0.5 } })
+  }, 300)
+}
+
+export function MatchReveal({ onComplete }: MatchRevealProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [displayScore, setDisplayScore] = useState(0)
-  const motionScore = useMotionValue(0)
-  const dashOffset = useTransform(motionScore, (v) => CIRCUMFERENCE * (1 - v / 100))
 
-  useEffect(() => {
-    const controls = animate(motionScore, matchScore, {
-      duration: 1.2,
-      ease: [0.32, 0, 0.67, 0],
-      onUpdate: (v) => setDisplayScore(Math.round(v)),
-    })
-
-    timerRef.current = setTimeout(onComplete, 3500)
-
-    return () => {
-      controls.stop()
-      if (timerRef.current) clearTimeout(timerRef.current)
-    }
-  }, [matchScore, motionScore, onComplete])
-
-  const handleSkip = () => {
+  const handleSkip = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current)
     onComplete()
-  }
+  }, [onComplete])
+
+  useEffect(() => {
+    // Fire confetti after a short delay for the entrance animation
+    const confettiTimer = setTimeout(fireConfetti, 400)
+
+    // Auto-advance after 3s
+    timerRef.current = setTimeout(handleSkip, 3000)
+
+    return () => {
+      clearTimeout(confettiTimer)
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [handleSkip])
 
   return (
     <motion.div
       key="match-reveal"
-      className="relative flex flex-1 cursor-pointer flex-col items-center justify-center px-6"
+      className="flex flex-1 cursor-pointer flex-col items-center justify-center px-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 0.97 }}
       transition={{ duration: 0.35 }}
       onClick={handleSkip}
     >
-      {/* Glow bloom behind the ring */}
+      {/* Glow behind icon */}
       <motion.div
-        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        className="pointer-events-none absolute rounded-full"
         style={{
-          width: 220,
-          height: 220,
-          background: 'radial-gradient(circle, oklch(0.8339 0.1432 93.43 / 0.18) 0%, transparent 70%)',
+          width: 140,
+          height: 140,
+          background: 'radial-gradient(circle, oklch(0.8339 0.1432 93.43 / 0.2) 0%, transparent 70%)',
           filter: 'blur(40px)',
         }}
-        initial={{ scale: 0.6, opacity: 0 }}
-        animate={{ scale: [0.8, 1.1, 1], opacity: [0, 0.25, 0.18] }}
-        transition={{ duration: 1.2, ease: 'easeOut' }}
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 0.2 }}
+        transition={{ delay: 0.2, duration: 0.8, ease: 'easeOut' }}
       />
 
-      {/* Label */}
-      <motion.p
-        className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.4 }}
+      {/* Check icon with spring pop */}
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{
+          delay: 0.2,
+          type: 'spring',
+          stiffness: 300,
+          damping: 15,
+        }}
       >
-        Tu dashcam ideal
-      </motion.p>
+        <CircleCheck className="h-16 w-16 text-brand" strokeWidth={1.5} />
+      </motion.div>
 
-      {/* Score ring + counter */}
-      <div className="relative flex shrink-0 items-center justify-center" style={{ width: RING_SIZE, height: RING_SIZE }}>
-        <svg
-          width={RING_SIZE}
-          height={RING_SIZE}
-          viewBox={`0 0 ${RING_SIZE} ${RING_SIZE}`}
-          className="absolute -rotate-90"
-          style={{ filter: 'drop-shadow(0 0 10px oklch(0.8339 0.1432 93.43 / 0.2))' }}
-        >
-          {/* Background ring */}
-          <circle
-            cx={RING_SIZE / 2}
-            cy={RING_SIZE / 2}
-            r={RADIUS}
-            fill="none"
-            stroke="oklch(1 0 0 / 0.06)"
-            strokeWidth={STROKE_WIDTH}
-          />
-          {/* Animated foreground ring */}
-          <motion.circle
-            cx={RING_SIZE / 2}
-            cy={RING_SIZE / 2}
-            r={RADIUS}
-            fill="none"
-            stroke="oklch(0.8339 0.1432 93.43)"
-            strokeWidth={STROKE_WIDTH}
-            strokeLinecap="round"
-            strokeDasharray={CIRCUMFERENCE}
-            style={{ strokeDashoffset: dashOffset }}
-          />
-        </svg>
-
-        {/* Counter number */}
-        <div className="relative z-10 flex items-baseline gap-0.5">
-          <span className="text-4xl font-bold tabular-nums text-brand">{displayScore}</span>
-          <span className="text-lg font-semibold text-muted-foreground">%</span>
-        </div>
-      </div>
-
-      {/* Product name */}
+      {/* Main message */}
       <motion.h2
         className="mt-5 text-center text-xl font-bold text-foreground"
-        initial={{ opacity: 0, y: 8 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.4, duration: 0.4 }}
+        transition={{ delay: 0.5, duration: 0.4, ease: 'easeOut' }}
       >
-        {productName}
+        ¡Ya tenemos tu recomendación!
       </motion.h2>
 
-      <motion.p
-        className="mt-1.5 text-sm text-muted-foreground"
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.6, duration: 0.4 }}
-      >
-        Compatibilidad con tus necesidades
-      </motion.p>
-
-      {/* Tap to continue hint */}
-      <motion.p
-        className="mt-auto pb-6 text-xs text-muted-foreground/60"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 0.6, 0.6] }}
-        transition={{ delay: 1.8, duration: 0.5 }}
-      >
-        Tocá para continuar
-      </motion.p>
     </motion.div>
   )
 }
