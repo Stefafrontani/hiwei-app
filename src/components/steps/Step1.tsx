@@ -1,8 +1,6 @@
 'use client'
 
-import { Car, Truck, CircleHelp, Info } from 'lucide-react'
-import PickupTruck from '@/components/icons/PickupTruck'
-import Sedan from '@/components/icons/Sedan'
+import { Car, Info } from 'lucide-react'
 import { OptionCard } from '@/components/quiz/OptionCard'
 import { InfoBox } from '@/components/quiz/InfoBox'
 import {
@@ -14,13 +12,6 @@ import {
 } from '@/components/ui/select'
 import type { VehicleType } from '@/domain/value-objects/VehicleType'
 import { STEP1 } from '@/content/quiz/steps'
-
-const VEHICLE_ICONS: Record<string, typeof Car> = {
-  auto: Sedan,
-  pickup: PickupTruck,
-  suv: Car,
-  otro: CircleHelp,
-}
 
 const YEARS = Array.from({ length: 30 }, (_, i) => String(new Date().getFullYear() - i))
 
@@ -65,8 +56,7 @@ export function Step1({
           {STEP1.options.map(({ type, label }) => (
             <OptionCard
               key={type}
-              icon={VEHICLE_ICONS[type]}
-              subLabel={label}
+              label={label}
               isActive={vehicleType === type}
               onClick={() => onVehicleTypeChange(type)}
             />
