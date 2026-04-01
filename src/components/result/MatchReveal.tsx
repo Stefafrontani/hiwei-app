@@ -9,26 +9,49 @@ interface MatchRevealProps {
   onComplete: () => void
 }
 
-const CONFETTI_COLORS = ['#e5c761', '#dbd6d1', '#c4a83b', '#f0e0a0']
+// Brand palette in hex — gold & blue dominant, with accent touches
+const CONFETTI_COLORS = [
+  '#e5c761', // brand gold
+  '#f0dfa0', // light gold
+  '#c4a83b', // deep gold
+  '#2563eb', // info blue
+  '#60a5fa', // light blue
+  '#dbd6d1', // warm white (isotipo)
+]
 
 function fireConfetti() {
   const defaults = {
     colors: CONFETTI_COLORS,
-    ticks: 200,
-    gravity: 0.8,
-    scalar: 1.1,
+    ticks: 250,
+    gravity: 0.7,
+    scalar: 1.05,
+    drift: 0,
     disableForReducedMotion: true,
+    shapes: ['square', 'circle'] as confetti.Shape[],
   }
 
-  // Left burst
-  confetti({ ...defaults, particleCount: 40, spread: 55, angle: 60, origin: { x: 0.15, y: 0.55 } })
-  // Right burst
-  confetti({ ...defaults, particleCount: 40, spread: 55, angle: 120, origin: { x: 0.85, y: 0.55 } })
+  // Side bursts — angled inward
+  confetti({ ...defaults, particleCount: 45, spread: 60, angle: 55, origin: { x: 0.1, y: 0.5 } })
+  confetti({ ...defaults, particleCount: 45, spread: 60, angle: 125, origin: { x: 0.9, y: 0.5 } })
 
-  // Center burst with delay
+  // Center rain — delayed
   setTimeout(() => {
-    confetti({ ...defaults, particleCount: 50, spread: 80, origin: { x: 0.5, y: 0.5 } })
-  }, 300)
+    confetti({ ...defaults, particleCount: 60, spread: 100, startVelocity: 30, origin: { x: 0.5, y: 0.45 } })
+  }, 250)
+
+  // Final shimmer — smaller, slower pieces
+  setTimeout(() => {
+    confetti({
+      ...defaults,
+      particleCount: 30,
+      spread: 120,
+      startVelocity: 15,
+      scalar: 0.7,
+      gravity: 0.5,
+      ticks: 300,
+      origin: { x: 0.5, y: 0.4 },
+    })
+  }, 600)
 }
 
 export function MatchReveal({ onComplete }: MatchRevealProps) {
