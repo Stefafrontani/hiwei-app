@@ -101,7 +101,7 @@ export function ComparatorView({ products }: ComparatorViewProps) {
 
       {/* Video Comparison — stacked (mobile) / full-bleed side by side (desktop) */}
       {bothSelected && (
-        <section className="animate-fade-in-up flex flex-col gap-1 md:flex-row md:items-center md:relative md:-ml-[50vw] md:left-1/2 md:w-screen" style={{ '--delay': '160ms' } as React.CSSProperties}>
+        <section className="animate-fade-in-up flex flex-col gap-1 md:flex-row md:items-center relative -ml-[50vw] left-1/2 w-screen" style={{ '--delay': '160ms' } as React.CSSProperties}>
           <ComparatorPlayerCard product={productA} activeAngle={activeAngle} autoplay={true} playbackKey={playbackKey} variant="immersive" onFullscreenChange={(fs) => setFullscreenSide(fs ? 'A' : null)} siblingFullscreen={fullscreenSide === 'B'} />
           <ComparatorPlayerCard product={productB} activeAngle={activeAngle} autoplay={true} playbackKey={playbackKey} variant="immersive" onFullscreenChange={(fs) => setFullscreenSide(fs ? 'B' : null)} siblingFullscreen={fullscreenSide === 'A'} />
         </section>
