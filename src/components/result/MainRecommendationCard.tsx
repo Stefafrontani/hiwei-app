@@ -30,8 +30,7 @@ export function MainRecommendationCard({ product, matchScore }: MainRecommendati
               video={previewVideo}
               maxQuality={product.maxQuality}
               size="lg"
-              autoplay={false}
-              showFullscreen={false}
+              autoplay={true}
             />
           </div>
         )}
@@ -62,15 +61,15 @@ export function MainRecommendationCard({ product, matchScore }: MainRecommendati
         {/* CTAs */}
         {hasVideos ? (
           <CardFooter className="mt-1 flex-col gap-2 px-4 pb-4 md:flex-row md:justify-end md:px-5 md:pb-5">
-            <Button variant="outline" asChild className="w-full md:w-auto md:px-8">
-              <Link href={`/galeria/${product.id}`}>
-                Ver más videos
-              </Link>
-            </Button>
-            <Button variant="brand" asChild className="w-full md:w-auto md:px-8">
+            <Button variant="brand" asChild className="w-full md:order-2 md:w-auto md:px-8">
               <a href={product.ecommerceUrl} target="_blank" rel="noopener noreferrer">
                 Ver en tienda
               </a>
+            </Button>
+            <Button variant="outline" asChild className="w-full md:order-1 md:w-auto md:px-8">
+              <Link href={`/galeria/${product.id}`}>
+                Ver más videos
+              </Link>
             </Button>
           </CardFooter>
         ) : (
