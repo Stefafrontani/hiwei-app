@@ -65,6 +65,7 @@ export function VideoThumbnail({
     toggleMute,
     replay,
     retry,
+    restoreMutePreference,
   } = useVideoPlayer({
     videoUrl: video.videoUrl,
     autoplay: effectiveAutoplay,
@@ -97,10 +98,10 @@ export function VideoThumbnail({
       video.pause()
       video.muted = true
     } else {
-      video.muted = true
+      restoreMutePreference()
       video.play().catch(() => {})
     }
-  }, [siblingFullscreen])
+  }, [siblingFullscreen, restoreMutePreference])
 
   // Notify parent when video ends (for playlist)
   const onEndedRef = useRef(onEnded)
@@ -171,7 +172,6 @@ export function VideoThumbnail({
           ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
           style={zoomStyle}
-          muted
           playsInline
           preload="metadata"
         />
