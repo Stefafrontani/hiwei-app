@@ -46,7 +46,7 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
   }, [product.description])
 
   return (
-    <div className="flex flex-col gap-3 md:gap-4 md:rounded-2xl md:glass-card md:border-white/[0.06] md:p-4">
+    <div className="flex flex-col gap-3 md:gap-4">
       {/* Video area */}
       <div className="-mx-4 overflow-hidden md:mx-0 md:rounded-xl">
         {activeVideo && (

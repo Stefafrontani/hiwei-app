@@ -3,7 +3,7 @@ import { SiteHeader } from '@/components/layout/SiteHeader'
 
 function ProductCardSkeleton() {
   return (
-    <div className="flex flex-col gap-3 md:gap-4 md:rounded-2xl md:glass-card md:border-white/[0.06] md:p-4">
+    <div className="flex flex-col gap-3 md:gap-4">
       <div className="-mx-4 md:mx-0 md:rounded-xl overflow-hidden">
         <Skeleton className="aspect-video w-full rounded-none md:rounded-xl" />
       </div>
