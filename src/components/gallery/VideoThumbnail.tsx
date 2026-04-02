@@ -46,7 +46,7 @@ export function VideoThumbnail({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const transitionRef = useRef<HTMLDivElement>(null)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
-  const effectiveAutoplay = scrollAutoplay.enabled ? false : autoplay
+  const effectiveAutoplay = scrollAutoplay.suppressAutoplay ? false : autoplay
 
   const {
     videoRef,
@@ -137,7 +137,8 @@ export function VideoThumbnail({
 
     const el = transitionRef.current
     if (!el) {
-      replay()
+      if (autoplay) replay()
+      else if (videoRef.current) videoRef.current.currentTime = 0
       return
     }
 
@@ -145,7 +146,8 @@ export function VideoThumbnail({
     el.style.opacity = '0.4'
 
     const fadeOutTimer = setTimeout(() => {
-      replay()
+      if (autoplay) replay()
+      else if (videoRef.current) videoRef.current.currentTime = 0
       el.style.opacity = '1'
     }, 150)
 

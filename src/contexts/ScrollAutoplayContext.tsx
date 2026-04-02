@@ -8,6 +8,7 @@ interface ScrollAutoplayContextValue {
   register: (id: string, videoEl: HTMLVideoElement) => void
   unregister: (id: string) => void
   enabled: boolean
+  suppressAutoplay: boolean
 }
 
 const noop = () => {}
@@ -15,13 +16,15 @@ const NO_OP_VALUE: ScrollAutoplayContextValue = {
   register: noop,
   unregister: noop,
   enabled: false,
+  suppressAutoplay: false,
 }
 
 const ScrollAutoplayCtx = createContext<ScrollAutoplayContextValue | null>(null)
 
 export function ScrollAutoplayProvider({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile()
-  const value = useScrollAutoplay({ enabled: isMobile })
+  const scrollAutoplay = useScrollAutoplay({ enabled: isMobile })
+  const value: ScrollAutoplayContextValue = { ...scrollAutoplay, suppressAutoplay: true }
 
   return <ScrollAutoplayCtx.Provider value={value}>{children}</ScrollAutoplayCtx.Provider>
 }
