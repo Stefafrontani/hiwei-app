@@ -1,10 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback } from 'react'
 import { Share2, VideoOff } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { DotIndicator } from '@/components/ui/dot-indicator'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { VideoThumbnail } from './VideoThumbnail'
@@ -36,16 +35,6 @@ export function ProductCard({ product, activeAngle, onAngleChange, onShare }: Pr
     const prev = (videoIndex - 1 + angleVideos.length) % angleVideos.length
     setVideoIndex(prev)
   }, [angleVideos.length, videoIndex, setVideoIndex])
-
-  const [descOpen, setDescOpen] = useState(false)
-  const [descOverflows, setDescOverflows] = useState(false)
-  const descWrapRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = descWrapRef.current
-    if (!el) return
-    setDescOverflows(el.scrollHeight > el.clientHeight + 1)
-  }, [product.description])
 
   return (
     <div className="flex flex-col gap-3 md:gap-4">
@@ -97,7 +86,7 @@ export function ProductCard({ product, activeAngle, onAngleChange, onShare }: Pr
 
       {/* Product info */}
       <div className="flex flex-col gap-2 md:px-1">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between">
           <h3 className="text-base font-bold text-foreground md:text-lg">{product.name}</h3>
           {onShare && (
             <Button variant="ghost" size="icon-sm" onClick={onShare} className="shrink-0 rounded-full text-muted-foreground">
@@ -112,26 +101,6 @@ export function ProductCard({ product, activeAngle, onAngleChange, onShare }: Pr
             </Badge>
           ))}
         </div>
-
-        {/* Expandable description */}
-        <Collapsible open={descOpen} onOpenChange={setDescOpen}>
-          <div
-            ref={descWrapRef}
-            className="overflow-hidden transition-[max-height] duration-300 ease-out"
-            style={{ maxHeight: descOpen ? `${descWrapRef.current?.scrollHeight ?? 200}px` : '4.3rem' }}
-          >
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {product.description}
-            </p>
-          </div>
-          {descOverflows && (
-            <CollapsibleTrigger asChild>
-              <Button variant="link" className="mt-1 h-auto p-0 text-xs font-semibold text-brand">
-                {descOpen ? 'Ver menos' : 'Ver más'}
-              </Button>
-            </CollapsibleTrigger>
-          )}
-        </Collapsible>
       </div>
     </div>
   )
