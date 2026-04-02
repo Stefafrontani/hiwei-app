@@ -1,10 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { VideoOff } from 'lucide-react'
+import { useCallback } from 'react'
+import { Share2, VideoOff } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { DotIndicator } from '@/components/ui/dot-indicator'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { VideoThumbnail } from './VideoThumbnail'
@@ -16,9 +15,10 @@ interface ProductCardProps {
   product: DashcamProduct
   activeAngle: CameraPosition
   onAngleChange: (angle: CameraPosition) => void
+  onShare?: () => void
 }
 
-export function ProductCard({ product, activeAngle, onAngleChange }: ProductCardProps) {
+export function ProductCard({ product, activeAngle, onAngleChange, onShare }: ProductCardProps) {
   const { angleVideos, activeVideo, videoIndex, setVideoIndex, handleVideoEnded, shouldAutoplay, replayToken } = useVideoPlaylist({
     videos: product.videos,
     activeAngle,
@@ -35,16 +35,6 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
     const prev = (videoIndex - 1 + angleVideos.length) % angleVideos.length
     setVideoIndex(prev)
   }, [angleVideos.length, videoIndex, setVideoIndex])
-
-  const [descOpen, setDescOpen] = useState(false)
-  const [descOverflows, setDescOverflows] = useState(false)
-  const descWrapRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = descWrapRef.current
-    if (!el) return
-    setDescOverflows(el.scrollHeight > el.clientHeight + 1)
-  }, [product.description])
 
   return (
     <div className="flex flex-col gap-3 md:gap-4">
@@ -96,7 +86,14 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
 
       {/* Product info */}
       <div className="flex flex-col gap-2 md:px-1">
-        <h3 className="text-base font-bold text-foreground md:text-lg">{product.name}</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-base font-bold text-foreground md:text-lg">{product.name}</h3>
+          {onShare && (
+            <Button variant="ghost" size="icon-sm" onClick={onShare} className="shrink-0 rounded-full text-muted-foreground">
+              <Share2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
         <div className="flex flex-wrap gap-1.5">
           {product.tags.slice(0, 4).map((tag) => (
             <Badge key={tag} variant="secondary" className="text-xs">
@@ -104,26 +101,6 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
             </Badge>
           ))}
         </div>
-
-        {/* Expandable description */}
-        <Collapsible open={descOpen} onOpenChange={setDescOpen}>
-          <div
-            ref={descWrapRef}
-            className="overflow-hidden transition-[max-height] duration-300 ease-out"
-            style={{ maxHeight: descOpen ? `${descWrapRef.current?.scrollHeight ?? 200}px` : '4.3rem' }}
-          >
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {product.description}
-            </p>
-          </div>
-          {descOverflows && (
-            <CollapsibleTrigger asChild>
-              <Button variant="link" className="mt-1 h-auto p-0 text-xs font-semibold text-brand">
-                {descOpen ? 'Ver menos' : 'Ver más'}
-              </Button>
-            </CollapsibleTrigger>
-          )}
-        </Collapsible>
       </div>
     </div>
   )

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { ScrollAutoplayProvider } from '@/contexts/ScrollAutoplayContext'
+import { shareUrl } from '@/lib/shareUrl'
 import { ProductCard } from './ProductCard'
 import { ComparePromoCard } from './ComparePromoCard'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
@@ -24,6 +25,12 @@ export function GalleryFeed({ products }: GalleryFeedProps) {
     setActiveAngles((prev) => ({ ...prev, [productId]: angle }))
   }
 
+  const handleShare = (productId: string) => {
+    const angle = activeAngles[productId]
+    const url = `${window.location.origin}/galeria/${productId}?angle=${angle}`
+    shareUrl(url, 'Dashcam — Hiwei')
+  }
+
   const firstRow = products.slice(0, 2)
   const rest = products.slice(2)
 
@@ -38,6 +45,7 @@ export function GalleryFeed({ products }: GalleryFeedProps) {
                 product={product}
                 activeAngle={activeAngles[product.id]}
                 onAngleChange={(angle) => handleAngleChange(product.id, angle)}
+                onShare={() => handleShare(product.id)}
               />
             </div>
           ))}
@@ -57,6 +65,7 @@ export function GalleryFeed({ products }: GalleryFeedProps) {
                   product={product}
                   activeAngle={activeAngles[product.id]}
                   onAngleChange={(angle) => handleAngleChange(product.id, angle)}
+                  onShare={() => handleShare(product.id)}
                 />
               </div>
             ))}

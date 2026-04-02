@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { Share2 } from 'lucide-react'
-import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useComparisonParams } from '@/hooks/useComparisonParams'
+import { shareUrl } from '@/lib/shareUrl'
 import { ComparatorPlayerCard } from './ComparatorPlayerCard'
 import { SpecsTable } from './SpecsTable'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
@@ -51,42 +51,8 @@ export function ComparatorView({ products }: ComparatorViewProps) {
     return Array.from(angles)
   }, [productA, productB])
 
-  async function handleShare() {
-    const url = window.location.href
-
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: 'Comparación de dashcams — Hiwei', url })
-        toast.success('Link compartido')
-        return
-      } catch (err) {
-        if (err instanceof Error && err.name === 'AbortError') return
-      }
-    }
-
-    await copyToClipboard(url)
-  }
-
-  async function copyToClipboard(url: string) {
-    try {
-      await navigator.clipboard.writeText(url)
-      toast.success('Link copiado al portapapeles')
-    } catch {
-      // Fallback for insecure contexts (e.g. LAN IP without HTTPS)
-      try {
-        const textarea = document.createElement('textarea')
-        textarea.value = url
-        textarea.style.position = 'fixed'
-        textarea.style.opacity = '0'
-        document.body.appendChild(textarea)
-        textarea.select()
-        document.execCommand('copy')
-        document.body.removeChild(textarea)
-        toast.success('Link copiado al portapapeles')
-      } catch {
-        toast.error('No se pudo copiar el link')
-      }
-    }
+  function handleShare() {
+    shareUrl(window.location.href, 'Comparación de dashcams — Hiwei')
   }
 
   return (
