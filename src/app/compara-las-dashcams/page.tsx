@@ -1,11 +1,11 @@
-import { InMemoryDashcamRepository } from '@/infrastructure/repositories/mock/InMemoryDashcamRepository'
+import { GetAllDashcamsUseCase } from '@/application/use-cases/dashcam/GetAllDashcams/GetAllDashcams.usecase'
+import { SupabaseDashcamRepository } from '@/infrastructure/repositories/supabase/SupabaseDashcamRepository'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { ComparatorView } from '@/components/comparator/ComparatorView'
 
 export default async function ComparatorPage() {
-  // TODO: Switch back to SupabaseDashcamRepository after testing
-  const repo = new InMemoryDashcamRepository()
-  const products = await repo.getAll()
+  const useCase = new GetAllDashcamsUseCase(new SupabaseDashcamRepository())
+  const products = await useCase.execute()
 
   return (
     <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">

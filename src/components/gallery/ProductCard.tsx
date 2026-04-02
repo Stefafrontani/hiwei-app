@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { VideoOff } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
@@ -46,10 +47,10 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
   }, [product.description])
 
   return (
-    <div className="flex flex-col gap-3 md:gap-4 md:rounded-2xl md:glass-card md:border-white/[0.06] md:p-4">
+    <div className="flex flex-col gap-3 md:gap-4">
       {/* Video area */}
       <div className="-mx-4 overflow-hidden md:mx-0 md:rounded-xl">
-        {activeVideo && (
+        {activeVideo ? (
           <VideoThumbnail
             video={activeVideo}
             maxQuality={product.maxQuality}
@@ -60,6 +61,18 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
             onPrev={angleVideos.length > 1 ? goPrev : undefined}
             onNext={angleVideos.length > 1 ? goNext : undefined}
           />
+        ) : (
+          <div className="flex aspect-video flex-col items-center justify-center gap-3 rounded-xl bg-white/[0.03] px-8 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.05]">
+              <VideoOff className="h-6 w-6 text-muted-foreground/50" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-foreground/80">No disponible</h4>
+              <p className="text-xs text-muted-foreground/50">
+                Este modelo no cuenta con videos disponibles.
+              </p>
+            </div>
+          </div>
         )}
       </div>
 

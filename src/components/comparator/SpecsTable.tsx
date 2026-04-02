@@ -63,7 +63,7 @@ export function SpecsTable({ productA, productB }: SpecsTableProps) {
   const rows = getRows(productA, productB)
 
   const wrap = 'whitespace-normal'
-  const pad = isMobile ? 'p-3' : 'p-3'
+  const pad = 'p-3'
   const headSize = isMobile ? 'text-xs' : 'text-sm'
   const cellSize = isMobile ? 'text-xs' : 'text-sm'
   const labelSize = 'text-xs'

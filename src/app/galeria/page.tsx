@@ -1,11 +1,11 @@
-import { InMemoryDashcamRepository } from '@/infrastructure/repositories/mock/InMemoryDashcamRepository'
+import { GetAllDashcamsUseCase } from '@/application/use-cases/dashcam/GetAllDashcams/GetAllDashcams.usecase'
+import { SupabaseDashcamRepository } from '@/infrastructure/repositories/supabase/SupabaseDashcamRepository'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { GalleryFeed } from '@/components/gallery/GalleryFeed'
 
 export default async function GaleriaPage() {
-  // TODO: Migrar de InMemoryDashcamRepository a SupabaseDashcamRepository.
-  const repo = new InMemoryDashcamRepository()
-  const products = await repo.getAll()
+  const useCase = new GetAllDashcamsUseCase(new SupabaseDashcamRepository())
+  const products = await useCase.execute()
 
   return (
     <div className="quiz-gradient grain-overlay flex h-dvh flex-col overflow-hidden">
