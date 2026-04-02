@@ -322,57 +322,6 @@ body.video-fullscreen-active {
   width: 100% !important;
 }
 
-/* ── Dual fullscreen (side-by-side comparison) ─────────────── */
-
-/* Keep visible inline when popover is closed */
-[popover].dual-fullscreen-popover:not(:popover-open) {
-  display: flex;
-}
-
-.dual-fullscreen-popover::backdrop {
-  background: black;
-}
-
-/* Base dual fullscreen: side-by-side in landscape */
-.dual-fullscreen {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100dvw !important;
-  height: 100dvh !important;
-  max-width: none !important;
-  max-height: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-  border-radius: 0 !important;
-  background: black !important;
-  overflow: hidden !important;
-  display: flex !important;
-  flex-direction: row !important;
-}
-
-/* Rotated dual fullscreen: portrait phones — rotate 90deg */
-.dual-fullscreen-rotated {
-  position: fixed !important;
-  inset: auto !important;
-  top: 50% !important;
-  left: 50% !important;
-  width: 100dvh !important;
-  height: 100dvw !important;
-  max-width: none !important;
-  max-height: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-  transform: translate(-50%, -50%) rotate(90deg) !important;
-  transform-origin: center center !important;
-  border-radius: 0 !important;
-  background: black !important;
-  overflow: hidden !important;
-  display: flex !important;
-  flex-direction: row !important;
-}
-
 /* ──────────────────────────────────────────────────────────────
    QUIZ — Premium animations & utilities
    ────────────────────────────────────────────────────────────── */
