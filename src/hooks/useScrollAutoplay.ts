@@ -21,12 +21,16 @@ export function useScrollAutoplay({ enabled }: UseScrollAutoplayOptions) {
 
   const pickAndPlay = useCallback(() => {
     const videos = videosRef.current
+
+    // If any video is in fullscreen (popover top-layer), don't change playback state
+    for (const [, entry] of videos) {
+      if ((entry.wrapper as HTMLElement).matches?.(':popover-open')) return
+    }
+
     let bestId: string | null = null
     let bestRatio = 0
 
     for (const [id, entry] of videos) {
-      // Skip videos whose wrapper is in the popover top-layer (fullscreen)
-      if ((entry.wrapper as HTMLElement).matches?.(':popover-open')) continue
       if (entry.ratio >= 0.5 && entry.ratio > bestRatio) {
         bestRatio = entry.ratio
         bestId = id
