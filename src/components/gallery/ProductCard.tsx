@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { VideoOff } from 'lucide-react'
+import { Share2, VideoOff } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
@@ -16,9 +16,10 @@ interface ProductCardProps {
   product: DashcamProduct
   activeAngle: CameraPosition
   onAngleChange: (angle: CameraPosition) => void
+  onShare?: () => void
 }
 
-export function ProductCard({ product, activeAngle, onAngleChange }: ProductCardProps) {
+export function ProductCard({ product, activeAngle, onAngleChange, onShare }: ProductCardProps) {
   const { angleVideos, activeVideo, videoIndex, setVideoIndex, handleVideoEnded, shouldAutoplay, replayToken } = useVideoPlaylist({
     videos: product.videos,
     activeAngle,
@@ -96,7 +97,14 @@ export function ProductCard({ product, activeAngle, onAngleChange }: ProductCard
 
       {/* Product info */}
       <div className="flex flex-col gap-2 md:px-1">
-        <h3 className="text-base font-bold text-foreground md:text-lg">{product.name}</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-base font-bold text-foreground md:text-lg">{product.name}</h3>
+          {onShare && (
+            <Button variant="ghost" size="icon-sm" onClick={onShare} className="shrink-0 rounded-full text-muted-foreground">
+              <Share2 className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
         <div className="flex flex-wrap gap-1.5">
           {product.tags.slice(0, 4).map((tag) => (
             <Badge key={tag} variant="secondary" className="text-xs">
