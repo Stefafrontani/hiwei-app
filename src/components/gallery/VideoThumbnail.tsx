@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import type { DashcamVideo } from '@/domain/value-objects/DashcamVideo'
 import type { VideoQuality } from '@/domain/value-objects/VideoQuality'
 import { useVideoPlayer } from '@/hooks/useVideoPlayer'
 import { useVideoZoom } from '@/hooks/useVideoZoom'
 import { useFullscreen } from '@/hooks/useFullscreen'
+import { useScrollAutoplayContext } from '@/contexts/ScrollAutoplayContext'
 import { PlayerControls } from './PlayerControls'
 import { VideoBadges } from './VideoBadges'
 import { VideoSkeleton } from './VideoSkeleton'
@@ -40,9 +41,12 @@ export function VideoThumbnail({
   onFullscreenChange,
   siblingFullscreen,
 }: VideoThumbnailProps) {
+  const scrollAutoplay = useScrollAutoplayContext()
+  const scrollId = useId()
   const wrapperRef = useRef<HTMLDivElement>(null)
   const transitionRef = useRef<HTMLDivElement>(null)
   const aspectClass = size === 'md' ? 'aspect-[16/10]' : 'aspect-video'
+  const effectiveAutoplay = scrollAutoplay.suppressAutoplay ? false : autoplay
 
   const {
     videoRef,
@@ -61,9 +65,10 @@ export function VideoThumbnail({
     toggleMute,
     replay,
     retry,
+    restoreMutePreference,
   } = useVideoPlayer({
     videoUrl: video.videoUrl,
-    autoplay,
+    autoplay: effectiveAutoplay,
     loop: !onEnded,
   })
 
@@ -93,10 +98,10 @@ export function VideoThumbnail({
       video.pause()
       video.muted = true
     } else {
-      video.muted = true
+      restoreMutePreference()
       video.play().catch(() => {})
     }
-  }, [siblingFullscreen])
+  }, [siblingFullscreen, restoreMutePreference])
 
   // Notify parent when video ends (for playlist)
   const onEndedRef = useRef(onEnded)
@@ -115,6 +120,15 @@ export function VideoThumbnail({
     }
   }, [video.videoUrl, resetZoom])
 
+  // Register with scroll autoplay observer
+  useEffect(() => {
+    const el = videoRef.current
+    if (!el) return
+    scrollAutoplay.register(scrollId, el)
+    return () => scrollAutoplay.unregister(scrollId)
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- videoRef is a stable ref, register/unregister are stable callbacks
+  }, [scrollId, scrollAutoplay.register, scrollAutoplay.unregister])
+
   // Crossfade transition on video change
   const prevReplayRef = useRef(replayToken)
 
@@ -124,7 +138,8 @@ export function VideoThumbnail({
 
     const el = transitionRef.current
     if (!el) {
-      replay()
+      if (autoplay) replay()
+      else if (videoRef.current) videoRef.current.currentTime = 0
       return
     }
 
@@ -132,7 +147,8 @@ export function VideoThumbnail({
     el.style.opacity = '0.4'
 
     const fadeOutTimer = setTimeout(() => {
-      replay()
+      if (autoplay) replay()
+      else if (videoRef.current) videoRef.current.currentTime = 0
       el.style.opacity = '1'
     }, 150)
 
@@ -156,7 +172,6 @@ export function VideoThumbnail({
           ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
           style={zoomStyle}
-          muted
           playsInline
           preload="metadata"
         />

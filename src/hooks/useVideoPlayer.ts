@@ -2,6 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+/**
+ * Module-level mute preference shared across all useVideoPlayer instances.
+ * Once a user unmutes any video, all subsequent videos play unmuted.
+ * Starts as `true` (muted) to satisfy browser autoplay policies on first load.
+ */
+let globalMutePreference = true
+
 interface UseVideoPlayerOptions {
   videoUrl: string
   autoplay?: boolean
@@ -27,6 +34,7 @@ interface UseVideoPlayerReturn {
   toggleMute: () => void
   replay: () => void
   retry: () => void
+  restoreMutePreference: () => void
 }
 
 export function useVideoPlayer({
@@ -48,26 +56,31 @@ export function useVideoPlayer({
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [volume, setVolumeState] = useState(100)
-  const [isMuted, setIsMuted] = useState(true)
+  const [isMuted, setIsMuted] = useState(globalMutePreference)
 
   // Single effect: attach listeners + load video. Re-runs when videoUrl changes.
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
 
-    // Set attributes
-    video.muted = true
-    video.playsInline = true
-    video.loop = loop
-    video.preload = 'metadata'
+    let cleanedUp = false
 
+    // 1. Define listeners
     const onLoadedMetadata = () => {
       setIsReady(true)
       setDuration(Math.floor(video.duration))
       setIsError(false)
       // Autoplay after metadata is loaded (avoids AbortError on iOS Safari)
       if (autoplayRef.current) {
-        video.play().catch(() => {})
+        video.play().catch((err: DOMException) => {
+          if (cleanedUp) return
+          // Unmuted autoplay blocked — fall back to muted autoplay
+          if (err.name === 'NotAllowedError' && !video.muted) {
+            video.muted = true
+            globalMutePreference = true
+            video.play().catch(() => {})
+          }
+        })
       }
     }
 
@@ -104,6 +117,7 @@ export function useVideoPlayer({
       setIsMuted(video.muted)
     }
 
+    // 2. Attach listeners BEFORE setting muted (so volumechange syncs state)
     video.addEventListener('loadedmetadata', onLoadedMetadata)
     video.addEventListener('play', onPlay)
     video.addEventListener('pause', onPause)
@@ -113,13 +127,20 @@ export function useVideoPlayer({
     video.addEventListener('error', onError)
     video.addEventListener('volumechange', onVolumeChange)
 
-    // Load the video
+    // 3. Set attributes — uses saved preference instead of hardcoded true
+    video.muted = globalMutePreference
+    video.playsInline = true
+    video.loop = loop
+    video.preload = 'metadata'
+
+    // 4. Load the video
     if (videoUrl) {
       video.src = videoUrl
       video.load()
     }
 
     return () => {
+      cleanedUp = true
       video.removeEventListener('loadedmetadata', onLoadedMetadata)
       video.removeEventListener('play', onPlay)
       video.removeEventListener('pause', onPause)
@@ -185,6 +206,7 @@ export function useVideoPlayer({
     video.volume = v / 100
     if (v > 0 && video.muted) {
       video.muted = false
+      globalMutePreference = false
     }
   }, [])
 
@@ -192,6 +214,7 @@ export function useVideoPlayer({
     const video = videoRef.current
     if (!video) return
     video.muted = !video.muted
+    globalMutePreference = video.muted
   }, [])
 
   const replay = useCallback(() => {
@@ -205,6 +228,12 @@ export function useVideoPlayer({
     const video = videoRef.current
     if (!video) return
     video.load()
+  }, [])
+
+  const restoreMutePreference = useCallback(() => {
+    const video = videoRef.current
+    if (!video) return
+    video.muted = globalMutePreference
   }, [])
 
   return {
@@ -226,5 +255,6 @@ export function useVideoPlayer({
     toggleMute,
     replay,
     retry,
+    restoreMutePreference,
   }
 }
