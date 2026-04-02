@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { ScrollAutoplayProvider } from '@/contexts/ScrollAutoplayContext'
 import { ProductCard } from './ProductCard'
 import { ComparePromoCard } from './ComparePromoCard'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
@@ -27,30 +28,12 @@ export function GalleryFeed({ products }: GalleryFeedProps) {
   const rest = products.slice(2)
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* First row of products */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {firstRow.map((product, i) => (
-          <div key={product.id} className="animate-fade-in-up" style={{ '--delay': `${i * 80}ms` } as React.CSSProperties}>
-            <ProductCard
-              product={product}
-              activeAngle={activeAngles[product.id]}
-              onAngleChange={(angle) => handleAngleChange(product.id, angle)}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Compare promo — full width */}
-      <div className="animate-fade-in-up" style={{ '--delay': '160ms' } as React.CSSProperties}>
-        <ComparePromoCard />
-      </div>
-
-      {/* Remaining products */}
-      {rest.length > 0 && (
+    <ScrollAutoplayProvider>
+      <div className="flex flex-col gap-6">
+        {/* First row of products */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {rest.map((product, i) => (
-            <div key={product.id} className="animate-fade-in-up" style={{ '--delay': `${200 + i * 80}ms` } as React.CSSProperties}>
+          {firstRow.map((product, i) => (
+            <div key={product.id} className="animate-fade-in-up" style={{ '--delay': `${i * 80}ms` } as React.CSSProperties}>
               <ProductCard
                 product={product}
                 activeAngle={activeAngles[product.id]}
@@ -59,7 +42,27 @@ export function GalleryFeed({ products }: GalleryFeedProps) {
             </div>
           ))}
         </div>
-      )}
-    </div>
+
+        {/* Compare promo — full width */}
+        <div className="animate-fade-in-up" style={{ '--delay': '160ms' } as React.CSSProperties}>
+          <ComparePromoCard />
+        </div>
+
+        {/* Remaining products */}
+        {rest.length > 0 && (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {rest.map((product, i) => (
+              <div key={product.id} className="animate-fade-in-up" style={{ '--delay': `${200 + i * 80}ms` } as React.CSSProperties}>
+                <ProductCard
+                  product={product}
+                  activeAngle={activeAngles[product.id]}
+                  onAngleChange={(angle) => handleAngleChange(product.id, angle)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </ScrollAutoplayProvider>
   )
 }
