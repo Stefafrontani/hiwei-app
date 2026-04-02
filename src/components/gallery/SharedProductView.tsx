@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { ExternalLink } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { shareUrl } from '@/lib/shareUrl'
@@ -39,7 +38,6 @@ export function SharedProductView({ product }: SharedProductViewProps) {
         <Button asChild variant="brand" size="lg" className="w-full">
           <a href={product.ecommerceUrl} target="_blank" rel="noopener noreferrer">
             Ver en tienda
-            <ExternalLink className="h-4 w-4" />
           </a>
         </Button>
       )}

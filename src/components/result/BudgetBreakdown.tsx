@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { HardDrive, MemoryStick, CreditCard, Banknote, Pencil, Plus, Flame, Send } from 'lucide-react'
+import { HardDrive, MemoryStick, CreditCard, Banknote, Pencil, Plus, Flame } from 'lucide-react'
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -294,7 +294,6 @@ export function BudgetBreakdown({ product, answers, memoryCards, onSendRecommend
             onClick={onSendRecommendation}
             className="w-full md:w-auto md:px-12"
           >
-            <Send className="h-4 w-4" />
             Enviar presupuesto por mail
           </Button>
         </CardFooter>
