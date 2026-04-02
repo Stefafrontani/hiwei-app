@@ -62,7 +62,7 @@ function formatAnswers(answers: QuizAnswers): string {
 
   if (answers.parkingMode) {
     const quiereKit = answers.parkingMode === 'si'
-    lines.push(`5. Modo estacionamiento: ${quiereKit ? 'Sí, quiere HWK' : 'No, sin kit'}`)
+    lines.push(`5. Modo estacionamiento: ${quiereKit ? 'Sí, quiere kit de vigilancia' : 'No, sin kit'}`)
   }
 
   if (answers.installation) {
