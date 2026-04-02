@@ -67,7 +67,9 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
       <div>
         <h4 className="text-sm font-bold text-foreground/80">No disponible</h4>
         <p className="text-xs text-muted-foreground/50">
-          Este modelo no cuenta con cámara {ANGLE_LABELS[activeAngle]}.
+          {product.videos.length === 0
+            ? 'Este modelo no cuenta con videos disponibles.'
+            : `Este modelo no cuenta con cámara ${ANGLE_LABELS[activeAngle]}.`}
         </p>
       </div>
     </div>
