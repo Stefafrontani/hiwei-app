@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { GetAllDashcamsUseCase } from '@/application/use-cases/dashcam/GetAllDashcams/GetAllDashcams.usecase'
 import { SupabaseDashcamRepository } from '@/infrastructure/repositories/supabase/SupabaseDashcamRepository'
 import { SiteHeader } from '@/components/layout/SiteHeader'
@@ -12,16 +13,9 @@ export default async function ComparatorPage() {
       <SiteHeader activeNav="comparador" />
       <main className="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar">
         <div className="mx-auto w-full max-w-7xl px-4 pb-32 pt-6 md:px-6 md:pt-8">
-          <div className="animate-fade-in-up mb-8">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-              Compará lado a lado
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Elegí dos modelos y mirá la diferencia en calidad de video y especificaciones.
-            </p>
-          </div>
-
-          <ComparatorView products={products} />
+          <Suspense fallback={null}>
+            <ComparatorView products={products} />
+          </Suspense>
         </div>
       </main>
     </div>

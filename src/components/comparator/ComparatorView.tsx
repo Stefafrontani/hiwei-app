@@ -1,8 +1,12 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import { Share2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useComparisonParams } from '@/hooks/useComparisonParams'
 import { ComparatorPlayerCard } from './ComparatorPlayerCard'
 import { SpecsTable } from './SpecsTable'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
@@ -13,8 +17,9 @@ interface ComparatorViewProps {
 }
 
 export function ComparatorView({ products }: ComparatorViewProps) {
-  const [modelAId, setModelAId] = useState<string | null>(null)
-  const [modelBId, setModelBId] = useState<string | null>(null)
+  const { modelAId, setModelAId, modelBId, setModelBId } = useComparisonParams(
+    products.map((p) => p.id)
+  )
   const [activeAngle, setActiveAngle] = useState<CameraPosition>('frontal')
   const [playbackKey, setPlaybackKey] = useState(0)
   const [fullscreenSide, setFullscreenSide] = useState<'A' | 'B' | null>(null)
@@ -46,8 +51,63 @@ export function ComparatorView({ products }: ComparatorViewProps) {
     return Array.from(angles)
   }, [productA, productB])
 
+  async function handleShare() {
+    const url = window.location.href
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Comparación de dashcams — Hiwei', url })
+        toast.success('Link compartido')
+        return
+      } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') return
+      }
+    }
+
+    await copyToClipboard(url)
+  }
+
+  async function copyToClipboard(url: string) {
+    try {
+      await navigator.clipboard.writeText(url)
+      toast.success('Link copiado al portapapeles')
+    } catch {
+      // Fallback for insecure contexts (e.g. LAN IP without HTTPS)
+      try {
+        const textarea = document.createElement('textarea')
+        textarea.value = url
+        textarea.style.position = 'fixed'
+        textarea.style.opacity = '0'
+        document.body.appendChild(textarea)
+        textarea.select()
+        document.execCommand('copy')
+        document.body.removeChild(textarea)
+        toast.success('Link copiado al portapapeles')
+      } catch {
+        toast.error('No se pudo copiar el link')
+      }
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
+      {/* Page Title + Share */}
+      <div className="animate-fade-in-up flex items-start justify-between">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+            Compará lado a lado
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Elegí dos modelos y mirá la diferencia en calidad de video y especificaciones.
+          </p>
+        </div>
+        {bothSelected && (
+          <Button variant="ghost" size="icon-sm" onClick={handleShare} className="shrink-0 rounded-full text-muted-foreground">
+            <Share2 className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+
       {/* Model Selectors */}
       <section className="animate-fade-in-up grid grid-cols-1 gap-4 md:grid-cols-2" style={{ '--delay': '80ms' } as React.CSSProperties}>
         <div className="flex flex-col gap-2">

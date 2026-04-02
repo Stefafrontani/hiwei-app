@@ -1,9 +1,6 @@
-'use client'
-
 import Link from 'next/link'
 import { ExternalLink } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { useIsMobile } from '@/hooks/use-mobile'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 
 const QUALITY_LABELS: Record<string, string> = {
@@ -56,70 +53,63 @@ function getRows(a: DashcamProduct | null, b: DashcamProduct | null): SpecRow[] 
 }
 
 export function SpecsTable({ productA, productB }: SpecsTableProps) {
-  const isMobile = useIsMobile()
-
   if (!productA && !productB) return null
 
   const rows = getRows(productA, productB)
 
-  const wrap = 'whitespace-normal'
-  const pad = 'p-3'
-  const headSize = isMobile ? 'text-xs' : 'text-sm'
-  const cellSize = isMobile ? 'text-xs' : 'text-sm'
-  const labelSize = 'text-xs'
-
   return (
-    <div className="glass-card rounded-2xl border-white/[0.06] overflow-hidden">
-      <div className="px-4 pt-4 pb-2">
-        <h3 className="text-base font-bold text-foreground">Especificaciones</h3>
-      </div>
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-white/[0.03] hover:bg-white/[0.03] border-white/[0.06]">
-            <TableHead className={`w-1/3 ${wrap} ${pad} text-xs font-bold uppercase tracking-wider text-muted-foreground/60`}>Modelo</TableHead>
-            <TableHead className={`w-1/3 ${wrap} ${pad} ${headSize} font-bold text-brand`}>{productA?.name ?? '—'}</TableHead>
-            <TableHead className={`w-1/3 ${wrap} ${pad} ${headSize} font-bold text-brand`}>{productB?.name ?? '—'}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.label} className="border-white/[0.04] hover:bg-white/[0.02]">
-              <TableCell className={`w-1/3 ${wrap} ${pad} ${labelSize} font-medium text-muted-foreground/60`}>{row.label}</TableCell>
-              <TableCell className={`w-1/3 ${wrap} ${pad} ${cellSize} font-semibold text-foreground/80`}>{row.valueA}</TableCell>
-              <TableCell className={`w-1/3 ${wrap} ${pad} ${cellSize} font-semibold text-foreground/80`}>{row.valueB}</TableCell>
+    <div>
+      <h3 className="mb-3 text-base font-bold text-foreground">Especificaciones</h3>
+
+      <div className="overflow-hidden rounded-xl border-white/[0.06]">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-white/[0.03] hover:bg-white/[0.03]">
+              <TableHead className="w-1/3 whitespace-normal p-3 text-xs font-bold uppercase tracking-wider text-muted-foreground/60">Modelo</TableHead>
+              <TableHead className="w-1/3 whitespace-normal p-3 text-xs font-bold text-brand md:text-sm">{productA?.name ?? '—'}</TableHead>
+              <TableHead className="w-1/3 whitespace-normal p-3 text-xs font-bold text-brand md:text-sm">{productB?.name ?? '—'}</TableHead>
             </TableRow>
-          ))}
-          <TableRow className="border-white/[0.04] hover:bg-white/[0.02]">
-            <TableCell className={`w-1/3 ${wrap} ${pad} ${labelSize} font-medium text-muted-foreground/60`}>Tienda</TableCell>
-            <TableCell className={`w-1/3 ${wrap} ${pad}`}>
-              {productA?.ecommerceUrl ? (
-                <Link
-                  href={productA.ecommerceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`inline-flex items-center gap-1.5 ${cellSize} font-semibold text-brand hover:underline`}
-                >
-                  Ver más info
-                  <ExternalLink className="h-3 w-3" />
-                </Link>
-              ) : '—'}
-            </TableCell>
-            <TableCell className={`w-1/3 ${wrap} ${pad}`}>
-              {productB?.ecommerceUrl ? (
-                <Link
-                  href={productB.ecommerceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`inline-flex items-center gap-1.5 ${cellSize} font-semibold text-brand hover:underline`}
-                >
-                  Ver más info
-                  <ExternalLink className="h-3 w-3" />
-                </Link>
-              ) : '—'}
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.label} className="border-white/[0.04] hover:bg-white/[0.02]">
+                <TableCell className="w-1/3 whitespace-normal p-3 text-xs font-medium text-muted-foreground/60">{row.label}</TableCell>
+                <TableCell className="w-1/3 whitespace-normal p-3 text-xs font-semibold text-foreground/80 md:text-sm">{row.valueA}</TableCell>
+                <TableCell className="w-1/3 whitespace-normal p-3 text-xs font-semibold text-foreground/80 md:text-sm">{row.valueB}</TableCell>
+              </TableRow>
+            ))}
+            <TableRow className="border-white/[0.04] hover:bg-white/[0.02]">
+              <TableCell className="w-1/3 whitespace-normal p-3 text-xs font-medium text-muted-foreground/60">Tienda</TableCell>
+              <TableCell className="w-1/3 whitespace-normal p-3">
+                {productA?.ecommerceUrl ? (
+                  <Link
+                    href={productA.ecommerceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand hover:underline md:text-sm"
+                  >
+                    Ver más info
+                    <ExternalLink className="h-3 w-3" />
+                  </Link>
+                ) : '—'}
+              </TableCell>
+              <TableCell className="w-1/3 whitespace-normal p-3">
+                {productB?.ecommerceUrl ? (
+                  <Link
+                    href={productB.ecommerceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand hover:underline md:text-sm"
+                  >
+                    Ver más info
+                    <ExternalLink className="h-3 w-3" />
+                  </Link>
+                ) : '—'}
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }
