@@ -29,9 +29,10 @@ export function ComparatorView({ products }: ComparatorViewProps) {
 
   const bothSelected = !!productA && !!productB
 
+  // Restart both videos whenever either model changes (so they play in sync)
   useEffect(() => {
     if (bothSelected) setPlaybackKey((k) => k + 1)
-  }, [bothSelected])
+  }, [modelAId, modelBId, bothSelected])
 
   const handleAngleChange = (angle: CameraPosition) => {
     setActiveAngle(angle)
