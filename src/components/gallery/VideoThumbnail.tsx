@@ -21,6 +21,7 @@ interface VideoThumbnailProps {
   onPrev?: () => void
   onNext?: () => void
   showFullscreen?: boolean
+  showBadges?: boolean
 }
 
 export function VideoThumbnail({
@@ -33,6 +34,7 @@ export function VideoThumbnail({
   onPrev,
   onNext,
   showFullscreen = true,
+  showBadges = true,
 }: VideoThumbnailProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const transitionRef = useRef<HTMLDivElement>(null)
@@ -120,8 +122,8 @@ export function VideoThumbnail({
       className={`video-popover relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}
       {...zoomHandlers}
     >
-      {/* Badges — always visible, above zoom layer */}
-      <VideoBadges cameraPosition={video.cameraPosition} maxQuality={maxQuality} />
+      {/* Badges — above zoom layer */}
+      {showBadges && <VideoBadges cameraPosition={video.cameraPosition} maxQuality={maxQuality} />}
 
       {/* Transition wrapper — crossfade on video change */}
       <div ref={transitionRef} className="absolute inset-0 transition-opacity duration-200 ease-out">

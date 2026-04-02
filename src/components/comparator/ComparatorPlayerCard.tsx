@@ -68,6 +68,7 @@ export function ComparatorPlayerCard({ product, activeAngle, autoplay, playbackK
       onPrev={angleVideos.length > 1 ? goPrev : undefined}
       onNext={angleVideos.length > 1 ? goNext : undefined}
       showFullscreen={showFullscreen}
+      showBadges={false}
     />
   ) : (
     <div className={`flex ${isImmersive ? 'aspect-video' : 'aspect-[16/10]'} flex-col items-center justify-center gap-3 rounded-xl bg-white/[0.03] px-8 text-center`}>
