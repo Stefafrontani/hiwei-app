@@ -170,10 +170,12 @@ export function ComparatorView({ products }: ComparatorViewProps) {
           </section>
         )}
 
-        {/* Specs Comparison Table */}
-        <div className="animate-fade-in-up" style={{ '--delay': '240ms' } as React.CSSProperties}>
-          <SpecsTable productA={productA} productB={productB} />
-        </div>
+        {/* Specs Comparison Table — only when both models selected */}
+        {bothSelected && (
+          <div className="animate-fade-in-up" style={{ '--delay': '240ms' } as React.CSSProperties}>
+            <SpecsTable productA={productA} productB={productB} />
+          </div>
+        )}
       </div>
 
       {/* Immersive Mode Overlay */}
