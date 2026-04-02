@@ -17,15 +17,17 @@ export function ComparatorView({ products }: ComparatorViewProps) {
   const [modelBId, setModelBId] = useState<string | null>(null)
   const [activeAngle, setActiveAngle] = useState<CameraPosition>('frontal')
   const [playbackKey, setPlaybackKey] = useState(0)
+  const [fullscreenSide, setFullscreenSide] = useState<'A' | 'B' | null>(null)
 
   const productA = products.find((p) => p.id === modelAId) ?? null
   const productB = products.find((p) => p.id === modelBId) ?? null
 
   const bothSelected = !!productA && !!productB
 
+  // Restart both videos whenever either model changes (so they play in sync)
   useEffect(() => {
     if (bothSelected) setPlaybackKey((k) => k + 1)
-  }, [bothSelected])
+  }, [modelAId, modelBId, bothSelected])
 
   const handleAngleChange = (angle: CameraPosition) => {
     setActiveAngle(angle)
@@ -97,16 +99,20 @@ export function ComparatorView({ products }: ComparatorViewProps) {
         </Tabs>
       </div>
 
-      {/* Video Comparison Cards */}
-      <section className="animate-fade-in-up grid grid-cols-1 gap-4 md:grid-cols-2" style={{ '--delay': '160ms' } as React.CSSProperties}>
-        <ComparatorPlayerCard product={productA} activeAngle={activeAngle} autoplay={bothSelected} playbackKey={playbackKey} />
-        <ComparatorPlayerCard product={productB} activeAngle={activeAngle} autoplay={bothSelected} playbackKey={playbackKey} />
-      </section>
+      {/* Video Comparison — stacked (mobile) / full-bleed side by side (desktop) */}
+      {bothSelected && (
+        <section className="animate-fade-in-up flex flex-col gap-1 md:flex-row md:items-center relative -ml-[50vw] left-1/2 w-screen" style={{ '--delay': '160ms' } as React.CSSProperties}>
+          <ComparatorPlayerCard product={productA} activeAngle={activeAngle} autoplay={true} playbackKey={playbackKey} onFullscreenChange={(fs) => setFullscreenSide(fs ? 'A' : null)} siblingFullscreen={fullscreenSide === 'B'} />
+          <ComparatorPlayerCard product={productB} activeAngle={activeAngle} autoplay={true} playbackKey={playbackKey} onFullscreenChange={(fs) => setFullscreenSide(fs ? 'B' : null)} siblingFullscreen={fullscreenSide === 'A'} />
+        </section>
+      )}
 
-      {/* Specs Comparison Table */}
-      <div className="animate-fade-in-up" style={{ '--delay': '240ms' } as React.CSSProperties}>
-        <SpecsTable productA={productA} productB={productB} />
-      </div>
+      {/* Specs Comparison Table — only when both models selected */}
+      {bothSelected && (
+        <div className="animate-fade-in-up" style={{ '--delay': '240ms' } as React.CSSProperties}>
+          <SpecsTable productA={productA} productB={productB} />
+        </div>
+      )}
     </div>
   )
 }

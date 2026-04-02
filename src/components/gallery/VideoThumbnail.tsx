@@ -20,6 +20,10 @@ interface VideoThumbnailProps {
   replayToken?: number
   onPrev?: () => void
   onNext?: () => void
+  showFullscreen?: boolean
+  showBadges?: boolean
+  onFullscreenChange?: (isFullscreen: boolean) => void
+  siblingFullscreen?: boolean
 }
 
 export function VideoThumbnail({
@@ -31,6 +35,10 @@ export function VideoThumbnail({
   replayToken,
   onPrev,
   onNext,
+  showFullscreen = true,
+  showBadges = true,
+  onFullscreenChange,
+  siblingFullscreen,
 }: VideoThumbnailProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const transitionRef = useRef<HTMLDivElement>(null)
@@ -69,6 +77,26 @@ export function VideoThumbnail({
     maxScale: 1.5,
     isRotated,
   })
+
+  // Notify parent when fullscreen changes
+  const onFullscreenChangeRef = useRef(onFullscreenChange)
+  useEffect(() => { onFullscreenChangeRef.current = onFullscreenChange })
+  useEffect(() => {
+    onFullscreenChangeRef.current?.(isFullscreen)
+  }, [isFullscreen])
+
+  // Pause/mute when sibling enters fullscreen, resume when it exits
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video || siblingFullscreen === undefined) return
+    if (siblingFullscreen) {
+      video.pause()
+      video.muted = true
+    } else {
+      video.muted = true
+      video.play().catch(() => {})
+    }
+  }, [siblingFullscreen])
 
   // Notify parent when video ends (for playlist)
   const onEndedRef = useRef(onEnded)
@@ -118,8 +146,8 @@ export function VideoThumbnail({
       className={`video-popover relative ${aspectClass} w-full overflow-hidden rounded-lg bg-black`}
       {...zoomHandlers}
     >
-      {/* Badges — always visible, above zoom layer */}
-      <VideoBadges cameraPosition={video.cameraPosition} maxQuality={maxQuality} />
+      {/* Badges — above zoom layer */}
+      {showBadges && <VideoBadges cameraPosition={video.cameraPosition} maxQuality={maxQuality} />}
 
       {/* Transition wrapper — crossfade on video change */}
       <div ref={transitionRef} className="absolute inset-0 transition-opacity duration-200 ease-out">
@@ -151,6 +179,7 @@ export function VideoThumbnail({
           isMuted={isMuted}
           isFullscreen={isFullscreen}
           isZoomed={isGesturing}
+          showFullscreen={showFullscreen}
           onTogglePlay={togglePlay}
           onVolumeChange={setVolume}
           onToggleMute={toggleMute}

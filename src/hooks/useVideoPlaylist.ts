@@ -28,6 +28,7 @@ export function useVideoPlaylist({ videos, activeAngle, resetKey }: UseVideoPlay
     setVideoIndexRaw(0)
     setShouldAutoplay(false)
     prevIndexRef.current = 0
+    setReplayToken((t) => t + 1)
   }, [activeAngle, resetKey])
 
   const setVideoIndex = useCallback((newIndex: number) => {
