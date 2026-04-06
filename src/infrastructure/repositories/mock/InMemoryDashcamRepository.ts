@@ -1,6 +1,8 @@
 import type { IDashcamRepository } from '@/domain/ports/IDashcamRepository'
 import type { DashcamProduct } from '@/domain/entities/DashcamProduct'
 
+const R2 = process.env.NEXT_PUBLIC_R2_PUBLIC_URL ?? ''
+
 const PRODUCTS: DashcamProduct[] = [
   {
     id: 'radares-full-hd',
@@ -16,8 +18,10 @@ const PRODUCTS: DashcamProduct[] = [
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/anti-radares-full-hd-preventa-exclusiva/',
     includedMemoryCardSize: null,
     videos: [
-      { videoUrl: '/videos/frontal1-fhd.MP4', label: 'Ruta de día', cameraPosition: 'frontal' },
-      { videoUrl: '/videos/trasera1-fhd.MP4', label: 'Vista trasera urbana', cameraPosition: 'trasera' },
+      { videoUrl: `${R2}/opt_e1-frontal-dia-1.mp4`, label: 'Ruta de día', cameraPosition: 'frontal' },
+      { videoUrl: `${R2}/opt_e1-frontal-dia-2.mp4`, label: 'Ruta de día 2', cameraPosition: 'frontal' },
+      { videoUrl: `${R2}/opt_e1-trasera-dia-1.mp4`, label: 'Vista trasera urbana', cameraPosition: 'trasera' },
+      { videoUrl: `${R2}/opt_e1-trasera-dia-2.mp4`, label: 'Vista trasera urbana 2', cameraPosition: 'trasera' },
     ],
   },
   {
@@ -52,8 +56,8 @@ const PRODUCTS: DashcamProduct[] = [
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/discreto1/',
     includedMemoryCardSize: 32,
     videos: [
-      { videoUrl: '/videos/frontal2-fhd.MP4', label: 'Manejo urbano 2K', cameraPosition: 'frontal' },
-      { videoUrl: '/videos/frontal1-fhd.MP4', label: 'Visión nocturna', cameraPosition: 'frontal' },
+      { videoUrl: `${R2}/opt_vs1-dia-1.mp4`, label: 'Manejo urbano 2K', cameraPosition: 'frontal' },
+      { videoUrl: `${R2}/opt_vs1-noche-1.MP4`, label: 'Visión nocturna', cameraPosition: 'frontal' },
     ],
   },
   {
@@ -70,8 +74,32 @@ const PRODUCTS: DashcamProduct[] = [
     ecommerceUrl: 'https://www.hiwei.com.ar/productos/anti-radares-4k/',
     includedMemoryCardSize: null,
     videos: [
-      { videoUrl: '/videos/frontal2-4k.MP4', label: 'Detalle patentes 4K', cameraPosition: 'frontal' },
-      { videoUrl: '/videos/trasera1-4k.MP4', label: 'Seguimiento trasero 4K', cameraPosition: 'trasera' },
+      { videoUrl: `${R2}/opt_s1ultra-frontal-dia-1.mp4`, label: 'Detalle patentes 4K', cameraPosition: 'frontal' },
+      { videoUrl: `${R2}/opt_s1ultra-frontal-dia-2.mp4`, label: 'Detalle patentes 4K 2', cameraPosition: 'frontal' },
+      { videoUrl: `${R2}/opt_s1ultra-trasera-dia-1.mp4`, label: 'Seguimiento trasero 4K', cameraPosition: 'trasera' },
+      { videoUrl: `${R2}/opt_s1ultra-trasera-dia-2.mp4`, label: 'Seguimiento trasero 4K 2', cameraPosition: 'trasera' },
+    ],
+  },
+  {
+    id: 'a229-pro',
+    name: 'A229 Pro - Triple cámara 4K + 2K + 1080P',
+    description: 'La A229 Pro ofrece triple cobertura con calidad 4K frontal, 2K trasera y 1080P interior. Equipada con sensor Sony STARVIS 2 y visión nocturna avanzada, es ideal para quienes buscan máxima cobertura y nitidez en cada ángulo.',
+    basePrice: 0,
+    discount: 0,
+    specs: ['Calidad 4k', 'Grabación Frontal, trasera e interior', 'Grabación en bucle', 'Permite modo estacionamiento', 'Wifi', 'GPS integrado', 'Aplicación para celular'],
+    tags: ['Premium', 'Graba Interior', '4K Frontal', '2K Trasera', '1080p Interior', 'Triple cobertura', 'WiFi', 'Grabación en bucle', 'GPS integrado', 'Bloqueo por impacto', 'G-Sensor'],
+    cameraPositions: ['frontal', 'trasera', 'interior'],
+    maxQuality: 'superior',
+    cycleSize: 0,
+    ecommerceUrl: '',
+    includedMemoryCardSize: null,
+    videos: [
+      { videoUrl: `${R2}/opt_a229pro-frontal-dia-1.mp4`, label: 'Frontal de día', cameraPosition: 'frontal' },
+      { videoUrl: `${R2}/opt_a229pro-frontal-dia-2.mp4`, label: 'Frontal de día 2', cameraPosition: 'frontal' },
+      { videoUrl: `${R2}/opt_a229pro-trasera-dia-1.mp4`, label: 'Trasera de día', cameraPosition: 'trasera' },
+      { videoUrl: `${R2}/opt_a229pro-trasera-dia-2.mp4`, label: 'Trasera de día 2', cameraPosition: 'trasera' },
+      { videoUrl: `${R2}/opt_a229pro-interior-dia-1.mp4`, label: 'Interior de día', cameraPosition: 'interior' },
+      { videoUrl: `${R2}/opt_a229pro-interior-dia-2.mp4`, label: 'Interior de día 2', cameraPosition: 'interior' },
     ],
   },
   {
