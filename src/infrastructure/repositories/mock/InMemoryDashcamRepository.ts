@@ -23,6 +23,7 @@ const PRODUCTS: DashcamProduct[] = [
       { videoUrl: `${R2}/opt_e1-trasera-dia-1.mp4`, label: 'Vista trasera urbana', cameraPosition: 'trasera' },
       { videoUrl: `${R2}/opt_e1-trasera-dia-2.mp4`, label: 'Vista trasera urbana 2', cameraPosition: 'trasera' },
     ],
+    stock: 10,
   },
   {
     id: 'f7np',
@@ -41,6 +42,7 @@ const PRODUCTS: DashcamProduct[] = [
       { videoUrl: '/videos/frontal1-4k.MP4', label: 'Autopista nocturna 4K', cameraPosition: 'frontal' },
       { videoUrl: '/videos/trasera1-4k.MP4', label: 'Estacionamiento trasero', cameraPosition: 'trasera' },
     ],
+    stock: 10,
   },
   {
     id: 'vs1',
@@ -59,6 +61,7 @@ const PRODUCTS: DashcamProduct[] = [
       { videoUrl: `${R2}/opt_vs1-dia-1.mp4`, label: 'Manejo urbano 2K', cameraPosition: 'frontal' },
       { videoUrl: `${R2}/opt_vs1-noche-1.MP4`, label: 'Visión nocturna', cameraPosition: 'frontal' },
     ],
+    stock: 10,
   },
   {
     id: 'radares-4k',
@@ -79,6 +82,7 @@ const PRODUCTS: DashcamProduct[] = [
       { videoUrl: `${R2}/opt_s1ultra-trasera-dia-1.mp4`, label: 'Seguimiento trasero 4K', cameraPosition: 'trasera' },
       { videoUrl: `${R2}/opt_s1ultra-trasera-dia-2.mp4`, label: 'Seguimiento trasero 4K 2', cameraPosition: 'trasera' },
     ],
+    stock: 10,
   },
   {
     id: 'a229-pro',
@@ -101,6 +105,7 @@ const PRODUCTS: DashcamProduct[] = [
       { videoUrl: `${R2}/opt_a229pro-interior-dia-1.mp4`, label: 'Interior de día', cameraPosition: 'interior' },
       { videoUrl: `${R2}/opt_a229pro-interior-dia-2.mp4`, label: 'Interior de día 2', cameraPosition: 'interior' },
     ],
+    stock: 10,
   },
   {
     id: 'f17-elite',
@@ -120,6 +125,7 @@ const PRODUCTS: DashcamProduct[] = [
       { videoUrl: '/videos/trasera1-fhd.MP4', label: 'Autopista trasera 2.5K', cameraPosition: 'trasera' },
       { videoUrl: '/videos/frontal2-fhd.MP4', label: 'Monitoreo interior', cameraPosition: 'interior' },
     ],
+    stock: 10,
   }
 ]
 
@@ -129,6 +135,7 @@ export class InMemoryDashcamRepository implements IDashcamRepository {
   }
 
   async getById(id: string): Promise<DashcamProduct | undefined> {
-    return Promise.resolve(PRODUCTS.find((p) => p.id === id))
+    const product = PRODUCTS.find((p) => p.id === id)
+    return Promise.resolve(product)
   }
 }

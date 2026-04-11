@@ -16,4 +16,5 @@ export interface DashcamProduct {
   ecommerceUrl: string
   includedMemoryCardSize: number | null
   videos: DashcamVideo[]
+  stock: number
 }
