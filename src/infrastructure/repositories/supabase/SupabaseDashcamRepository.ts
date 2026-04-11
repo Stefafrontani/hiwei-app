@@ -21,6 +21,7 @@ function rowToProduct(row: Record<string, any>): DashcamProduct {
     ecommerceUrl: (row.ecommerce_url as string),
     includedMemoryCardSize: (row.included_memory_card_size as number) ?? null,
     videos: (row.videos as DashcamVideo[]) ?? [],
+    stock: row.stock as number,
   }
 }
 
